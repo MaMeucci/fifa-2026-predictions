@@ -28,6 +28,19 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('combined'));
 }
 
+// Root endpoint for Railway health check
+app.get('/', (req, res) => {
+  res.status(200).json({
+    name: 'FIFA World Cup 2026 - Predictions API',
+    version: '1.0.0',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth',
+    },
+  });
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({
