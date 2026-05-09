@@ -53,11 +53,9 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', require('./routes/auth'));
-// app.use('/api/predictions', require('./routes/predictions'));
-// app.use('/api/matches', require('./routes/matches'));
-// app.use('/api/scores', require('./routes/scores'));
-// app.use('/api/settings', require('./routes/settings'));
-// app.use('/api/admin', require('./routes/admin'));
+app.use('/api/predictions', require('./routes/predictions'));
+app.use('/api/matches', require('./routes/matches'));
+app.use('/api/settings', require('./routes/settings'));
 
 // 404 handler
 app.use((req, res) => {
