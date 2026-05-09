@@ -20,7 +20,7 @@ Verifica che tutte le variabili d'ambiente siano configurate:
 - [ ] `MONGODB_URI` = `mongodb+srv://fifa2026admin:c3ej4h0QWaMGjIbL@fifa2026-cluster.cpk7ux1.mongodb.net/fifa2026?retryWrites=true&w=majority&appName=fifa2026-cluster`
 - [ ] `JWT_SECRET` = [genera una stringa casuale sicura]
 - [ ] `JWT_EXPIRE` = `7d`
-- [ ] `CORS_ORIGIN` = `https://mmroot.github.io`
+- [ ] `CORS_ORIGIN` = `https://mameucci.github.io`
 
 **Come generare JWT_SECRET:**
 ```bash
@@ -67,7 +67,7 @@ npm run deploy
 ### 4. Verifica Deployment Frontend
 
 Dopo il deploy, il sito sarà disponibile su:
-**https://mmroot.github.io/fifa-2026-predictions/**
+**https://mameucci.github.io/fifa-2026-predictions/**
 
 Controlla:
 - [ ] La pagina si carica correttamente
@@ -77,7 +77,7 @@ Controlla:
 ### 5. Test Connessione Frontend-Backend
 
 #### Test 1: Registrazione Utente
-1. Vai su https://mmroot.github.io/fifa-2026-predictions/
+1. Vai su https://mameucci.github.io/fifa-2026-predictions/
 2. Clicca su "Registrati"
 3. Compila il form con:
    - Username: `testuser`
@@ -108,13 +108,13 @@ Controlla:
 
 **Sintomo:** Errore nella console del browser tipo:
 ```
-Access to fetch at 'https://fifa-2026-predictions-backend.onrender.com/api/auth/register' 
-from origin 'https://mmroot.github.io' has been blocked by CORS policy
+Access to fetch at 'https://fifa-2026-predictions-backend.onrender.com/api/auth/register'
+from origin 'https://mameucci.github.io' has been blocked by CORS policy
 ```
 
 **Soluzione:**
 1. Vai su Render Dashboard → Environment
-2. Verifica che `CORS_ORIGIN` sia `https://mmroot.github.io`
+2. Verifica che `CORS_ORIGIN` sia `https://mameucci.github.io`
 3. Salva e attendi il redeploy (2-3 minuti)
 4. Svuota la cache del browser (Cmd+Shift+R)
 

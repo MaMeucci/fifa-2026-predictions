@@ -17,10 +17,10 @@ Nel menu laterale, clicca su **Environment**
 ### 4. Aggiungi la Variabile CORS_ORIGIN
 Clicca su **Add Environment Variable** e aggiungi:
 
-**Key:** `CORS_ORIGIN`  
-**Value:** `https://mmroot.github.io`
+**Key:** `CORS_ORIGIN`
+**Value:** `https://mameucci.github.io`
 
-> **Nota:** Questo è l'URL del tuo frontend su GitHub Pages. Se hai un dominio personalizzato, usa quello invece.
+> **Nota:** Questo è l'URL del tuo frontend su GitHub Pages.
 
 ### 5. Salva e Redeploy
 1. Clicca su **Save Changes**
@@ -31,7 +31,7 @@ Clicca su **Add Environment Variable** e aggiungi:
 Dopo il redeploy, testa che il backend accetti richieste dal frontend:
 
 ```bash
-curl -H "Origin: https://mmroot.github.io" \
+curl -H "Origin: https://mameucci.github.io" \
      -H "Access-Control-Request-Method: POST" \
      -H "Access-Control-Request-Headers: Content-Type" \
      -X OPTIONS \
@@ -40,7 +40,7 @@ curl -H "Origin: https://mmroot.github.io" \
 
 Dovresti vedere negli header della risposta:
 ```
-Access-Control-Allow-Origin: https://mmroot.github.io
+Access-Control-Allow-Origin: https://mameucci.github.io
 Access-Control-Allow-Credentials: true
 ```
 
@@ -55,7 +55,7 @@ Assicurati di avere tutte queste variabili configurate:
 | `MONGODB_URI` | `mongodb+srv://fifa2026admin:...` | Connection string MongoDB Atlas |
 | `JWT_SECRET` | `[genera-una-stringa-casuale-sicura]` | Secret per JWT tokens |
 | `JWT_EXPIRE` | `7d` | Durata token (7 giorni) |
-| `CORS_ORIGIN` | `https://mmroot.github.io` | URL frontend per CORS |
+| `CORS_ORIGIN` | `https://mameucci.github.io` | URL frontend per CORS |
 
 ## Generare JWT_SECRET Sicuro
 
