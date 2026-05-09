@@ -135,7 +135,7 @@ const HomePage = () => {
                 </Grid>
 
                 {/* Sistema Punteggi */}
-                <Grid item xs={12} md={5}>
+                <Grid item xs={12} md={4}>
                   <Card
                     sx={{
                       height: '100%',
@@ -173,7 +173,7 @@ const HomePage = () => {
                 </Grid>
 
                 {/* Pronostici Completi */}
-                <Grid item xs={12} md={7}>
+                <Grid item xs={12} md={7} sx={{ ml: 'auto' }}>
                   <Tooltip
                     title={!tournamentStarted ? "Disponibile dall'inizio del torneo (11 Giugno 2026)" : ""}
                     arrow
@@ -243,7 +243,7 @@ const HomePage = () => {
             Come Funziona
           </Typography>
           <Grid container spacing={3} sx={{ mt: 2 }}>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Typography variant="h6" color="primary" gutterBottom>
                 1. Registrati
               </Typography>
@@ -251,7 +251,7 @@ const HomePage = () => {
                 Crea un account gratuito o accedi con Auth0
               </Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Typography variant="h6" color="primary" gutterBottom>
                 2. Inserisci Pronostici
               </Typography>
@@ -259,7 +259,7 @@ const HomePage = () => {
                 Prevedi risultati, squadre qualificate e capocannoniere
               </Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Typography variant="h6" color="primary" gutterBottom>
                 3. Guadagna Punti
               </Typography>
@@ -267,7 +267,7 @@ const HomePage = () => {
                 Accumula punti per ogni pronostico corretto
               </Typography>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Typography variant="h6" color="primary" gutterBottom>
                 4. Vinci
               </Typography>
