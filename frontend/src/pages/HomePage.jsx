@@ -135,7 +135,7 @@ const HomePage = () => {
                 </Grid>
 
                 {/* Sistema Punteggi */}
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
                   <Card
                     sx={{
                       height: '100%',
@@ -173,7 +173,7 @@ const HomePage = () => {
                 </Grid>
 
                 {/* Pronostici Completi */}
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={8}>
                   <Tooltip
                     title={!tournamentStarted ? "Disponibile dall'inizio del torneo (11 Giugno 2026)" : ""}
                     arrow
