@@ -1,14 +1,19 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+import { ThemeProvider, createTheme, CssBaseline, Box } from '@mui/material';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ROUTES, THEME_COLORS } from './utils/constants';
 
-// Pages (to be created)
+// Components
+import Navbar from './components/Navbar';
+
+// Pages
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import PredictionsPage from './pages/PredictionsPage';
+import AllPredictionsPage from './pages/AllPredictionsPage';
+import ScoringRulesPage from './pages/ScoringRulesPage';
 import DashboardPage from './pages/DashboardPage';
 import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -25,14 +30,16 @@ const queryClient = new QueryClient({
   },
 });
 
-// Create MUI theme
+// Create MUI theme with FIFA 2026 colors
 const theme = createTheme({
   palette: {
     primary: {
-      main: THEME_COLORS.PRIMARY,
+      main: THEME_COLORS.PRIMARY, // Turchese FIFA 2026
+      contrastText: '#fff',
     },
     secondary: {
-      main: THEME_COLORS.SECONDARY,
+      main: THEME_COLORS.SECONDARY, // Magenta vibrante
+      contrastText: '#fff',
     },
     success: {
       main: THEME_COLORS.SUCCESS,
@@ -45,6 +52,10 @@ const theme = createTheme({
     },
     info: {
       main: THEME_COLORS.INFO,
+    },
+    background: {
+      default: THEME_COLORS.LIGHT,
+      paper: '#fff',
     },
   },
   typography: {
@@ -133,10 +144,26 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
-          <Router>
-            <Routes>
-              {/* Public Routes */}
-              <Route path={ROUTES.HOME} element={<HomePage />} />
+          <Router basename="/fifa-2026-predictions">
+            <AppContent />
+          </Router>
+        </AuthProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
+
+// Separate component to use useAuth hook
+const AppContent = () => {
+  const { isAuthenticated } = useAuth();
+
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      {isAuthenticated && <Navbar />}
+      <Box component="main" sx={{ flexGrow: 1 }}>
+        <Routes>
+          {/* Public Routes */}
+          <Route path={ROUTES.HOME} element={<HomePage />} />
               <Route
                 path={ROUTES.LOGIN}
                 element={
@@ -165,6 +192,22 @@ function App() {
                 }
               />
               <Route
+                path={ROUTES.ALL_PREDICTIONS}
+                element={
+                  <ProtectedRoute>
+                    <AllPredictionsPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.SCORING_RULES}
+                element={
+                  <ProtectedRoute>
+                    <ScoringRulesPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path={ROUTES.DASHBOARD}
                 element={
                   <ProtectedRoute>
@@ -183,15 +226,13 @@ function App() {
                 }
               />
 
-              {/* 404 Not Found */}
-              <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
-            </Routes>
-          </Router>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+          {/* 404 Not Found */}
+          <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
+        </Routes>
+      </Box>
+    </Box>
   );
-}
+};
 
 export default App;
 

@@ -150,6 +150,8 @@ export const ROUTES = {
   REGISTER: '/register',
   CALLBACK: '/callback',
   PREDICTIONS: '/predictions',
+  ALL_PREDICTIONS: '/all-predictions',
+  SCORING_RULES: '/scoring-rules',
   DASHBOARD: '/dashboard',
   ADMIN: '/admin',
   NOT_FOUND: '*',
@@ -209,14 +211,16 @@ export const TOAST_MESSAGES = {
   },
 };
 
-// Theme Colors
+// Theme Colors - FIFA 2026 Official Colors
 export const THEME_COLORS = {
-  PRIMARY: '#1976d2',
-  SECONDARY: '#dc004e',
+  PRIMARY: '#00B8A9', // Turchese FIFA 2026
+  SECONDARY: '#E91E63', // Magenta vibrante
   SUCCESS: '#4caf50',
   ERROR: '#f44336',
-  WARNING: '#ff9800',
-  INFO: '#2196f3',
+  WARNING: '#FFC107', // Giallo/Oro
+  INFO: '#00BCD4', // Cyan
+  DARK: '#1A1A2E', // Blu scuro
+  LIGHT: '#F8F9FA', // Grigio chiaro
 };
 
 // Made with Bob

@@ -9,6 +9,7 @@ import {
   Paper,
   Divider,
   Alert,
+  Tooltip,
 } from '@mui/material';
 import { useAuth } from '../context/AuthContext';
 import { ROUTES } from '../utils/constants';
@@ -103,15 +104,19 @@ const LoginPage = () => {
 
           <Divider sx={{ my: 3 }}>oppure</Divider>
 
-          <Button
-            fullWidth
-            variant="outlined"
-            size="large"
-            onClick={handleAuth0Login}
-            sx={{ mb: 2 }}
-          >
-            Accedi con Auth0
-          </Button>
+          <Tooltip title="Disponibile prossimamente" arrow>
+            <span>
+              <Button
+                fullWidth
+                variant="outlined"
+                size="large"
+                disabled
+                sx={{ mb: 2 }}
+              >
+                Accedi con Auth0
+              </Button>
+            </span>
+          </Tooltip>
 
           <Box sx={{ textAlign: 'center', mt: 2 }}>
             <Typography variant="body2">
