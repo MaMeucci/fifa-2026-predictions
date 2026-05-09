@@ -269,7 +269,7 @@ const HomePage = () => {
             </Grid>
             <Grid item xs={3}>
               <Typography variant="h6" color="primary" gutterBottom>
-                4. Vinci!
+                4. Vinci
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Scala la classifica e diventa il campione
