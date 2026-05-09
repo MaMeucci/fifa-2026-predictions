@@ -29,8 +29,9 @@ const HomePage = () => {
           <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
             {TOURNAMENT_CONFIG.hosts.join(' • ')}
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}>
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 800, mx: 'auto' }}>
             Partecipa al gioco dei pronostici sul Mondiale di Calcio 2026!
+            <br />
             Prevedi i risultati delle partite, le squadre qualificate e vinci punti.
           </Typography>
           
@@ -56,7 +57,7 @@ const HomePage = () => {
               </Button>
             </Box>
           ) : (
-            <Box sx={{ maxWidth: 900, mx: 'auto' }}>
+            <Box sx={{ maxWidth: 800, mx: 'auto' }}>
               {/* 4 Main Action Buttons in 2x2 Grid */}
               <Grid container spacing={3}>
                 {/* I Miei Pronostici */}
