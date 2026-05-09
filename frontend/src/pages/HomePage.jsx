@@ -242,7 +242,7 @@ const HomePage = () => {
           <Typography variant="h3" gutterBottom>
             Come Funziona
           </Typography>
-          <Grid container spacing={3} sx={{ mt: 2, justifyContent: 'center' }}>
+          <Grid container spacing={3} sx={{ mt: 2, justifyContent: 'center', flexWrap: 'nowrap' }}>
             <Grid item xs={6} md={3}>
               <Typography variant="h6" color="primary" gutterBottom>
                 1. Registrati
@@ -269,7 +269,7 @@ const HomePage = () => {
             </Grid>
             <Grid item xs={6} md={3}>
               <Typography variant="h6" color="primary" gutterBottom>
-                4. Vinci!
+                4. Vinci
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Scala la classifica e diventa il campione
