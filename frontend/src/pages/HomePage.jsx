@@ -157,7 +157,7 @@ const HomePage = () => {
                         Sistema Punteggi
                       </Typography>
                       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                        Scopri come vengono assegnati i punti
+                        Scopri in dettaglio come vengono assegnati i punti
                       </Typography>
                       <Button
                         variant="contained"
