@@ -9,7 +9,7 @@ const {
   getLeaderboard,
   calculateScores,
 } = require('../controllers/predictionsController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, admin } = require('../middleware/auth');
 
 // Public routes
 router.get('/leaderboard', getLeaderboard);
@@ -27,7 +27,7 @@ router.get('/all', getAllPredictions);
 router.get('/user/:userId', getUserPredictions);
 
 // Admin routes
-router.post('/calculate-scores', authorize('admin'), calculateScores);
+router.post('/calculate-scores', admin, calculateScores);
 
 module.exports = router;
 
