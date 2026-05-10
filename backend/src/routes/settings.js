@@ -8,7 +8,7 @@ const {
   updateCapiscioneGroups,
   getScoringRules,
 } = require('../controllers/settingsController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, admin } = require('../middleware/auth');
 
 // Public routes
 router.get('/', getSettings);
@@ -18,7 +18,7 @@ router.get('/scoring', getScoringRules);
 
 // Admin routes
 router.use(protect);
-router.use(authorize('admin'));
+router.use(admin);
 
 router.put('/', updateSettings);
 router.put('/capiscione', updateCapiscioneGroups);

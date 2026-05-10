@@ -13,7 +13,7 @@ const {
   getLiveMatches,
   getFinishedMatches,
 } = require('../controllers/matchesController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, admin } = require('../middleware/auth');
 
 // Public routes
 router.get('/', getAllMatches);
@@ -26,7 +26,7 @@ router.get('/:id', getMatch);
 
 // Admin routes (require authentication and admin role)
 router.use(protect);
-router.use(authorize('admin'));
+router.use(admin);
 
 router.post('/', createMatch);
 router.put('/:id', updateMatch);
