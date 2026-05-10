@@ -60,13 +60,16 @@ function getTeamCode(teamName) {
 // Generate group stage matches (72 matches)
 function generateGroupMatches() {
   const groupSchedule = [
-    // Group A
-    { num: 1, date: '2026-06-11T18:00:00Z', group: 'A', home: 'Mexico', away: 'South Africa', venue: 'Mexico City' },
-    { num: 2, date: '2026-06-12T00:00:00Z', group: 'A', home: 'Korea Republic', away: 'Czech Republic', venue: 'Los Angeles' },
-    { num: 3, date: '2026-06-16T21:00:00Z', group: 'A', home: 'Mexico', away: 'Korea Republic', venue: 'Guadalajara' },
-    { num: 4, date: '2026-06-17T00:00:00Z', group: 'A', home: 'South Africa', away: 'Czech Republic', venue: 'Houston' },
-    { num: 5, date: '2026-06-21T19:00:00Z', group: 'A', home: 'Mexico', away: 'Czech Republic', venue: 'Dallas' },
-    { num: 6, date: '2026-06-21T19:00:00Z', group: 'A', home: 'South Africa', away: 'Korea Republic', venue: 'Monterrey' },
+    // Group A - Corrected schedule
+    // Giornata 1
+    { num: 1, date: '2026-06-11T19:00:00Z', group: 'A', home: 'Mexico', away: 'South Africa', venue: 'Mexico City' },
+    { num: 2, date: '2026-06-12T02:00:00Z', group: 'A', home: 'Korea Republic', away: 'Czech Republic', venue: 'Guadalajara' },
+    // Giornata 2
+    { num: 3, date: '2026-06-18T16:00:00Z', group: 'A', home: 'Czech Republic', away: 'South Africa', venue: 'Atlanta' },
+    { num: 4, date: '2026-06-19T01:00:00Z', group: 'A', home: 'Mexico', away: 'Korea Republic', venue: 'Guadalajara' },
+    // Giornata 3
+    { num: 5, date: '2026-06-25T01:00:00Z', group: 'A', home: 'South Africa', away: 'Korea Republic', venue: 'Monterrey' },
+    { num: 6, date: '2026-06-25T01:00:00Z', group: 'A', home: 'Czech Republic', away: 'Mexico', venue: 'Mexico City' },
     // Group B
     { num: 7, date: '2026-06-12T18:00:00Z', group: 'B', home: 'Canada', away: 'Bosnia Erzigovna', venue: 'Kansas City' },
     { num: 8, date: '2026-06-12T21:00:00Z', group: 'B', home: 'Qatar', away: 'Switzerland', venue: 'Toronto' },
