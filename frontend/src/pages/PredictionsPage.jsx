@@ -59,6 +59,8 @@ const PredictionsPage = () => {
         
         // Group matches by group
         const groupedMatches = {};
+        const initialPredictions = {};
+        
         response.data.data.forEach(match => {
           if (!groupedMatches[match.group]) {
             groupedMatches[match.group] = [];
@@ -74,9 +76,17 @@ const PredictionsPage = () => {
             venue: match.venue,
             city: match.city,
           });
+          
+          // Initialize predictions with default values: 0-0 and sign X
+          initialPredictions[match._id] = {
+            homeScore: '0',
+            awayScore: '0',
+            sign: MATCH_SIGNS.DRAW, // X
+          };
         });
         
         setMatches(groupedMatches);
+        setGroupPredictions(initialPredictions);
       } catch (err) {
         console.error('Error loading matches:', err);
         setError('Errore nel caricamento delle partite');
@@ -153,49 +163,49 @@ const PredictionsPage = () => {
                     <Card variant="outlined">
                       <CardContent>
                         <Grid container spacing={2} alignItems="center">
-                          <Grid item xs={12} sm={3}>
+                          <Grid item xs={12} md={4}>
                             <Typography variant="body2" color="text.secondary">
                               {new Date(match.date).toLocaleDateString('it-IT')}
                             </Typography>
-                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 0.5 }}>
                               {match.home} vs {match.away}
                             </Typography>
                             <Typography variant="caption" color="text.secondary">
                               {match.venue}, {match.city}
                             </Typography>
                           </Grid>
-                      
-                          <Grid item xs={6} sm={2}>
+                          
+                          <Grid item xs={4} md={2}>
                             <TextField
                               label="Casa"
                               type="number"
                               size="small"
                               fullWidth
                               disabled={isLocked}
-                              value={groupPredictions[match.id]?.homeScore || ''}
+                              value={groupPredictions[match.id]?.homeScore || '0'}
                               onChange={(e) => handleGroupPredictionChange(match.id, 'homeScore', e.target.value)}
                               inputProps={{ min: 0, max: 20 }}
                             />
                           </Grid>
                           
-                          <Grid item xs={6} sm={2}>
+                          <Grid item xs={4} md={2}>
                             <TextField
                               label="Trasferta"
                               type="number"
                               size="small"
                               fullWidth
                               disabled={isLocked}
-                              value={groupPredictions[match.id]?.awayScore || ''}
+                              value={groupPredictions[match.id]?.awayScore || '0'}
                               onChange={(e) => handleGroupPredictionChange(match.id, 'awayScore', e.target.value)}
                               inputProps={{ min: 0, max: 20 }}
                             />
                           </Grid>
                           
-                          <Grid item xs={12} sm={3}>
+                          <Grid item xs={4} md={4}>
                             <FormControl fullWidth size="small" disabled={isLocked}>
                               <InputLabel>Segno</InputLabel>
                               <Select
-                                value={groupPredictions[match.id]?.sign || ''}
+                                value={groupPredictions[match.id]?.sign || MATCH_SIGNS.DRAW}
                                 onChange={(e) => handleGroupPredictionChange(match.id, 'sign', e.target.value)}
                                 label="Segno"
                               >
@@ -204,16 +214,6 @@ const PredictionsPage = () => {
                                 <MenuItem value={MATCH_SIGNS.AWAY}>2 (Trasferta)</MenuItem>
                               </Select>
                             </FormControl>
-                          </Grid>
-                          
-                          <Grid item xs={12} sm={2}>
-                            {groupPredictions[match.id]?.homeScore && groupPredictions[match.id]?.awayScore && (
-                              <Chip
-                                label={`${groupPredictions[match.id].homeScore}-${groupPredictions[match.id].awayScore}`}
-                                color="primary"
-                                size="small"
-                              />
-                            )}
                           </Grid>
                         </Grid>
                       </CardContent>
