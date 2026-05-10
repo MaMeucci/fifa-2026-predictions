@@ -35,6 +35,7 @@ const venues = {
   'Atlanta': { name: 'Mercedes-Benz Stadium', city: 'Atlanta', country: 'USA' },
   'Seattle': { name: 'Lumen Field', city: 'Seattle', country: 'USA' },
   'San Francisco': { name: 'Levi\'s Stadium', city: 'San Francisco Bay Area', country: 'USA' },
+  'Santa Clara': { name: 'Levi\'s Stadium', city: 'San Francisco Bay Area', country: 'USA' }, // Alias for San Francisco
   'Boston': { name: 'Gillette Stadium', city: 'Boston', country: 'USA' },
   'New York': { name: 'MetLife Stadium', city: 'New York/New Jersey', country: 'USA' }
 };
