@@ -128,7 +128,7 @@ function generateGroupMatches() {
     { num: 53, date: '2026-06-26T19:00:00Z', group: 'I', home: 'Norway', away: 'France', venue: 'Boston' },
     { num: 54, date: '2026-06-26T19:00:00Z', group: 'I', home: 'Senegal', away: 'Iraq', venue: 'Toronto' },
     // Group J - Corrected
-    { num: 55, date: '2026-06-16T04:00:00Z', group: 'J', home: 'Austria', away: 'Jordan', venue: 'San Francisco' },
+    { num: 55, date: '2026-06-17T04:00:00Z', group: 'J', home: 'Austria', away: 'Jordan', venue: 'San Francisco' },
     { num: 56, date: '2026-06-17T01:00:00Z', group: 'J', home: 'Argentina', away: 'Algeria', venue: 'Kansas City' },
     { num: 57, date: '2026-06-22T17:00:00Z', group: 'J', home: 'Argentina', away: 'Austria', venue: 'Dallas' },
     { num: 58, date: '2026-06-23T03:00:00Z', group: 'J', home: 'Jordan', away: 'Algeria', venue: 'San Francisco' },
