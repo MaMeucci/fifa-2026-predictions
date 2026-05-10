@@ -185,7 +185,7 @@ function generateGroupMatches() {
 // Official FIFA 2026 Match Schedule - KNOCKOUT STAGE (32 matches)
 function generateKnockoutMatches() {
   const knockoutSchedule = [
-    // ROUND OF 16 (16 matches)
+    // SEDICESIMI DI FINALE / ROUND OF 16 (16 matches)
     { num: 73, date: '2026-06-28T21:00:00Z', phase: 'ROUND_16', home: '2A', away: '2B', venue: 'Los Angeles' },
     { num: 74, date: '2026-06-29T19:00:00Z', phase: 'ROUND_16', home: '1C', away: '2F', venue: 'Houston' },
     { num: 75, date: '2026-06-29T22:30:00Z', phase: 'ROUND_16', home: '1E', away: '3ABCDF', venue: 'Boston' },
@@ -203,28 +203,31 @@ function generateKnockoutMatches() {
     { num: 87, date: '2026-07-05T00:00:00Z', phase: 'ROUND_16', home: '1D', away: '3ABCDE', venue: 'Philadelphia' },
     { num: 88, date: '2026-07-05T03:00:00Z', phase: 'ROUND_16', home: '1H', away: '3FGHIJ', venue: 'Santa Clara' },
     
-    // QUARTER FINALS (8 matches)
-    { num: 89, date: '2026-07-04T19:00:00Z', phase: 'QUARTER', home: 'W73', away: 'W75', venue: 'Houston' },
-    { num: 90, date: '2026-07-04T23:00:00Z', phase: 'QUARTER', home: 'W74', away: 'W77', venue: 'Philadelphia' },
-    { num: 91, date: '2026-07-05T22:00:00Z', phase: 'QUARTER', home: 'W76', away: 'W78', venue: 'New York' },
-    { num: 92, date: '2026-07-06T02:00:00Z', phase: 'QUARTER', home: 'W79', away: 'W80', venue: 'Mexico City' },
-    { num: 93, date: '2026-07-06T21:00:00Z', phase: 'QUARTER', home: 'W83', away: 'W84', venue: 'Dallas' },
-    { num: 94, date: '2026-07-07T02:00:00Z', phase: 'QUARTER', home: 'W81', away: 'W82', venue: 'Seattle' },
-    { num: 95, date: '2026-07-07T22:00:00Z', phase: 'QUARTER', home: 'W85', away: 'W87', venue: 'Vancouver' },
-    { num: 96, date: '2026-07-09T22:00:00Z', phase: 'QUARTER', home: 'W89', away: 'W90', venue: 'Boston' },
+    // OTTAVI DI FINALE / ROUND OF 8 (8 matches)
+    { num: 89, date: '2026-07-04T19:00:00Z', phase: 'ROUND_8', home: 'W73', away: 'W75', venue: 'Houston' },
+    { num: 90, date: '2026-07-04T23:00:00Z', phase: 'ROUND_8', home: 'W74', away: 'W77', venue: 'Philadelphia' },
+    { num: 91, date: '2026-07-05T22:00:00Z', phase: 'ROUND_8', home: 'W76', away: 'W78', venue: 'New York' },
+    { num: 92, date: '2026-07-06T02:00:00Z', phase: 'ROUND_8', home: 'W79', away: 'W80', venue: 'Mexico City' },
+    { num: 93, date: '2026-07-06T21:00:00Z', phase: 'ROUND_8', home: 'W83', away: 'W84', venue: 'Dallas' },
+    { num: 94, date: '2026-07-07T02:00:00Z', phase: 'ROUND_8', home: 'W81', away: 'W82', venue: 'Seattle' },
+    { num: 95, date: '2026-07-07T22:00:00Z', phase: 'ROUND_8', home: 'W85', away: 'W87', venue: 'Vancouver' },
+    { num: 96, date: '2026-07-09T22:00:00Z', phase: 'ROUND_8', home: 'W86', away: 'W88', venue: 'Boston' },
     
-    // SEMI FINALS (4 matches)
-    { num: 97, date: '2026-07-10T21:00:00Z', phase: 'SEMI', home: 'W93', away: 'W94', venue: 'Los Angeles' },
-    { num: 98, date: '2026-07-11T23:00:00Z', phase: 'SEMI', home: 'W91', away: 'W92', venue: 'Miami' },
-    { num: 99, date: '2026-07-12T03:00:00Z', phase: 'SEMI', home: 'W95', away: 'W96', venue: 'Kansas City' },
-    { num: 100, date: '2026-07-14T21:00:00Z', phase: 'SEMI', home: 'W97', away: 'W98', venue: 'Dallas' },
-    { num: 101, date: '2026-07-15T21:00:00Z', phase: 'SEMI', home: 'W99', away: 'W100', venue: 'Atlanta' },
+    // QUARTI DI FINALE / QUARTER FINALS (4 matches)
+    { num: 97, date: '2026-07-10T21:00:00Z', phase: 'QUARTER', home: 'W89', away: 'W90', venue: 'Los Angeles' },
+    { num: 98, date: '2026-07-11T23:00:00Z', phase: 'QUARTER', home: 'W91', away: 'W92', venue: 'Miami' },
+    { num: 99, date: '2026-07-12T03:00:00Z', phase: 'QUARTER', home: 'W93', away: 'W94', venue: 'Kansas City' },
+    { num: 100, date: '2026-07-14T21:00:00Z', phase: 'QUARTER', home: 'W95', away: 'W96', venue: 'Dallas' },
+    
+    // SEMIFINALI / SEMI FINALS (2 matches)
+    { num: 101, date: '2026-07-15T21:00:00Z', phase: 'SEMI', home: 'W97', away: 'W98', venue: 'Atlanta' },
+    { num: 102, date: '2026-07-16T21:00:00Z', phase: 'SEMI', home: 'W99', away: 'W100', venue: 'Philadelphia' },
     
     // THIRD PLACE
-    { num: 102, date: '2026-07-18T23:00:00Z', phase: 'THIRD_PLACE', home: 'RU101', away: 'RU102', venue: 'Miami' },
+    { num: 103, date: '2026-07-18T23:00:00Z', phase: 'THIRD_PLACE', home: 'L101', away: 'L102', venue: 'Miami' },
     
     // FINAL
-    { num: 103, date: '2026-07-19T21:00:00Z', phase: 'FINAL', home: 'W101', away: 'W102', venue: 'New York' }
+    { num: 104, date: '2026-07-19T21:00:00Z', phase: 'FINAL', home: 'W101', away: 'W102', venue: 'New York' }
   ];
 
   return knockoutSchedule.map(m => {
@@ -320,12 +323,18 @@ async function seedDatabase() {
     console.log(`✅ Created ${allMatches.length} matches with OFFICIAL FIFA schedule`);
     console.log(`   - Group stage: ${groupMatches.length} matches (June 11-28)`);
     console.log(`   - Knockout stage: ${knockoutMatches.length} matches (June 28 - July 19)`);
+    console.log(`     • Sedicesimi (Round of 16): 16 matches`);
+    console.log(`     • Ottavi (Round of 8): 8 matches`);
+    console.log(`     • Quarti (Quarter Finals): 4 matches`);
+    console.log(`     • Semifinali (Semi Finals): 2 matches`);
+    console.log(`     • Third Place: 1 match`);
+    console.log(`     • Final: 1 match`);
 
     console.log('\n🎉 Database seeding completed successfully!');
     console.log('\n📊 FIFA World Cup 2026 - Official Schedule:');
     console.log(`   - Opening Match: June 11, 2026 - Mexico vs South Africa (Estadio Azteca)`);
     console.log(`   - Final: July 19, 2026 - MetLife Stadium (New York/New Jersey)`);
-    console.log(`   - Total matches: ${allMatches.length}`);
+    console.log(`   - Total matches: ${allMatches.length} (72 group + 32 knockout)`);
     console.log(`   - Groups: ${Object.keys(groups).length} (A-L)`);
     console.log(`   - Teams: 48 nations`);
     console.log(`   - Venues: ${Object.keys(venues).length} stadiums`);

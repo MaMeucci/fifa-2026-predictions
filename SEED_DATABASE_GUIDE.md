@@ -1,7 +1,7 @@
 # 🌱 Guida Seed Database - FIFA 2026 Predictions
 
 ## Panoramica
-Questa guida spiega come popolare il database MongoDB Atlas con il calendario ufficiale FIFA 2026 (103 partite) utilizzando Render Shell.
+Questa guida spiega come popolare il database MongoDB Atlas con il calendario ufficiale FIFA 2026 (104 partite) utilizzando Render Shell.
 
 ## ✅ Prerequisiti
 - Backend deployato su Render.com
@@ -33,16 +33,22 @@ Dovresti vedere un output simile a:
 ✅ Connected to MongoDB
 ✅ Cleared existing data
 ✅ Settings created
-✅ Created 103 matches with OFFICIAL FIFA schedule
+✅ Created 104 matches with OFFICIAL FIFA schedule
    - Group stage: 72 matches (June 11-28)
-   - Knockout stage: 31 matches (June 28 - July 19)
+   - Knockout stage: 32 matches (June 28 - July 19)
+     • Sedicesimi (Round of 16): 16 matches
+     • Ottavi (Round of 8): 8 matches
+     • Quarti (Quarter Finals): 4 matches
+     • Semifinali (Semi Finals): 2 matches
+     • Third Place: 1 match
+     • Final: 1 match
 
 🎉 Database seeding completed successfully!
 
 📊 FIFA World Cup 2026 - Official Schedule:
    - Opening Match: June 11, 2026 - Mexico vs South Africa (Estadio Azteca)
    - Final: July 19, 2026 - MetLife Stadium (New York/New Jersey)
-   - Total matches: 103
+   - Total matches: 104 (72 group + 32 knockout)
    - Groups: 12 (A-L)
    - Teams: 48 nations
    - Venues: 16 stadiums
@@ -61,7 +67,7 @@ Dovresti vedere un output simile a:
 2. Vai al tuo cluster
 3. Clicca su **Browse Collections**
 4. Verifica le collections:
-   - `matches`: dovrebbe contenere 103 documenti
+   - `matches`: dovrebbe contenere 104 documenti
    - `settings`: dovrebbe contenere 1 documento
 
 ### Opzione 2: API Endpoint
@@ -71,7 +77,7 @@ Testa l'endpoint delle partite:
 curl https://fifa-2026-backend.onrender.com/api/matches
 ```
 
-Dovresti ricevere un array con 103 partite.
+Dovresti ricevere un array con 104 partite.
 
 ### Opzione 3: Frontend
 1. Vai su [https://mameucci.github.io/fifa-2026-predictions](https://mameucci.github.io/fifa-2026-predictions)
@@ -81,18 +87,19 @@ Dovresti ricevere un array con 103 partite.
 
 ## 📊 Struttura Dati Creati
 
-### Matches (103 documenti)
+### Matches (104 documenti)
 - **72 partite fase a gironi** (11-28 giugno 2026)
   - 12 gruppi (A-L)
   - 6 partite per gruppo
   - Date, orari e stadi ufficiali FIFA
 
-- **31 partite fase finale** (28 giugno - 19 luglio 2026)
-  - 16 ottavi di finale
-  - 8 quarti di finale
-  - 4 semifinali
-  - 1 finale 3° posto
-  - 1 finale
+- **32 partite fase finale** (28 giugno - 19 luglio 2026)
+  - 16 sedicesimi di finale (Round of 16)
+  - 8 ottavi di finale (Round of 8)
+  - 4 quarti di finale (Quarter Finals)
+  - 2 semifinali (Semi Finals)
+  - 1 finale 3° posto (Third Place)
+  - 1 finale (Final)
 
 ### Settings (1 documento)
 - Configurazione torneo
@@ -144,6 +151,6 @@ Per problemi o domande:
 
 ---
 
-**Ultimo aggiornamento**: 10 Maggio 2026  
-**Versione script**: 2.0 (Calendario ufficiale FIFA 2026)  
-**Commit**: 92efd14
+**Ultimo aggiornamento**: 10 Maggio 2026
+**Versione script**: 2.1 (Calendario ufficiale FIFA 2026 - 104 partite)
+**Commit**: [in corso]
