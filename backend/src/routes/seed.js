@@ -3,9 +3,8 @@ const router = express.Router();
 const Match = require('../models/Match');
 const Settings = require('../models/Settings');
 
-// Import seed script
-const path = require('path');
-const seedScriptPath = path.join(__dirname, '../../scripts/seedDatabase.js');
+// Import seed data generator
+const { generateGroupMatches, generateKnockoutMatches, createSettingsData } = require('../../scripts/seedDataGenerator');
 
 // Seed endpoint - protected by secret key
 router.post('/database', async (req, res) => {
@@ -27,43 +26,31 @@ router.post('/database', async (req, res) => {
     await Settings.deleteMany({});
     console.log('✅ Cleared existing data');
 
-    // Load and execute seed script functions
-    delete require.cache[require.resolve(seedScriptPath)];
-    const seedModule = require(seedScriptPath);
-    
-    // Since the seed script doesn't export functions, we'll recreate them inline
-    // This is a simplified version that calls the MongoDB operations directly
-    
-    // Execute the seed by spawning the script
-    const { exec } = require('child_process');
-    const util = require('util');
-    const execPromise = util.promisify(exec);
-    
-    try {
-      const { stdout, stderr } = await execPromise('node scripts/seedDatabase.js', {
-        cwd: path.join(__dirname, '../..'),
-        env: { ...process.env }
-      });
-      
-      console.log('Seed output:', stdout);
-      if (stderr) console.error('Seed errors:', stderr);
-      
-      // Count documents
-      const matchCount = await Match.countDocuments();
-      const settingsCount = await Settings.countDocuments();
-      
-      res.status(200).json({
-        success: true,
-        message: 'Database seeded successfully via script execution',
-        data: {
-          matches: matchCount,
-          settings: settingsCount,
-          output: stdout
-        }
-      });
-    } catch (execError) {
-      throw new Error(`Seed script execution failed: ${execError.message}`);
-    }
+    // Generate matches
+    const groupMatches = generateGroupMatches();
+    const knockoutMatches = generateKnockoutMatches();
+    const allMatches = [...groupMatches, ...knockoutMatches];
+
+    // Insert matches
+    await Match.insertMany(allMatches);
+    console.log(`✅ Created ${allMatches.length} matches`);
+
+    // Create settings
+    const settingsData = createSettingsData();
+    const settings = new Settings(settingsData);
+    await settings.save();
+    console.log('✅ Settings created');
+
+    res.status(200).json({
+      success: true,
+      message: 'Database seeded successfully',
+      data: {
+        matches: allMatches.length,
+        groupMatches: groupMatches.length,
+        knockoutMatches: knockoutMatches.length,
+        settings: 1
+      }
+    });
 
   } catch (error) {
     console.error('❌ Seed error:', error);
