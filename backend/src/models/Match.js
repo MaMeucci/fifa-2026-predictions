@@ -12,7 +12,7 @@ const matchSchema = new mongoose.Schema({
   phase: {
     type: String,
     required: true,
-    enum: ['GROUP', 'ROUND_16', 'QUARTER', 'SEMI', 'THIRD_PLACE', 'FINAL'],
+    enum: ['GROUP', 'ROUND_16', 'ROUND_8', 'QUARTER', 'SEMI', 'THIRD_PLACE', 'FINAL'],
   },
   
   // Group information (for group stage matches)
