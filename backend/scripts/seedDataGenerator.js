@@ -1,6 +1,6 @@
 // FIFA World Cup 2026 Groups (Official Draw)
 const groups = {
-  A: ['Messico', 'Sudafrica', 'Corea del Sud', 'Cechia'],
+  A: ['Messico', 'Sudafrica', 'Corea del Sud', 'Repubblica Ceca'],
   B: ['Canada', 'Bosnia Erzegovina', 'Qatar', 'Svizzera'],
   C: ['Brasile', 'Marocco', 'Haiti', 'Scozia'],
   D: ['USA', 'Paraguay', 'Australia', 'Turchia'],
@@ -22,7 +22,7 @@ const capiscioneGroups = {
 
 function getTeamCode(teamName) {
   const codes = {
-    'Messico': 'MEX', 'Sudafrica': 'RSA', 'Corea del Sud': 'KOR', 'Cechia': 'CZE',
+    'Messico': 'MEX', 'Sudafrica': 'RSA', 'Corea del Sud': 'KOR', 'Repubblica Ceca': 'CZE',
     'Canada': 'CAN', 'Bosnia Erzegovina': 'BIH', 'Qatar': 'QAT', 'Svizzera': 'SUI',
     'Brasile': 'BRA', 'Marocco': 'MAR', 'Haiti': 'HAI', 'Scozia': 'SCO',
     'USA': 'USA', 'Paraguay': 'PAR', 'Australia': 'AUS', 'Turchia': 'TUR',
@@ -44,7 +44,7 @@ function generateGroupMatches() {
     // 11 Giugno
     { num: 1, date: '2026-06-11T19:00:00Z', group: 'A', home: 'Messico', away: 'Sudafrica' },
     // 12 Giugno
-    { num: 2, date: '2026-06-12T02:00:00Z', group: 'A', home: 'Corea del Sud', away: 'Cechia' },
+    { num: 2, date: '2026-06-12T02:00:00Z', group: 'A', home: 'Corea del Sud', away: 'Repubblica Ceca' },
     { num: 7, date: '2026-06-12T19:00:00Z', group: 'B', home: 'Canada', away: 'Bosnia Erzegovina' },
     // 13 Giugno
     { num: 19, date: '2026-06-13T01:00:00Z', group: 'D', home: 'USA', away: 'Paraguay' },
@@ -64,7 +64,7 @@ function generateGroupMatches() {
     { num: 38, date: '2026-06-16T01:00:00Z', group: 'G', home: 'Iran', away: 'Nuova Zelanda' },
     { num: 49, date: '2026-06-16T19:00:00Z', group: 'I', home: 'Francia', away: 'Senegal' },
     { num: 50, date: '2026-06-16T22:00:00Z', group: 'I', home: 'Iraq', away: 'Norvegia' },
-    { num: 44, date: '2026-06-17T00:00:00Z', group: 'H', home: 'Arabia Saudita', away: 'Uruguay' },
+    { num: 44, date: '2026-06-16T22:00:00Z', group: 'H', home: 'Arabia Saudita', away: 'Uruguay' },
     // 17 Giugno
     { num: 56, date: '2026-06-17T01:00:00Z', group: 'J', home: 'Argentina', away: 'Algeria' },
     { num: 55, date: '2026-06-17T04:00:00Z', group: 'J', home: 'Austria', away: 'Giordania' },
@@ -73,7 +73,7 @@ function generateGroupMatches() {
     { num: 68, date: '2026-06-17T23:00:00Z', group: 'L', home: 'Ghana', away: 'Panama' },
     // 18 Giugno
     { num: 62, date: '2026-06-18T02:00:00Z', group: 'K', home: 'Uzbekistan', away: 'Colombia' },
-    { num: 3, date: '2026-06-18T16:00:00Z', group: 'A', home: 'Cechia', away: 'Sudafrica' },
+    { num: 3, date: '2026-06-18T16:00:00Z', group: 'A', home: 'Repubblica Ceca', away: 'Sudafrica' },
     { num: 9, date: '2026-06-18T19:00:00Z', group: 'B', home: 'Svizzera', away: 'Bosnia Erzegovina' },
     { num: 10, date: '2026-06-19T00:00:00Z', group: 'B', home: 'Canada', away: 'Qatar' },
     // 19 Giugno
@@ -106,13 +106,13 @@ function generateGroupMatches() {
     { num: 11, date: '2026-06-24T19:00:00Z', group: 'B', home: 'Svizzera', away: 'Canada' },
     { num: 12, date: '2026-06-24T19:00:00Z', group: 'B', home: 'Bosnia Erzegovina', away: 'Qatar' },
     // 25 Giugno
-    { num: 6, date: '2026-06-25T01:00:00Z', group: 'A', home: 'Cechia', away: 'Messico' },
+    { num: 6, date: '2026-06-25T01:00:00Z', group: 'A', home: 'Repubblica Ceca', away: 'Messico' },
     { num: 5, date: '2026-06-25T01:00:00Z', group: 'A', home: 'Sudafrica', away: 'Corea del Sud' },
     { num: 29, date: '2026-06-25T20:00:00Z', group: 'E', home: 'Curaçao', away: 'Costa d\'Avorio' },
     { num: 30, date: '2026-06-25T20:00:00Z', group: 'E', home: 'Ecuador', away: 'Germania' },
+    { num: 17, date: '2026-06-25T22:00:00Z', group: 'C', home: 'Marocco', away: 'Haiti' },
+    { num: 18, date: '2026-06-25T22:00:00Z', group: 'C', home: 'Scozia', away: 'Brasile' },
     // 26 Giugno
-    { num: 17, date: '2026-06-26T00:00:00Z', group: 'C', home: 'Marocco', away: 'Haiti' },
-    { num: 18, date: '2026-06-26T00:00:00Z', group: 'C', home: 'Scozia', away: 'Brasile' },
     { num: 36, date: '2026-06-26T01:00:00Z', group: 'F', home: 'Giappone', away: 'Svezia' },
     { num: 35, date: '2026-06-26T01:00:00Z', group: 'F', home: 'Tunisia', away: 'Paesi Bassi' },
     { num: 23, date: '2026-06-26T02:00:00Z', group: 'D', home: 'Turchia', away: 'USA' },
