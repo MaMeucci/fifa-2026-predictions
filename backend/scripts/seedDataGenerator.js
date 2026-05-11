@@ -75,7 +75,7 @@ function generateGroupMatches() {
     { num: 7, date: '2026-06-12T19:00:00Z', group: 'B', home: 'Canada', away: 'Bosnia Erzigovna', venue: 'Toronto' },
     { num: 8, date: '2026-06-13T19:00:00Z', group: 'B', home: 'Switzerland', away: 'Qatar', venue: 'San Francisco' },
     { num: 9, date: '2026-06-18T19:00:00Z', group: 'B', home: 'Switzerland', away: 'Bosnia Erzigovna', venue: 'Los Angeles' },
-    { num: 10, date: '2026-06-20T22:00:00Z', group: 'B', home: 'Canada', away: 'Qatar', venue: 'Vancouver' },
+    { num: 10, date: '2026-06-19T22:00:00Z', group: 'B', home: 'Canada', away: 'Qatar', venue: 'Vancouver' },
     { num: 11, date: '2026-06-24T19:00:00Z', group: 'B', home: 'Switzerland', away: 'Canada', venue: 'Vancouver' },
     { num: 12, date: '2026-06-24T19:00:00Z', group: 'B', home: 'Bosnia Erzigovna', away: 'Qatar', venue: 'Seattle' },
     // Group C - Corrected
