@@ -50,21 +50,21 @@ function generateGroupMatches() {
     { num: 19, date: '2026-06-13T01:00:00Z', group: 'D', home: 'USA', away: 'Paraguay' },
     { num: 8, date: '2026-06-13T19:00:00Z', group: 'B', home: 'Svizzera', away: 'Qatar' },
     // 14 Giugno
+    { num: 13, date: '2026-06-14T01:00:00Z', group: 'C', home: 'Brasile', away: 'Marocco' },
     { num: 14, date: '2026-06-14T01:00:00Z', group: 'C', home: 'Haiti', away: 'Scozia' },
     { num: 20, date: '2026-06-14T04:00:00Z', group: 'D', home: 'Australia', away: 'Turchia' },
     { num: 25, date: '2026-06-14T17:00:00Z', group: 'E', home: 'Germania', away: 'Curaçao' },
     { num: 31, date: '2026-06-14T20:00:00Z', group: 'F', home: 'Paesi Bassi', away: 'Giappone' },
-    { num: 13, date: '2026-06-14T20:00:00Z', group: 'C', home: 'Brasile', away: 'Marocco' },
     // 15 Giugno
     { num: 26, date: '2026-06-15T01:00:00Z', group: 'E', home: 'Costa d\'Avorio', away: 'Ecuador' },
     { num: 32, date: '2026-06-15T02:00:00Z', group: 'F', home: 'Svezia', away: 'Tunisia' },
     { num: 43, date: '2026-06-15T16:00:00Z', group: 'H', home: 'Spagna', away: 'Capo Verde' },
     { num: 37, date: '2026-06-15T19:00:00Z', group: 'G', home: 'Belgio', away: 'Egitto' },
+    { num: 44, date: '2026-06-15T22:00:00Z', group: 'H', home: 'Arabia Saudita', away: 'Uruguay' },
     // 16 Giugno
     { num: 38, date: '2026-06-16T01:00:00Z', group: 'G', home: 'Iran', away: 'Nuova Zelanda' },
     { num: 49, date: '2026-06-16T19:00:00Z', group: 'I', home: 'Francia', away: 'Senegal' },
     { num: 50, date: '2026-06-16T22:00:00Z', group: 'I', home: 'Iraq', away: 'Norvegia' },
-    { num: 44, date: '2026-06-15T22:00:00Z', group: 'H', home: 'Arabia Saudita', away: 'Uruguay' },
     // 17 Giugno
     { num: 56, date: '2026-06-17T01:00:00Z', group: 'J', home: 'Argentina', away: 'Algeria' },
     { num: 55, date: '2026-06-17T04:00:00Z', group: 'J', home: 'Austria', away: 'Giordania' },
