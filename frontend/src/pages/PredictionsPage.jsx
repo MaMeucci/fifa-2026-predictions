@@ -159,9 +159,6 @@ const PredictionsPage = () => {
                         {new Date(match.date).toLocaleDateString('it-IT', {
                           day: '2-digit',
                           month: 'short'
-                        })} - {new Date(match.date).toLocaleTimeString('it-IT', {
-                          hour: '2-digit',
-                          minute: '2-digit'
                         })}
                       </Typography>
                       <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 0.5 }}>
