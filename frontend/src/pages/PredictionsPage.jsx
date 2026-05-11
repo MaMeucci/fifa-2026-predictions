@@ -57,15 +57,9 @@ const PredictionsPage = () => {
         setLoading(true);
         const response = await api.get('/matches?phase=GROUP');
         
-        // Group matches by group
-        const groupedMatches = {};
-        const initialPredictions = {};
-        
-        response.data.data.forEach(match => {
-          if (!groupedMatches[match.group]) {
-            groupedMatches[match.group] = [];
-          }
-          groupedMatches[match.group].push({
+        // Sort matches by date (chronological order)
+        const sortedMatches = response.data.data
+          .map(match => ({
             id: match._id,
             matchNumber: match.matchNumber,
             home: match.homeTeam.name,
@@ -73,19 +67,21 @@ const PredictionsPage = () => {
             away: match.awayTeam.name,
             awayCode: match.awayTeam.code,
             date: match.date,
-            venue: match.venue,
-            city: match.city,
-          });
-          
+            group: match.group,
+          }))
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        const initialPredictions = {};
+        sortedMatches.forEach(match => {
           // Initialize predictions with default values: 0-0 and sign X
-          initialPredictions[match._id] = {
+          initialPredictions[match.id] = {
             homeScore: '0',
             awayScore: '0',
             sign: MATCH_SIGNS.DRAW, // X
           };
         });
         
-        setMatches(groupedMatches);
+        setMatches(sortedMatches);
         setGroupPredictions(initialPredictions);
       } catch (err) {
         console.error('Error loading matches:', err);
@@ -142,88 +138,89 @@ const PredictionsPage = () => {
       );
     }
 
+    if (!matches || matches.length === 0) {
+      return <Alert severity="info">Nessuna partita disponibile</Alert>;
+    }
+
     return (
       <Box>
         <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-          Pronostici Fase a Gironi
+          Pronostici Fase a Gironi - Ordine Cronologico
         </Typography>
         
-        {GROUPS.map(group => (
-          <Paper key={group} elevation={2} sx={{ p: 3, mb: 3 }}>
-            <Typography variant="h6" gutterBottom sx={{ color: 'primary.main', fontWeight: 'bold' }}>
-              Gruppo {group}
-            </Typography>
-            
-            {!matches[group] || matches[group].length === 0 ? (
-              <Alert severity="info">Nessuna partita disponibile per questo gruppo</Alert>
-            ) : (
-              <Grid container spacing={2}>
-                {matches[group].map(match => (
-                  <Grid item xs={12} key={match.id}>
-                    <Card variant="outlined">
-                      <CardContent>
-                        <Grid container spacing={2} alignItems="center">
-                          <Grid item xs={12} md={4}>
-                            <Typography variant="body2" color="text.secondary">
-                              {new Date(match.date).toLocaleDateString('it-IT')}
-                            </Typography>
-                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-                              {match.home} vs {match.away}
-                            </Typography>
-                            <Typography variant="caption" color="text.secondary">
-                              {match.venue}, {match.city}
-                            </Typography>
-                          </Grid>
-                          
-                          <Grid item xs={4} md={2}>
-                            <TextField
-                              label="Casa"
-                              type="number"
-                              size="small"
-                              fullWidth
-                              disabled={isLocked}
-                              value={groupPredictions[match.id]?.homeScore || '0'}
-                              onChange={(e) => handleGroupPredictionChange(match.id, 'homeScore', e.target.value)}
-                              inputProps={{ min: 0, max: 20 }}
-                            />
-                          </Grid>
-                          
-                          <Grid item xs={4} md={2}>
-                            <TextField
-                              label="Trasferta"
-                              type="number"
-                              size="small"
-                              fullWidth
-                              disabled={isLocked}
-                              value={groupPredictions[match.id]?.awayScore || '0'}
-                              onChange={(e) => handleGroupPredictionChange(match.id, 'awayScore', e.target.value)}
-                              inputProps={{ min: 0, max: 20 }}
-                            />
-                          </Grid>
-                          
-                          <Grid item xs={4} md={4}>
-                            <FormControl fullWidth size="small" disabled={isLocked}>
-                              <InputLabel>Segno</InputLabel>
-                              <Select
-                                value={groupPredictions[match.id]?.sign || MATCH_SIGNS.DRAW}
-                                onChange={(e) => handleGroupPredictionChange(match.id, 'sign', e.target.value)}
-                                label="Segno"
-                              >
-                                <MenuItem value={MATCH_SIGNS.HOME}>1 (Casa)</MenuItem>
-                                <MenuItem value={MATCH_SIGNS.DRAW}>X (Pareggio)</MenuItem>
-                                <MenuItem value={MATCH_SIGNS.AWAY}>2 (Trasferta)</MenuItem>
-                              </Select>
-                            </FormControl>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card>
+        <Grid container spacing={2}>
+          {matches.map(match => (
+            <Grid item xs={12} key={match.id}>
+              <Card variant="outlined">
+                <CardContent>
+                  <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={12} md={4}>
+                      <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                        {new Date(match.date).toLocaleDateString('it-IT', {
+                          day: '2-digit',
+                          month: 'short'
+                        })} - {new Date(match.date).toLocaleTimeString('it-IT', {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </Typography>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+                        {match.home} - {match.away}
+                      </Typography>
+                      <Chip
+                        label={`Gruppo ${match.group}`}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                      />
+                    </Grid>
+                    
+                    <Grid item xs={4} md={2}>
+                      <TextField
+                        label="Casa"
+                        type="number"
+                        size="small"
+                        fullWidth
+                        disabled={isLocked}
+                        value={groupPredictions[match.id]?.homeScore || '0'}
+                        onChange={(e) => handleGroupPredictionChange(match.id, 'homeScore', e.target.value)}
+                        inputProps={{ min: 0, max: 20 }}
+                      />
+                    </Grid>
+                    
+                    <Grid item xs={4} md={2}>
+                      <TextField
+                        label="Trasferta"
+                        type="number"
+                        size="small"
+                        fullWidth
+                        disabled={isLocked}
+                        value={groupPredictions[match.id]?.awayScore || '0'}
+                        onChange={(e) => handleGroupPredictionChange(match.id, 'awayScore', e.target.value)}
+                        inputProps={{ min: 0, max: 20 }}
+                      />
+                    </Grid>
+                    
+                    <Grid item xs={4} md={4}>
+                      <FormControl fullWidth size="small" disabled={isLocked}>
+                        <InputLabel>Segno</InputLabel>
+                        <Select
+                          value={groupPredictions[match.id]?.sign || MATCH_SIGNS.DRAW}
+                          onChange={(e) => handleGroupPredictionChange(match.id, 'sign', e.target.value)}
+                          label="Segno"
+                        >
+                          <MenuItem value={MATCH_SIGNS.HOME}>1 (Casa)</MenuItem>
+                          <MenuItem value={MATCH_SIGNS.DRAW}>X (Pareggio)</MenuItem>
+                          <MenuItem value={MATCH_SIGNS.AWAY}>2 (Trasferta)</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
-                ))}
-              </Grid>
-            )}
-          </Paper>
-        ))}
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
         
         <Alert severity="info" sx={{ mt: 2 }}>
           <strong>Nota:</strong> Il segno può essere diverso dal risultato esatto.
