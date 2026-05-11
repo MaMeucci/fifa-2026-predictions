@@ -227,140 +227,228 @@ const PredictionsPage = () => {
     );
   };
 
-  const renderKnockoutStage = () => (
-    <Box>
-      <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-        Fase Finale
-      </Typography>
-      
-      <Grid container spacing={3}>
-        {/* Round of 16 */}
-        <Grid item xs={12}>
-          <Paper elevation={2} sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom sx={{ color: 'primary.main' }}>
-              Sedicesimi di Finale
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Indica le 16 squadre qualificate in ordine di posizione (incluse le 8 migliori terze)
-            </Typography>
-            <Grid container spacing={2}>
-              {[...Array(16)].map((_, index) => (
-                <Grid item xs={12} sm={6} md={3} key={index}>
+  const renderKnockoutStage = () => {
+    const round16Matches = [
+      // Parte Sinistra del Tabellone
+      { id: 'A', date: '28 Giugno', city: 'Los Angeles', desc: '2ª Gruppo A vs 2ª Gruppo B' },
+      { id: 'B', date: '29 Giugno', city: 'Boston', desc: '1ª Gruppo E vs 3ª Migliore (Gruppo A/B/C/D/F)' },
+      { id: 'C', date: '29 Giugno', city: 'Houston', desc: '1ª Gruppo C vs 2ª Gruppo F' },
+      { id: 'D', date: '30 Giugno', city: 'Dallas', desc: '2ª Gruppo A vs 2ª Gruppo I' },
+      { id: 'E', date: '30 Giugno', city: 'Monterrey', desc: '1ª Gruppo F vs 2ª Gruppo C' },
+      { id: 'F', date: '1 Luglio', city: 'Houston', desc: '1ª Gruppo A vs 3ª Migliore (C/E/F/H/I)' },
+      { id: 'G', date: '2 Luglio', city: 'Atlanta', desc: '1ª Gruppo D vs 3ª Migliore (B/C/E/F/H)' },
+      { id: 'H', date: '2 Luglio', city: 'San Francisco', desc: '1ª Gruppo H vs 2ª Gruppo G' },
+      // Parte Destra del Tabellone
+      { id: 'I', date: '28 Giugno', city: 'Vancouver', desc: '1ª Gruppo B vs 3ª Migliore (A/D/E/F/I)' },
+      { id: 'J', date: '29 Giugno', city: 'New York', desc: '1ª Gruppo I vs 3ª Migliore (C/D/G/H/J)' },
+      { id: 'K', date: '30 Giugno', city: 'Toronto', desc: '1ª Gruppo G vs 2ª Gruppo D' },
+      { id: 'L', date: '30 Giugno', city: 'New Jersey', desc: '1ª Gruppo L vs 3ª Migliore (E/H/I/J/K)' },
+      { id: 'M', date: '1 Luglio', city: 'Boston', desc: '1ª Gruppo I vs 3ª Migliore (A/B/C/D/F)' },
+      { id: 'N', date: '1 Luglio', city: 'San Francisco', desc: '1ª Gruppo D vs 2ª Gruppo H' },
+      { id: 'O', date: '2 Luglio', city: 'Dallas', desc: '1ª Gruppo E vs 2ª Gruppo A' },
+      { id: 'P', date: '3 Luglio', city: 'Seattle', desc: '1ª Gruppo H vs 3ª Migliore (A/B/C/D/F)' },
+    ];
+
+    return (
+      <Box>
+        <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
+          Fase Finale
+        </Typography>
+        
+        <Grid container spacing={3}>
+          {/* Round of 16 */}
+          <Grid item xs={12}>
+            <Paper elevation={2} sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom sx={{ color: 'primary.main' }}>
+                Sedicesimi di Finale
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                Indica le 32 squadre qualificate in ordine di posizione (incluse le 8 migliori terze)
+              </Typography>
+              
+              {/* Parte Sinistra del Tabellone */}
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2, color: 'primary.main' }}>
+                Parte Sinistra del Tabellone
+              </Typography>
+              <Grid container spacing={2} sx={{ mb: 4 }}>
+                {round16Matches.slice(0, 8).map((match) => (
+                  <Grid item xs={12} key={match.id}>
+                    <Paper elevation={1} sx={{ p: 2, bgcolor: 'grey.50' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                        Sedicesimi {match.id} ({match.date} - {match.city})
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                        {match.desc}
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            label="Squadra 1"
+                            size="small"
+                            fullWidth
+                            disabled={isLocked}
+                            placeholder="Nome squadra"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            label="Squadra 2"
+                            size="small"
+                            fullWidth
+                            disabled={isLocked}
+                            placeholder="Nome squadra"
+                          />
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Grid>
+                ))}
+              </Grid>
+
+              {/* Parte Destra del Tabellone */}
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2, color: 'primary.main' }}>
+                Parte Destra del Tabellone
+              </Typography>
+              <Grid container spacing={2}>
+                {round16Matches.slice(8, 16).map((match) => (
+                  <Grid item xs={12} key={match.id}>
+                    <Paper elevation={1} sx={{ p: 2, bgcolor: 'grey.50' }}>
+                      <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                        Sedicesimi {match.id} ({match.date} - {match.city})
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                        {match.desc}
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            label="Squadra 1"
+                            size="small"
+                            fullWidth
+                            disabled={isLocked}
+                            placeholder="Nome squadra"
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <TextField
+                            label="Squadra 2"
+                            size="small"
+                            fullWidth
+                            disabled={isLocked}
+                            placeholder="Nome squadra"
+                          />
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Grid>
+                ))}
+              </Grid>
+            </Paper>
+          </Grid>
+
+          {/* Quarter Finals */}
+          <Grid item xs={12} md={6}>
+            <Paper elevation={2} sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom sx={{ color: 'primary.main' }}>
+                Quarti di Finale
+              </Typography>
+              <Grid container spacing={2}>
+                {[...Array(8)].map((_, index) => (
+                  <Grid item xs={12} key={index}>
+                    <TextField
+                      label={`Squadra ${index + 1}`}
+                      size="small"
+                      fullWidth
+                      disabled={isLocked}
+                      placeholder="Nome squadra"
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Paper>
+          </Grid>
+
+          {/* Semi Finals */}
+          <Grid item xs={12} md={6}>
+            <Paper elevation={2} sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom sx={{ color: 'primary.main' }}>
+                Semifinali
+              </Typography>
+              <Grid container spacing={2}>
+                {[...Array(4)].map((_, index) => (
+                  <Grid item xs={12} key={index}>
+                    <TextField
+                      label={`Squadra ${index + 1}`}
+                      size="small"
+                      fullWidth
+                      disabled={isLocked}
+                      placeholder="Nome squadra"
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Paper>
+          </Grid>
+
+          {/* Final & Podium */}
+          <Grid item xs={12}>
+            <Paper elevation={2} sx={{ p: 3, bgcolor: 'warning.light' }}>
+              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <EmojiEvents /> Finale e Podio
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
                   <TextField
-                    label={`Posizione ${index + 1}`}
+                    label="🥇 Vincitore"
                     size="small"
                     fullWidth
                     disabled={isLocked}
-                    placeholder="Nome squadra"
+                    placeholder="Prima classificata"
                   />
                 </Grid>
-              ))}
-            </Grid>
-          </Paper>
-        </Grid>
-
-        {/* Quarter Finals */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={2} sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom sx={{ color: 'primary.main' }}>
-              Quarti di Finale
-            </Typography>
-            <Grid container spacing={2}>
-              {[...Array(8)].map((_, index) => (
-                <Grid item xs={12} key={index}>
+                <Grid item xs={12} sm={6}>
                   <TextField
-                    label={`Squadra ${index + 1}`}
+                    label="🥈 Seconda Classificata"
                     size="small"
                     fullWidth
                     disabled={isLocked}
-                    placeholder="Nome squadra"
+                    placeholder="Seconda classificata"
                   />
                 </Grid>
-              ))}
-            </Grid>
-          </Paper>
-        </Grid>
-
-        {/* Semi Finals */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={2} sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom sx={{ color: 'primary.main' }}>
-              Semifinali
-            </Typography>
-            <Grid container spacing={2}>
-              {[...Array(4)].map((_, index) => (
-                <Grid item xs={12} key={index}>
+                <Grid item xs={12} sm={6}>
                   <TextField
-                    label={`Squadra ${index + 1}`}
+                    label="🥉 Terza Classificata"
                     size="small"
                     fullWidth
                     disabled={isLocked}
-                    placeholder="Nome squadra"
+                    placeholder="Terza classificata"
                   />
                 </Grid>
-              ))}
-            </Grid>
-          </Paper>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Quarta Classificata"
+                    size="small"
+                    fullWidth
+                    disabled={isLocked}
+                    placeholder="Quarta classificata"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="⚽ Capocannoniere"
+                    size="small"
+                    fullWidth
+                    disabled={isLocked}
+                    placeholder="Nome giocatore"
+                  />
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
         </Grid>
-
-        {/* Final & Podium */}
-        <Grid item xs={12}>
-          <Paper elevation={2} sx={{ p: 3, bgcolor: 'warning.light' }}>
-            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <EmojiEvents /> Finale e Podio
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="🥇 Vincitore"
-                  size="small"
-                  fullWidth
-                  disabled={isLocked}
-                  placeholder="Prima classificata"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="🥈 Seconda Classificata"
-                  size="small"
-                  fullWidth
-                  disabled={isLocked}
-                  placeholder="Seconda classificata"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="🥉 Terza Classificata"
-                  size="small"
-                  fullWidth
-                  disabled={isLocked}
-                  placeholder="Terza classificata"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Quarta Classificata"
-                  size="small"
-                  fullWidth
-                  disabled={isLocked}
-                  placeholder="Quarta classificata"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="⚽ Capocannoniere"
-                  size="small"
-                  fullWidth
-                  disabled={isLocked}
-                  placeholder="Nome giocatore"
-                />
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Box>
-  );
+      </Box>
+    );
+  };
 
   const renderCapiscione = () => (
     <Box>
