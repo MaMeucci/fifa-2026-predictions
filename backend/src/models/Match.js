@@ -46,22 +46,6 @@ const matchSchema = new mongoose.Schema({
   },
   
   // Match details
-  venue: {
-    type: String,
-    required: true,
-  },
-  
-  city: {
-    type: String,
-    required: true,
-  },
-  
-  country: {
-    type: String,
-    required: true,
-    enum: ['USA', 'Canada', 'Mexico'],
-  },
-  
   date: {
     type: Date,
     required: true,
