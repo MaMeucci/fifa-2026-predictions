@@ -396,8 +396,8 @@ const PredictionsPage = () => {
   );
 
   return (
-    <Container maxWidth="lg">
-      <Box sx={{ py: 4 }}>
+    <Container maxWidth={false} disableGutters>
+      <Box sx={{ py: 4, px: 2 }}>
         {/* Header */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="h3" component="h1" gutterBottom>
