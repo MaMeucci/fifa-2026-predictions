@@ -138,7 +138,7 @@
 /* Round of 32 spacing */
 .round-32-left .match-box,
 .round-32-right .match-box {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 /* Round of 16 spacing - centered between R32 matches */
@@ -150,12 +150,17 @@
 
 .round-16-left .match-box:first-of-type,
 .round-16-right .match-box:first-of-type {
-  margin-top: 85px;
+  margin-top: 70px;
 }
 
 .round-16-left .match-box,
 .round-16-right .match-box {
-  margin-bottom: 170px;
+  margin-bottom: 140px;
+}
+
+.round-16-left .match-box:last-of-type,
+.round-16-right .match-box:last-of-type {
+  margin-bottom: 0;
 }
 
 /* Quarter finals spacing - centered between R16 matches */
@@ -167,12 +172,17 @@
 
 .quarter-left .match-box:first-of-type,
 .quarter-right .match-box:first-of-type {
-  margin-top: 170px;
+  margin-top: 140px;
 }
 
 .quarter-left .match-box,
 .quarter-right .match-box {
-  margin-bottom: 340px;
+  margin-bottom: 280px;
+}
+
+.quarter-left .match-box:last-of-type,
+.quarter-right .match-box:last-of-type {
+  margin-bottom: 0;
 }
 
 /* Semi finals spacing - centered between Quarter matches */
@@ -184,7 +194,7 @@
 
 .semi-left .match-box,
 .semi-right .match-box {
-  margin-top: 340px;
+  margin-top: 280px;
 }
 
 /* Final center - centered between Semi matches */
@@ -195,7 +205,7 @@
 }
 
 .final-box {
-  margin-top: 340px;
+  margin-top: 280px;
 }
 
 .final-box {
