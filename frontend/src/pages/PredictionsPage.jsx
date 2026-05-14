@@ -263,7 +263,7 @@ const PredictionsPage = () => {
       />
 
       {/* Podium & Top Scorer */}
-      <Grid container spacing={3} sx={{ mt: 4, px: 2 }}>
+      <Grid container spacing={3} sx={{ mt: 4, px: 0 }}>
         <Grid item xs={12}>
           <Paper elevation={2} sx={{ p: 3, bgcolor: 'warning.light' }}>
             <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
