@@ -4,7 +4,7 @@
   align-items: flex-start;
   gap: 20px;
   padding: 20px 5px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #1976d2;
   border-radius: 0;
   overflow-y: auto;
   min-height: 600px;
