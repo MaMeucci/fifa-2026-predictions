@@ -47,10 +47,10 @@ const TournamentBracket = ({ predictions, onChange, isLocked }) => {
         <MatchBox matchNum="77" date="TUE, JUN 30" team1={predictions.round32?.[4]?.[0]} team2={predictions.round32?.[4]?.[1]} round="round32" matchIndex={4} label1="1I" label2="3RD" />
         <MatchBox matchNum="73" date="SUN, JUN 28" team1={predictions.round32?.[0]?.[0]} team2={predictions.round32?.[0]?.[1]} round="round32" matchIndex={0} label1="2A" label2="2B" />
         <MatchBox matchNum="75" date="MON, JUN 29" team1={predictions.round32?.[2]?.[0]} team2={predictions.round32?.[2]?.[1]} round="round32" matchIndex={2} label1="1F" label2="2C" />
-        <MatchBox matchNum="83" date="THU, JUL 2" team1={predictions.round32?.[10]?.[0]} team2={predictions.round32?.[10]?.[1]} round="round32" matchIndex={10} label1="1G" label2="2L" />
-        <MatchBox matchNum="84" date="THU, JUL 2" team1={predictions.round32?.[11]?.[0]} team2={predictions.round32?.[11]?.[1]} round="round32" matchIndex={11} label1="1J" label2="2H" />
-        <MatchBox matchNum="81" date="WED, JUL 1" team1={predictions.round32?.[8]?.[0]} team2={predictions.round32?.[8]?.[1]} round="round32" matchIndex={8} label1="1C" label2="3RD" />
-        <MatchBox matchNum="82" date="WED, JUL 1" team1={predictions.round32?.[9]?.[0]} team2={predictions.round32?.[9]?.[1]} round="round32" matchIndex={9} label1="1K" label2="3RD" />
+        <MatchBox matchNum="83" date="THU, JUL 2" team1={predictions.round32?.[10]?.[0]} team2={predictions.round32?.[10]?.[1]} round="round32" matchIndex={10} label1="2K" label2="2L" />
+        <MatchBox matchNum="84" date="THU, JUL 2" team1={predictions.round32?.[11]?.[0]} team2={predictions.round32?.[11]?.[1]} round="round32" matchIndex={11} label1="1H" label2="2J" />
+        <MatchBox matchNum="81" date="WED, JUL 1" team1={predictions.round32?.[8]?.[0]} team2={predictions.round32?.[8]?.[1]} round="round32" matchIndex={8} label1="1D" label2="3RD" />
+        <MatchBox matchNum="82" date="WED, JUL 1" team1={predictions.round32?.[9]?.[0]} team2={predictions.round32?.[9]?.[1]} round="round32" matchIndex={9} label1="1G" label2="3RD" />
       </Box>
 
       {/* Left Side - Round of 16 */}
