@@ -162,7 +162,7 @@ const PredictionsPage = () => {
     }
 
     return (
-      <Box>
+      <Box sx={{ px: 2 }}>
         <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
           Pronostici Fase a Gironi - Ordine Cronologico
         </Typography>
@@ -248,11 +248,11 @@ const PredictionsPage = () => {
 
   const renderKnockoutStage = () => (
     <Box>
-      <Typography variant="h5" gutterBottom sx={{ mb: 3, textAlign: 'center' }}>
+      <Typography variant="h5" gutterBottom sx={{ mb: 3, textAlign: 'center', px: 2 }}>
         Fase Finale - Tabellone Eliminazione Diretta
       </Typography>
       
-      <Alert severity="info" sx={{ mb: 3 }}>
+      <Alert severity="info" sx={{ mb: 3, mx: 2 }}>
         Inserisci le squadre che prevedi passeranno ad ogni turno. Il tabellone mostra tutti i match dalla fase a 32 squadre fino alla finale.
       </Alert>
 
@@ -263,7 +263,7 @@ const PredictionsPage = () => {
       />
 
       {/* Podium & Top Scorer */}
-      <Grid container spacing={3} sx={{ mt: 4 }}>
+      <Grid container spacing={3} sx={{ mt: 4, px: 2 }}>
         <Grid item xs={12}>
           <Paper elevation={2} sx={{ p: 3, bgcolor: 'warning.light' }}>
             <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -333,7 +333,7 @@ const PredictionsPage = () => {
   );
 
   const renderCapiscione = () => (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
         Angolo del Capiscione
       </Typography>
@@ -397,9 +397,9 @@ const PredictionsPage = () => {
 
   return (
     <Container maxWidth={false} disableGutters>
-      <Box sx={{ py: 4, px: 2 }}>
+      <Box sx={{ py: 2, px: 0 }}>
         {/* Header */}
-        <Box sx={{ mb: 4 }}>
+        <Box sx={{ mb: 3, px: 2 }}>
           <Typography variant="h3" component="h1" gutterBottom>
             I Miei Pronostici
           </Typography>
@@ -416,19 +416,19 @@ const PredictionsPage = () => {
         </Box>
 
         {success && (
-          <Alert severity="success" sx={{ mb: 3 }}>
+          <Alert severity="success" sx={{ mb: 3, mx: 2 }}>
             {success}
           </Alert>
         )}
 
         {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
+          <Alert severity="error" sx={{ mb: 3, mx: 2 }}>
             {error}
           </Alert>
         )}
 
         {/* Tabs */}
-        <Paper elevation={2} sx={{ mb: 3 }}>
+        <Paper elevation={2} sx={{ mb: 3, mx: 2 }}>
           <Tabs
             value={activeTab}
             onChange={handleTabChange}
