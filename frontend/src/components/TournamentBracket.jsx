@@ -42,7 +42,7 @@ const TournamentBracket = ({ predictions, onChange, isLocked }) => {
     <Box className="tournament-bracket">
       {/* Left Side - Round of 32 */}
       <Box className="bracket-column round-32-left">
-        <Typography variant="h6" className="round-title">ROUND OF 32</Typography>
+        <Typography variant="h6" className="round-title">SEDICESIMI DI FINALE</Typography>
         <MatchBox matchNum="73" date="SUN, JUN 28" team1={predictions.round32?.[0]?.[0]} team2={predictions.round32?.[0]?.[1]} round="round32" matchIndex={0} label1="2A" label2="2B" />
         <MatchBox matchNum="74" date="MON, JUN 29" team1={predictions.round32?.[1]?.[0]} team2={predictions.round32?.[1]?.[1]} round="round32" matchIndex={1} label1="1E" label2="3RD" />
         <MatchBox matchNum="75" date="MON, JUN 29" team1={predictions.round32?.[2]?.[0]} team2={predictions.round32?.[2]?.[1]} round="round32" matchIndex={2} label1="1F" label2="2C" />
@@ -55,7 +55,7 @@ const TournamentBracket = ({ predictions, onChange, isLocked }) => {
 
       {/* Left Side - Round of 16 */}
       <Box className="bracket-column round-16-left">
-        <Typography variant="h6" className="round-title">ROUND OF 16</Typography>
+        <Typography variant="h6" className="round-title">OTTAVI DI FINALE</Typography>
         <MatchBox matchNum="89" date="SAT, JUL 4" team1={predictions.round16?.[0]?.[0]} team2={predictions.round16?.[0]?.[1]} round="round16" matchIndex={0} />
         <MatchBox matchNum="90" date="SAT, JUL 4" team1={predictions.round16?.[1]?.[0]} team2={predictions.round16?.[1]?.[1]} round="round16" matchIndex={1} />
         <MatchBox matchNum="91" date="SUN, JUL 5" team1={predictions.round16?.[2]?.[0]} team2={predictions.round16?.[2]?.[1]} round="round16" matchIndex={2} />
@@ -64,20 +64,20 @@ const TournamentBracket = ({ predictions, onChange, isLocked }) => {
 
       {/* Left Side - Quarter Finals */}
       <Box className="bracket-column quarter-left">
-        <Typography variant="h6" className="round-title">QUARTER FINAL</Typography>
+        <Typography variant="h6" className="round-title">QUARTI DI FINALE</Typography>
         <MatchBox matchNum="97" date="THU, JUL 9" team1={predictions.quarters?.[0]?.[0]} team2={predictions.quarters?.[0]?.[1]} round="quarters" matchIndex={0} />
         <MatchBox matchNum="98" date="FRI, JUL 10" team1={predictions.quarters?.[1]?.[0]} team2={predictions.quarters?.[1]?.[1]} round="quarters" matchIndex={1} />
       </Box>
 
       {/* Left Side - Semi Final */}
       <Box className="bracket-column semi-left">
-        <Typography variant="h6" className="round-title">SEMI FINAL</Typography>
+        <Typography variant="h6" className="round-title">SEMIFINALI</Typography>
         <MatchBox matchNum="101" date="TUE, JUL 14" team1={predictions.semis?.[0]?.[0]} team2={predictions.semis?.[0]?.[1]} round="semis" matchIndex={0} />
       </Box>
 
       {/* Center - Final */}
       <Box className="bracket-column final-center">
-        <Typography variant="h6" className="round-title">FINAL</Typography>
+        <Typography variant="h6" className="round-title">FINALE</Typography>
         <Paper className="final-box" elevation={3}>
           <Box className="trophy-icon">🏆</Box>
           <TextField
@@ -101,20 +101,20 @@ const TournamentBracket = ({ predictions, onChange, isLocked }) => {
 
       {/* Right Side - Semi Final */}
       <Box className="bracket-column semi-right">
-        <Typography variant="h6" className="round-title">SEMI FINAL</Typography>
+        <Typography variant="h6" className="round-title">SEMIFINALI</Typography>
         <MatchBox matchNum="102" date="WED, JUL 15" team1={predictions.semis?.[1]?.[0]} team2={predictions.semis?.[1]?.[1]} round="semis" matchIndex={1} />
       </Box>
 
       {/* Right Side - Quarter Finals */}
       <Box className="bracket-column quarter-right">
-        <Typography variant="h6" className="round-title">QUARTER FINAL</Typography>
+        <Typography variant="h6" className="round-title">QUARTI DI FINALE</Typography>
         <MatchBox matchNum="99" date="THU, JUL 11" team1={predictions.quarters?.[2]?.[0]} team2={predictions.quarters?.[2]?.[1]} round="quarters" matchIndex={2} />
         <MatchBox matchNum="100" date="SAT, JUL 11" team1={predictions.quarters?.[3]?.[0]} team2={predictions.quarters?.[3]?.[1]} round="quarters" matchIndex={3} />
       </Box>
 
       {/* Right Side - Round of 16 */}
       <Box className="bracket-column round-16-right">
-        <Typography variant="h6" className="round-title">ROUND OF 16</Typography>
+        <Typography variant="h6" className="round-title">OTTAVI DI FINALE</Typography>
         <MatchBox matchNum="93" date="MON, JUL 6" team1={predictions.round16?.[4]?.[0]} team2={predictions.round16?.[4]?.[1]} round="round16" matchIndex={4} />
         <MatchBox matchNum="94" date="MON, JUL 6" team1={predictions.round16?.[5]?.[0]} team2={predictions.round16?.[5]?.[1]} round="round16" matchIndex={5} />
         <MatchBox matchNum="95" date="TUE, JUL 7" team1={predictions.round16?.[6]?.[0]} team2={predictions.round16?.[6]?.[1]} round="round16" matchIndex={6} />
@@ -123,7 +123,7 @@ const TournamentBracket = ({ predictions, onChange, isLocked }) => {
 
       {/* Right Side - Round of 32 */}
       <Box className="bracket-column round-32-right">
-        <Typography variant="h6" className="round-title">ROUND OF 32</Typography>
+        <Typography variant="h6" className="round-title">SEDICESIMI DI FINALE</Typography>
         <MatchBox matchNum="81" date="WED, JUL 1" team1={predictions.round32?.[8]?.[0]} team2={predictions.round32?.[8]?.[1]} round="round32" matchIndex={8} label1="1C" label2="3RD" />
         <MatchBox matchNum="82" date="WED, JUL 1" team1={predictions.round32?.[9]?.[0]} team2={predictions.round32?.[9]?.[1]} round="round32" matchIndex={9} label1="1K" label2="3RD" />
         <MatchBox matchNum="83" date="THU, JUL 2" team1={predictions.round32?.[10]?.[0]} team2={predictions.round32?.[10]?.[1]} round="round32" matchIndex={10} label1="1G" label2="2L" />
