@@ -79,7 +79,34 @@ const TournamentBracket = ({ predictions, onChange, isLocked }) => {
       <Box className="bracket-column final-center">
         <Typography variant="h6" className="round-title">FINALE</Typography>
         <Paper className="final-box" elevation={3}>
-          <Box className="trophy-icon">🏆</Box>
+          <Box className="trophy-icon">
+            <svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style={{stopColor: '#FFD700', stopOpacity: 1}} />
+                  <stop offset="50%" style={{stopColor: '#FFA500', stopOpacity: 1}} />
+                  <stop offset="100%" style={{stopColor: '#DAA520', stopOpacity: 1}} />
+                </linearGradient>
+              </defs>
+              {/* Trophy base */}
+              <ellipse cx="100" cy="280" rx="40" ry="8" fill="url(#goldGradient)" />
+              <rect x="85" y="260" width="30" height="20" fill="url(#goldGradient)" />
+              {/* Trophy stem */}
+              <path d="M 90 260 L 85 220 L 115 220 L 110 260 Z" fill="url(#goldGradient)" stroke="#B8860B" strokeWidth="1"/>
+              {/* Trophy cup */}
+              <path d="M 60 220 Q 50 180 55 140 L 70 60 Q 100 40 130 60 L 145 140 Q 150 180 140 220 Z"
+                    fill="url(#goldGradient)" stroke="#B8860B" strokeWidth="2"/>
+              {/* Trophy handles */}
+              <path d="M 55 140 Q 30 140 25 120 Q 20 100 30 90 Q 40 85 50 100 L 55 120"
+                    fill="url(#goldGradient)" stroke="#B8860B" strokeWidth="1.5"/>
+              <path d="M 145 140 Q 170 140 175 120 Q 180 100 170 90 Q 160 85 150 100 L 145 120"
+                    fill="url(#goldGradient)" stroke="#B8860B" strokeWidth="1.5"/>
+              {/* Decorative bands */}
+              <ellipse cx="100" cy="80" rx="32" ry="4" fill="#B8860B" opacity="0.5"/>
+              <ellipse cx="100" cy="120" rx="35" ry="4" fill="#B8860B" opacity="0.5"/>
+              <ellipse cx="100" cy="160" rx="38" ry="4" fill="#B8860B" opacity="0.5"/>
+            </svg>
+          </Box>
           <TextField
             size="small"
             value={predictions.final?.[0] || ''}
