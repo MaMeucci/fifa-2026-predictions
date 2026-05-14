@@ -150,12 +150,12 @@
 
 .round-16-left .match-box:first-of-type,
 .round-16-right .match-box:first-of-type {
-  margin-top: 70px;
+  margin-top: 68px;
 }
 
 .round-16-left .match-box,
 .round-16-right .match-box {
-  margin-bottom: 140px;
+  margin-bottom: 152px;
 }
 
 .round-16-left .match-box:last-of-type,
@@ -172,12 +172,12 @@
 
 .quarter-left .match-box:first-of-type,
 .quarter-right .match-box:first-of-type {
-  margin-top: 140px;
+  margin-top: 136px;
 }
 
 .quarter-left .match-box,
 .quarter-right .match-box {
-  margin-bottom: 280px;
+  margin-bottom: 424px;
 }
 
 .quarter-left .match-box:last-of-type,
@@ -194,10 +194,18 @@
 
 .semi-left .match-box,
 .semi-right .match-box {
-  margin-top: 280px;
+  margin-top: 272px;
 }
 
 /* Final center - centered between Semi matches */
+.final-center {
+  justify-content: flex-start;
+  padding-top: 0;
+}
+
+.final-center .match-box {
+  margin-top: 272px;
+}
 .final-center {
   justify-content: flex-start;
   align-items: center;
