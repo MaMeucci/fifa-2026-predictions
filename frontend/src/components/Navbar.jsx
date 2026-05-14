@@ -75,7 +75,7 @@ const Navbar = () => {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.1rem',
-              color: '#1976d2',
+              color: 'inherit',
               textDecoration: 'none',
             }}
           >
@@ -140,7 +140,7 @@ const Navbar = () => {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.1rem',
-              color: '#1976d2',
+              color: 'inherit',
               textDecoration: 'none',
             }}
           >
