@@ -126,12 +126,12 @@
   margin-top: 132px;
 }
 
-/* Special spacing for Match 91 and 92 (positions 5 and 6) - slight increase */
-.round-16 .match-box:nth-child(6) {
-  margin-top: 165px;
-}
-
-.round-16 .match-box:nth-child(7) {
+/* Lower all matches from Match 94 onwards (positions 5-8) */
+.round-16 .match-box:nth-child(5),
+.round-16 .match-box:nth-child(6),
+.round-16 .match-box:nth-child(7),
+.round-16 .match-box:nth-child(8),
+.round-16 .match-box:nth-child(9) {
   margin-top: 165px;
 }
 
