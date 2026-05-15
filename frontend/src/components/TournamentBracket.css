@@ -127,8 +127,8 @@
 }
 
 /* Special spacing for Match 96 - centered between 85 and 87 */
-.round-16 .match-box:nth-child(9) {
-  margin-top: 156px;
+.round-16 .match-box:nth-child(8) {
+  margin-top: 420px;
 }
 
 /* Vertical spacing for Quarters - centered between R16 pairs */
