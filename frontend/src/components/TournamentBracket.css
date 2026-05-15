@@ -131,17 +131,17 @@
   margin-top: 295px;
 }
 
-/* Special spacing for Match 92 - centered between 79 and 80 */
+/* Special spacing for Match 92 - centered between 79 and 80 - compensate for Match 91 */
 .round-16 .match-box:nth-child(6) {
-  margin-top: 295px;
-}
-
-/* Reset Match 95 to standard spacing */
-.round-16 .match-box:nth-child(7) {
   margin-top: 132px;
 }
 
-/* Special spacing for Match 96 - centered between 85 and 87 */
+/* Reset Match 95 to standard spacing - compensate for Match 91 and 92 */
+.round-16 .match-box:nth-child(7) {
+  margin-top: -31px;
+}
+
+/* Special spacing for Match 96 - centered between 85 and 87 - compensate for previous adjustments */
 .round-16 .match-box:nth-child(8) {
   margin-top: 295px;
 }
