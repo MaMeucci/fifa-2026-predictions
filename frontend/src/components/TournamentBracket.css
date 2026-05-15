@@ -126,22 +126,13 @@
   margin-top: 132px;
 }
 
-/* Special spacing for Match 91 and 92 (positions 5 and 6) - increase spacing */
+/* Special spacing for Match 91 and 92 (positions 5 and 6) - slight increase */
 .round-16 .match-box:nth-child(6) {
-  margin-top: 200px;
+  margin-top: 165px;
 }
 
 .round-16 .match-box:nth-child(7) {
-  margin-top: 200px;
-}
-
-/* Compensate for Match 95 and 96 (positions 7 and 8) - reduce spacing to keep them in place */
-.round-16 .match-box:nth-child(8) {
-  margin-top: 64px;
-}
-
-.round-16 .match-box:nth-child(9) {
-  margin-top: 64px;
+  margin-top: 165px;
 }
 
 /* Vertical spacing for Quarters - centered between R16 pairs */
