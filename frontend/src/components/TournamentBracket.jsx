@@ -1,24 +1,68 @@
 import { Box, TextField, Typography, Paper, Autocomplete } from '@mui/material';
+import { useState, useEffect } from 'react';
 import './TournamentBracket.css';
-import { TEAMS_BY_GROUP, ALL_TEAMS } from '../utils/constants';
+import api from '../services/api';
 
 const TournamentBracket = ({ predictions, onChange, isLocked }) => {
+  const [teamsByGroup, setTeamsByGroup] = useState({});
+  const [allTeams, setAllTeams] = useState([]);
+
+  // Load teams from group matches
+  useEffect(() => {
+    const loadTeams = async () => {
+      try {
+        const response = await api.get('/matches?phase=GROUP');
+        const matches = response.data.data;
+        
+        // Extract teams by group
+        const groups = {};
+        matches.forEach(match => {
+          const group = match.group;
+          if (!groups[group]) {
+            groups[group] = new Set();
+          }
+          groups[group].add(match.homeTeam.name);
+          groups[group].add(match.awayTeam.name);
+        });
+        
+        // Convert Sets to Arrays
+        const teamsByGroupObj = {};
+        Object.keys(groups).forEach(group => {
+          teamsByGroupObj[group] = Array.from(groups[group]).sort();
+        });
+        
+        setTeamsByGroup(teamsByGroupObj);
+        
+        // Create list of all teams
+        const allTeamsSet = new Set();
+        Object.values(teamsByGroupObj).forEach(teams => {
+          teams.forEach(team => allTeamsSet.add(team));
+        });
+        setAllTeams(Array.from(allTeamsSet).sort());
+      } catch (error) {
+        console.error('Error loading teams:', error);
+      }
+    };
+    
+    loadTeams();
+  }, []);
+
   const handleTeamChange = (round, matchIndex, position, value) => {
     onChange(round, matchIndex, position, value);
   };
 
   // Get teams for a specific label (e.g., "1A", "2B", "3RD")
   const getTeamsForLabel = (label) => {
-    if (!label) return ALL_TEAMS;
+    if (!label) return allTeams;
     
     // For third place teams, return all teams
-    if (label.startsWith('3')) return ALL_TEAMS;
+    if (label.startsWith('3')) return allTeams;
     
     // Extract group letter (last character)
     const group = label.slice(-1);
     
     // Return teams from that group
-    return TEAMS_BY_GROUP[group] || ALL_TEAMS;
+    return teamsByGroup[group] || allTeams;
   };
 
   // Match component for bracket
