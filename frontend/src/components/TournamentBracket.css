@@ -51,7 +51,7 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 }
 
-/* Connection lines between rounds */
+/* Horizontal red lines from each match */
 .round-32 .match-box::after,
 .round-16 .match-box::after,
 .quarters .match-box::after,
@@ -59,10 +59,59 @@
   content: '';
   position: absolute;
   top: 50%;
-  right: -40px;
-  width: 30px;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.5);
+  right: -20px;
+  width: 20px;
+  height: 3px;
+  background: #c62828;
+  transform: translateY(-1.5px);
+}
+
+/* Vertical red lines connecting pairs - Round of 32 */
+.round-32 .match-box:nth-child(even)::before {
+  content: '';
+  position: absolute;
+  right: -20px;
+  width: 3px;
+  background: #c62828;
+  top: 50%;
+  height: calc(100% + 12px);
+  transform: translateY(-100%);
+}
+
+/* Vertical red lines - Round of 16 */
+.round-16 .match-box:nth-child(even)::before {
+  content: '';
+  position: absolute;
+  right: -20px;
+  width: 3px;
+  background: #c62828;
+  top: 50%;
+  height: calc(200% + 24px);
+  transform: translateY(-100%);
+}
+
+/* Vertical red lines - Quarters */
+.quarters .match-box:nth-child(even)::before {
+  content: '';
+  position: absolute;
+  right: -20px;
+  width: 3px;
+  background: #c62828;
+  top: 50%;
+  height: calc(400% + 48px);
+  transform: translateY(-100%);
+}
+
+/* Vertical red line - Semis */
+.semis .match-box:nth-child(2)::before {
+  content: '';
+  position: absolute;
+  right: -20px;
+  width: 3px;
+  background: #c62828;
+  top: 50%;
+  height: calc(800% + 96px);
+  transform: translateY(-100%);
 }
 
 .team-input-wrapper {
@@ -130,24 +179,36 @@
   min-width: 240px;
 }
 
-/* Vertical spacing for Round of 16 - add more space at top */
+/* Vertical spacing for Round of 16 - centered between R32 pairs */
 .round-16 .match-box:first-child {
-  margin-top: 80px;
+  margin-top: 60px;
 }
 
-/* Vertical spacing for Quarters - add more space at top */
+.round-16 .match-box:not(:first-child) {
+  margin-top: 132px;
+}
+
+/* Vertical spacing for Quarters - centered between R16 pairs */
 .quarters .match-box:first-child {
-  margin-top: 240px;
+  margin-top: 192px;
 }
 
-/* Vertical spacing for Semis - add more space at top */
+.quarters .match-box:not(:first-child) {
+  margin-top: 276px;
+}
+
+/* Vertical spacing for Semis - centered between Quarter pairs */
 .semis .match-box:first-child {
-  margin-top: 560px;
+  margin-top: 456px;
 }
 
-/* Vertical spacing for Final - add more space at top */
+.semis .match-box:not(:first-child) {
+  margin-top: 564px;
+}
+
+/* Vertical spacing for Final - centered between Semis */
 .final .match-box {
-  margin-top: 1200px;
+  margin-top: 1020px;
 }
 
 /* Final box styling */
