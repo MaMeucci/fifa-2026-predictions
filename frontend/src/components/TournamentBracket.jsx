@@ -14,7 +14,16 @@ const TournamentBracket = ({ predictions, onChange, isLocked }) => {
         {date}
       </Typography>
       <Box className="team-input-wrapper">
-        {label1 && <Box className="team-label">{label1}</Box>}
+        {label1 && (
+          <Box className="team-label">
+            {label1.split('\\n').map((line, i) => (
+              <span key={i}>
+                {line}
+                {i < label1.split('\\n').length - 1 && <br />}
+              </span>
+            ))}
+          </Box>
+        )}
         <TextField
           size="small"
           value={team1 || ''}
@@ -25,7 +34,16 @@ const TournamentBracket = ({ predictions, onChange, isLocked }) => {
         />
       </Box>
       <Box className="team-input-wrapper">
-        {label2 && <Box className="team-label">{label2}</Box>}
+        {label2 && (
+          <Box className="team-label">
+            {label2.split('\\n').map((line, i) => (
+              <span key={i}>
+                {line}
+                {i < label2.split('\\n').length - 1 && <br />}
+              </span>
+            ))}
+          </Box>
+        )}
         <TextField
           size="small"
           value={team2 || ''}
@@ -43,14 +61,14 @@ const TournamentBracket = ({ predictions, onChange, isLocked }) => {
       {/* Left Side - Round of 32 */}
       <Box className="bracket-column round-32-left">
         <Typography variant="h6" className="round-title">SEDICESIMI DI FINALE</Typography>
-        <MatchBox matchNum="74" date="MON, JUN 29" team1={predictions.round32?.[1]?.[0]} team2={predictions.round32?.[1]?.[1]} round="round32" matchIndex={1} label1="1E" label2="3ABCDF" />
-        <MatchBox matchNum="77" date="TUE, JUN 30" team1={predictions.round32?.[4]?.[0]} team2={predictions.round32?.[4]?.[1]} round="round32" matchIndex={4} label1="1I" label2="3CDFGH" />
+        <MatchBox matchNum="74" date="MON, JUN 29" team1={predictions.round32?.[1]?.[0]} team2={predictions.round32?.[1]?.[1]} round="round32" matchIndex={1} label1="1E" label2="3AB\nCDF" />
+        <MatchBox matchNum="77" date="TUE, JUN 30" team1={predictions.round32?.[4]?.[0]} team2={predictions.round32?.[4]?.[1]} round="round32" matchIndex={4} label1="1I" label2="3CD\nFGH" />
         <MatchBox matchNum="73" date="SUN, JUN 28" team1={predictions.round32?.[0]?.[0]} team2={predictions.round32?.[0]?.[1]} round="round32" matchIndex={0} label1="2A" label2="2B" />
         <MatchBox matchNum="75" date="MON, JUN 29" team1={predictions.round32?.[2]?.[0]} team2={predictions.round32?.[2]?.[1]} round="round32" matchIndex={2} label1="1F" label2="2C" />
         <MatchBox matchNum="83" date="THU, JUL 2" team1={predictions.round32?.[10]?.[0]} team2={predictions.round32?.[10]?.[1]} round="round32" matchIndex={10} label1="2K" label2="2L" />
         <MatchBox matchNum="84" date="THU, JUL 2" team1={predictions.round32?.[11]?.[0]} team2={predictions.round32?.[11]?.[1]} round="round32" matchIndex={11} label1="1H" label2="2J" />
-        <MatchBox matchNum="81" date="WED, JUL 1" team1={predictions.round32?.[8]?.[0]} team2={predictions.round32?.[8]?.[1]} round="round32" matchIndex={8} label1="1D" label2="3RD" />
-        <MatchBox matchNum="82" date="WED, JUL 1" team1={predictions.round32?.[9]?.[0]} team2={predictions.round32?.[9]?.[1]} round="round32" matchIndex={9} label1="1G" label2="3RD" />
+        <MatchBox matchNum="81" date="WED, JUL 1" team1={predictions.round32?.[8]?.[0]} team2={predictions.round32?.[8]?.[1]} round="round32" matchIndex={8} label1="1D" label2="3BE\nFIJ" />
+        <MatchBox matchNum="82" date="WED, JUL 1" team1={predictions.round32?.[9]?.[0]} team2={predictions.round32?.[9]?.[1]} round="round32" matchIndex={9} label1="1G" label2="3AE\nHIJ" />
       </Box>
 
       {/* Left Side - Round of 16 */}
