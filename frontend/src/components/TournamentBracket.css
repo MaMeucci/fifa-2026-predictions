@@ -126,6 +126,21 @@
   margin-top: 132px;
 }
 
+/* Raise Match 93 */
+.round-16 .match-box:nth-child(3) {
+  margin-top: 80px;
+}
+
+/* Raise Match 94 */
+.round-16 .match-box:nth-child(4) {
+  margin-top: 80px;
+}
+
+/* Raise Match 92 */
+.round-16 .match-box:nth-child(6) {
+  margin-top: 80px;
+}
+
 /* Special spacing for Match 96 - centered between 85 and 87 */
 .round-16 .match-box:nth-child(8) {
   margin-top: 295px;
