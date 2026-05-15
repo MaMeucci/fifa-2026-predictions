@@ -30,6 +30,25 @@ export const MATCH_PHASES = {
 // Groups
 export const GROUPS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
+// Teams by Group (FIFA World Cup 2026)
+export const TEAMS_BY_GROUP = {
+  A: ['Germania', 'Scozia', 'Ungheria', 'Svizzera'],
+  B: ['Spagna', 'Croazia', 'Italia', 'Albania'],
+  C: ['Inghilterra', 'Danimarca', 'Slovenia', 'Serbia'],
+  D: ['Francia', 'Paesi Bassi', 'Austria', 'Polonia'],
+  E: ['Belgio', 'Ucraina', 'Slovacchia', 'Romania'],
+  F: ['Portogallo', 'Turchia', 'Repubblica Ceca', 'Georgia'],
+  G: ['Brasile', 'Colombia', 'Paraguay', 'Costa Rica'],
+  H: ['Uruguay', 'USA', 'Panama', 'Bolivia'],
+  I: ['Argentina', 'Canada', 'Cile', 'Perù'],
+  J: ['Messico', 'Ecuador', 'Venezuela', 'Giamaica'],
+  K: ['Marocco', 'Senegal', 'Egitto', 'Nigeria'],
+  L: ['Giappone', 'Corea del Sud', 'Australia', 'Arabia Saudita'],
+};
+
+// Get all teams
+export const ALL_TEAMS = Object.values(TEAMS_BY_GROUP).flat();
+
 // Match Signs
 export const MATCH_SIGNS = {
   HOME: '1',
