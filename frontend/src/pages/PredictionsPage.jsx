@@ -400,7 +400,7 @@ const PredictionsPage = () => {
       <Box sx={{ py: 2, px: 0 }}>
         {/* Header */}
         <Box sx={{ mb: 3, px: 2 }}>
-          <Typography variant="h3" component="h1" gutterBottom sx={{ color: '#2e7d32' }}>
+          <Typography variant="h3" component="h1" gutterBottom>
             I Miei Pronostici
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
