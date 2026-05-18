@@ -4,7 +4,7 @@
   align-items: flex-start;
   gap: 40px;
   padding: 20px;
-  background: #ff0000;
+  background: #5cb8b2;
   border-radius: 0;
   overflow-x: auto;
   overflow-y: auto;
@@ -21,8 +21,8 @@
 }
 
 .round-title {
-  background: #ff0000;
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.95);
+  color: #1976d2;
   padding: 8px 16px;
   border-radius: 6px;
   text-align: center;
@@ -174,14 +174,14 @@
   margin-top: 564px;
 }
 
-/* Match 102 (position 2) - center between 99 and 100 */
+/* Match 102 (position 2) - lower significantly */
 .semis .match-box:nth-child(2) {
-  margin-top: 525px;
+  margin-top: 650px;
 }
 
 /* Vertical spacing for Final - centered between 101 and 102 */
 .final .match-box {
-  margin-top: 490px;
+  margin-top: 553px;
 }
 
 /* Final box styling */
