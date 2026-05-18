@@ -126,13 +126,18 @@
   margin-top: 132px;
 }
 
-/* Lower all matches from Match 94 onwards (positions 5-9) */
-.round-16 .match-box:nth-child(5),
+/* Fine-tuned spacing for individual matches */
+/* Match 94 (position 5) - lower slightly */
+.round-16 .match-box:nth-child(5) {
+  margin-top: 210px;
+}
+
+/* Match 91, 92, 95, 96 (positions 6-9) - lower more */
 .round-16 .match-box:nth-child(6),
 .round-16 .match-box:nth-child(7),
 .round-16 .match-box:nth-child(8),
 .round-16 .match-box:nth-child(9) {
-  margin-top: 200px;
+  margin-top: 220px;
 }
 
 /* Vertical spacing for Quarters - centered between R16 pairs */
