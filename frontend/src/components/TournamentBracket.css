@@ -174,14 +174,14 @@
   margin-top: 564px;
 }
 
-/* Match 102 (position 2) - lower significantly */
+/* Match 102 (position 2) - lower significantly MORE */
 .semis .match-box:nth-child(2) {
-  margin-top: 650px;
+  margin-top: 750px;
 }
 
 /* Vertical spacing for Final - centered between 101 and 102 */
 .final .match-box {
-  margin-top: 553px;
+  margin-top: 603px;
 }
 
 /* Final box styling */
