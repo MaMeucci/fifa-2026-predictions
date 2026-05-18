@@ -172,9 +172,9 @@
   margin-bottom: 0 !important;
 }
 
-/* Match 102 (position 2) - MUCH lower, around 725px from top */
+/* Match 102 (position 2) - MUCH MUCH lower, in the bottom part of bracket */
 .bracket-column.semis .match-box:nth-child(2) {
-  margin-top: 545px !important;
+  margin-top: 850px !important;
 }
 
 /* Vertical spacing for Final - centered between 101 and 102 */
