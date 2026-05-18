@@ -191,10 +191,15 @@
   }
 }
 
+.final-input {
+  width: 100%;
+}
+
 .final-input input {
   background: white;
   font-weight: 600;
   font-size: 0.85rem;
+  text-align: center;
 }
 
 /* Responsive adjustments */
