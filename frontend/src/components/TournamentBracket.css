@@ -159,9 +159,9 @@
   margin-top: 520px;
 }
 
-/* Match 100 (position 5) - raise a bit more */
+/* Match 100 (position 5) - raise a bit */
 .quarters .match-box:nth-child(5) {
-  margin-top: 540px;
+  margin-top: 530px;
 }
 
 /* Vertical spacing for Semis - centered between Quarter pairs */
@@ -174,9 +174,9 @@
   margin-top: 564px;
 }
 
-/* Match 102 (position 2) - center between 99 and 100 */
+/* Match 102 (position 2) - lower much more */
 .semis .match-box:nth-child(2) {
-  margin-top: 540px;
+  margin-top: 600px;
 }
 
 /* Vertical spacing for Final - centered between Semis */
