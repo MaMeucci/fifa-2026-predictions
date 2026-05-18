@@ -149,19 +149,19 @@
   margin-top: 276px;
 }
 
-/* Match 98 (position 3) - center between 93 and 94 */
+/* Match 98 (position 3) - center between 93 and 94 - DO NOT TOUCH */
 .quarters .match-box:nth-child(3) {
   margin-top: 420px;
 }
 
-/* Match 99 (position 4) - center between 91 and 92 */
+/* Match 99 (position 4) - raise a bit (reduce margin) */
 .quarters .match-box:nth-child(4) {
-  margin-top: 564px;
+  margin-top: 520px;
 }
 
-/* Match 100 (position 5) - center between 95 and 96 */
+/* Match 100 (position 5) - raise much more (reduce margin much more) */
 .quarters .match-box:nth-child(5) {
-  margin-top: 708px;
+  margin-top: 620px;
 }
 
 /* Vertical spacing for Semis - centered between Quarter pairs */
