@@ -149,6 +149,13 @@
   margin-top: 276px;
 }
 
+/* Lower Match 98, 99, 100 (positions 2, 3, 4) */
+.quarters .match-box:nth-child(3),
+.quarters .match-box:nth-child(4),
+.quarters .match-box:nth-child(5) {
+  margin-top: 310px;
+}
+
 /* Vertical spacing for Semis - centered between Quarter pairs */
 .semis .match-box:first-child {
   margin-top: 456px;
