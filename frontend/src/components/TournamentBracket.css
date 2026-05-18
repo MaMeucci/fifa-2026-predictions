@@ -170,13 +170,9 @@
   margin-top: 456px;
 }
 
-.semis .match-box:not(:first-child) {
-  margin-top: 564px;
-}
-
 /* Match 102 (position 2) - lower significantly MORE */
 .semis .match-box:nth-child(2) {
-  margin-top: 750px;
+  margin-top: 750px !important;
 }
 
 /* Vertical spacing for Final - centered between 101 and 102 */
