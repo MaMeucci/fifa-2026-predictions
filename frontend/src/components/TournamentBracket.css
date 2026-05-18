@@ -111,6 +111,7 @@
 
 .semis {
   min-width: 220px;
+  gap: 0 !important;
 }
 
 .final {
@@ -168,11 +169,12 @@
 /* Match 101 (position 1) */
 .bracket-column.semis .match-box:first-child {
   margin-top: 250px !important;
+  margin-bottom: 0 !important;
 }
 
-/* Match 102 (position 2) */
+/* Match 102 (position 2) - use margin-bottom on 101 to create space */
 .bracket-column.semis .match-box:nth-child(2) {
-  margin-top: 725px !important;
+  margin-top: 463px !important;
 }
 
 /* Vertical spacing for Final - centered between 101 and 102 */
