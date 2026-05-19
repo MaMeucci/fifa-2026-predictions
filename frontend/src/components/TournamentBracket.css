@@ -166,7 +166,7 @@
 
 /* Vertical spacing for Semis - centered between Quarter pairs */
 .semis .match-box:first-child {
-  margin-top: 320px;
+  margin-top: 310px;
 }
 
 .semis .match-box:not(:first-child) {
@@ -175,7 +175,7 @@
 
 /* Match 102 (position 2) - centered between 99 and 100 */
 .semis .match-box:nth-child(2) {
-  margin-top: 680px;
+  margin-top: 800px;
 }
 
 /* Vertical spacing for Final - centered between 101 and 102 */
