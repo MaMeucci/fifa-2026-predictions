@@ -4,7 +4,8 @@
   align-items: flex-start;
   gap: 40px;
   padding: 20px;
-  background: #5cb8b2;
+  /*background: #5cb8b2;*/
+  background: #b8855c;
   border-radius: 0;
   overflow-x: auto;
   overflow-y: auto;
@@ -168,11 +169,11 @@
 /* Vertical spacing for Semis - user specified positions */
 /* Match 101 (position 1) - lower slightly */
 .bracket-column.semis .match-box:first-child {
-  margin-top: 270px !important;
+  margin-top: 100px !important;
   /* margin-bottom: 0 !important; */
 }
 
-/* Match 102 (position 2) - MUCH MUCH lower, in the bottom part of bracket */
+/* Match 102 (position 2) - in the bottom part of bracket */
 .bracket-column.semis .match-box:nth-child(2) {
   margin-top: 850px !important;
 }
