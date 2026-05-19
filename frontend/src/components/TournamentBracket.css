@@ -169,9 +169,9 @@
   margin-top: 306px;
 }
 
-/* Match 102 (position 2) - add space BETWEEN matches */
+/* Match 102 (position 2) - add large space BETWEEN matches */
 .semis .match-box:nth-child(2) {
-  margin-top: 344px;  /* Space between Match 101 and 102 */
+  margin-top: 500px;  /* Large space between Match 101 and 102 */
 }
 
 /* Vertical spacing for Final - centered between 101 and 102 */
