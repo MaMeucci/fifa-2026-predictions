@@ -111,7 +111,6 @@
 
 .semis {
   min-width: 220px;
-  gap: 0 !important;
 }
 
 .final {
@@ -165,16 +164,18 @@
   margin-top: 530px;
 }
 
-/* Vertical spacing for Semis - user specified positions */
-/* Match 101 (position 1) - lower slightly */
-.bracket-column.semis .match-box:first-child {
-  margin-top: 100px !important;
-  /* margin-bottom: 0 !important; */
+/* Vertical spacing for Semis - centered between Quarter pairs */
+.semis .match-box:first-child {
+  margin-top: 306px;
 }
 
-/* Match 102 (position 2) - in the bottom part of bracket */
-.bracket-column.semis .match-box:nth-child(2) {
-  margin-top: 850px !important;
+.semis .match-box:not(:first-child) {
+  margin-top: 564px;
+}
+
+/* Match 102 (position 2) - centered between 99 and 100 */
+.semis .match-box:nth-child(2) {
+  margin-top: 525px;
 }
 
 /* Vertical spacing for Final - centered between 101 and 102 */
