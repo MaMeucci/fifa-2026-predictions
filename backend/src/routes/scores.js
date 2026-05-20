@@ -26,8 +26,8 @@ router.get('/leaderboard', protect, async (req, res) => {
       username: score.user.username,
       userId: score.user._id,
       totalPoints: score.totalPoints || 0,
-      exactResults: score.breakdown?.groupStage?.exactResults || 0,
-      correctSigns: score.breakdown?.groupStage?.correctSigns || 0,
+      exactResults: score.breakdown?.exactResults?.count || 0,
+      correctSigns: score.breakdown?.correctSigns?.count || 0,
       trend: 'same' // TODO: Calculate trend based on previous rankings
     }));
     
@@ -78,8 +78,8 @@ router.get('/my-score', protect, async (req, res) => {
         userId: score.user._id,
         username: score.user.username,
         totalPoints: score.totalPoints,
-        exactResults: score.breakdown.groupStage.exactResults,
-        correctSigns: score.breakdown.groupStage.correctSigns,
+        exactResults: score.breakdown?.exactResults?.count || 0,
+        correctSigns: score.breakdown?.correctSigns?.count || 0,
         rank
       }
     });

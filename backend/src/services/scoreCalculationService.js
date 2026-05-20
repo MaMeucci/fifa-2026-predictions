@@ -98,18 +98,25 @@ const calculateUserScore = async (userId, finishedMatches = null) => {
       finishedMatches = await Match.find({ status: 'FINISHED' });
     }
 
-    // Initialize score breakdown
+    // Initialize score breakdown matching Score model structure
     const breakdown = {
-      groupStage: { exactResults: 0, correctSigns: 0, bonuses: 0, points: 0 },
-      knockoutStage: {
-        round16: { correctTeams: 0, exactPositions: 0, points: 0 },
-        quarterFinals: { correctTeams: 0, points: 0 },
-        semiFinals: { correctTeams: 0, points: 0 },
-        final: { correctTeams: 0, points: 0 }
-      },
-      finalRankings: { first: 0, second: 0, third: 0, fourth: 0, points: 0 },
+      exactResults: { count: 0, points: 0 },
+      correctSigns: { count: 0, points: 0 },
+      bonusExactResults: { count: 0, points: 0 },
+      round16Teams: { correct: 0, exactPosition: 0, points: 0 },
+      quarterTeams: { correct: 0, points: 0 },
+      semiTeams: { correct: 0, points: 0 },
+      finalTeams: { correct: 0, points: 0 },
+      winner: { correct: false, points: 0 },
+      runnerUp: { correct: false, points: 0 },
+      third: { correct: false, points: 0 },
+      fourth: { correct: false, points: 0 },
       topScorer: { correct: false, points: 0 },
-      capiscione: { top: 0, outsider: 0, materasso: 0, points: 0 }
+      capiscione: {
+        top: { correct: false, points: 0 },
+        outsider: { correct: false, points: 0 },
+        materasso: { correct: false, points: 0 }
+      }
     };
 
     // Calculate group stage points
@@ -198,11 +205,13 @@ const calculateGroupStagePoints = (prediction, finishedMatches, breakdown) => {
   const bonusPoints = bonuses * 5;
   points += bonusPoints;
 
-  // Update breakdown
-  breakdown.groupStage.exactResults = exactResults;
-  breakdown.groupStage.correctSigns = correctSigns;
-  breakdown.groupStage.bonuses = bonuses;
-  breakdown.groupStage.points = points;
+  // Update breakdown matching Score model structure
+  breakdown.exactResults.count = exactResults;
+  breakdown.exactResults.points = exactResults * 6;
+  breakdown.correctSigns.count = correctSigns;
+  breakdown.correctSigns.points = correctSigns * 3;
+  breakdown.bonusExactResults.count = bonuses;
+  breakdown.bonusExactResults.points = bonusPoints;
 
   return points;
 };
