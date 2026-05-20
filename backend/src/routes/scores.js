@@ -25,9 +25,9 @@ router.get('/leaderboard', protect, async (req, res) => {
       rank: index + 1,
       username: score.user.username,
       userId: score.user._id,
-      totalPoints: score.totalPoints,
-      exactResults: score.breakdown.groupStage.exactResults,
-      correctSigns: score.breakdown.groupStage.correctSigns,
+      totalPoints: score.totalPoints || 0,
+      exactResults: score.breakdown?.groupStage?.exactResults || 0,
+      correctSigns: score.breakdown?.groupStage?.correctSigns || 0,
       trend: 'same' // TODO: Calculate trend based on previous rankings
     }));
     
