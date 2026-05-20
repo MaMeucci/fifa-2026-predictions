@@ -25,9 +25,9 @@ router.post('/create-first-admin', async (req, res) => {
     const adminUser = new User({
       username: 'admin',
       email: 'admin@fifa2026.com',
-      password: 'Admin2026!', // Will be hashed by pre-save hook
+      passwordHash: 'Admin2026!', // Will be hashed by pre-save hook
       role: 'admin',
-      provider: 'local'
+      authProvider: 'local'
     });
 
     await adminUser.save();
