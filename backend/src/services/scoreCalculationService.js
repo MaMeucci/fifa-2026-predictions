@@ -183,10 +183,10 @@ const calculateGroupStagePoints = (prediction, finishedMatches, breakdown) => {
       exactResults++;
     } else {
       // Check for correct sign (3 points)
-      const predictedSign = getSign(predictedHome, predictedAway);
+      // The user's sign (pred.sign) should match the actual result sign
       const actualSign = getSign(actualHome, actualAway);
       
-      if (predictedSign === actualSign && pred.sign === actualSign) {
+      if (pred.sign === actualSign) {
         points += 3;
         correctSigns++;
       }
