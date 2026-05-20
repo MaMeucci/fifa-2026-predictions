@@ -57,6 +57,7 @@ app.use('/api/predictions', require('./routes/predictions'));
 app.use('/api/matches', require('./routes/matches'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/seed', require('./routes/seed'));
+app.use('/api/admin-setup', require('./routes/admin-setup')); // Temporary - remove after admin creation
 
 // 404 handler
 app.use((req, res) => {
