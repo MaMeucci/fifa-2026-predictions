@@ -67,7 +67,6 @@ const AdminPage = () => {
   const [error, setError] = useState('');
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedPhase, setSelectedPhase] = useState('GROUP');
   const [selectedGroup, setSelectedGroup] = useState('ALL');
   
   // User management states
@@ -84,7 +83,7 @@ const AdminPage = () => {
   // Load matches on component mount and when filters change
   useEffect(() => {
     loadMatches();
-  }, [selectedPhase, selectedGroup]);
+  }, [selectedGroup]);
 
   // Load users when user management tab is active
   useEffect(() => {
@@ -99,13 +98,11 @@ const AdminPage = () => {
       setLoading(true);
       setError('');
       
-      let url = '/matches';
-      const params = new URLSearchParams();
+      let url = '/matches?phase=GROUP';
       
-      if (selectedPhase) params.append('phase', selectedPhase);
-      if (selectedGroup !== 'ALL' && selectedPhase === 'GROUP') params.append('group', selectedGroup);
-      
-      if (params.toString()) url += `?${params.toString()}`;
+      if (selectedGroup !== 'ALL') {
+        url += `&group=${selectedGroup}`;
+      }
       
       const response = await api.get(url);
       setMatches(response.data.data || []);
@@ -273,12 +270,9 @@ const AdminPage = () => {
     }
   };
 
-  const isKnockoutPhase = () => {
-    return ['ROUND_16', 'ROUND_8', 'QUARTER', 'SEMI', 'FINAL'].includes(selectedPhase);
-  };
 
   const renderMatchResults = () => (
-    <Box>
+    <Box sx={{ px: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h5">
           Inserimento Risultati
@@ -293,44 +287,25 @@ const AdminPage = () => {
         </Button>
       </Box>
 
-      {/* Filters */}
+      {/* Filters - Only Group filter */}
       <Paper elevation={1} sx={{ p: 2, mb: 3 }}>
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={6}>
             <FormControl fullWidth size="small">
-              <InputLabel>Fase</InputLabel>
+              <InputLabel>Gruppo</InputLabel>
               <Select
-                value={selectedPhase}
-                label="Fase"
-                onChange={(e) => setSelectedPhase(e.target.value)}
+                value={selectedGroup}
+                label="Gruppo"
+                onChange={(e) => setSelectedGroup(e.target.value)}
               >
-                <MenuItem value="GROUP">Gironi</MenuItem>
-                <MenuItem value="ROUND_16">Sedicesimi</MenuItem>
-                <MenuItem value="ROUND_8">Ottavi</MenuItem>
-                <MenuItem value="QUARTER">Quarti</MenuItem>
-                <MenuItem value="SEMI">Semifinali</MenuItem>
-                <MenuItem value="FINAL">Finale</MenuItem>
+                <MenuItem value="ALL">Tutti i gruppi</MenuItem>
+                {['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'].map(group => (
+                  <MenuItem key={group} value={group}>Gruppo {group}</MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
-          {selectedPhase === 'GROUP' && (
-            <Grid item xs={12} sm={6} md={4}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Gruppo</InputLabel>
-                <Select
-                  value={selectedGroup}
-                  label="Gruppo"
-                  onChange={(e) => setSelectedGroup(e.target.value)}
-                >
-                  <MenuItem value="ALL">Tutti i gruppi</MenuItem>
-                  {['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'].map(group => (
-                    <MenuItem key={group} value={group}>Gruppo {group}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-          )}
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={6}>
             <Button
               variant="outlined"
               startIcon={<Refresh />}
@@ -355,7 +330,7 @@ const AdminPage = () => {
             <TableHead>
               <TableRow sx={{ bgcolor: 'grey.100' }}>
                 <TableCell sx={{ fontWeight: 'bold' }}>Match #</TableCell>
-                {selectedPhase === 'GROUP' && <TableCell sx={{ fontWeight: 'bold' }}>Gruppo</TableCell>}
+                <TableCell sx={{ fontWeight: 'bold' }}>Gruppo</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>Partita</TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>Data</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Risultato</TableCell>
@@ -369,11 +344,9 @@ const AdminPage = () => {
                   <TableCell>
                     <Chip label={match.matchNumber} size="small" />
                   </TableCell>
-                  {selectedPhase === 'GROUP' && (
-                    <TableCell>
-                      <Chip label={`Gruppo ${match.group}`} size="small" color="primary" />
-                    </TableCell>
-                  )}
+                  <TableCell>
+                    <Chip label={`Gruppo ${match.group}`} size="small" color="primary" />
+                  </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                       {match.homeTeam.name} vs {match.awayTeam.name}
@@ -678,10 +651,10 @@ const AdminPage = () => {
   );
 
   return (
-    <Container maxWidth="lg">
-      <Box sx={{ py: 4 }}>
+    <Container maxWidth={false} disableGutters>
+      <Box sx={{ py: 2, px: 0 }}>
         {/* Header */}
-        <Box sx={{ mb: 4 }}>
+        <Box sx={{ mb: 3, px: 2 }}>
           <Typography variant="h3" component="h1" gutterBottom>
             Pannello Amministrazione
           </Typography>
@@ -691,19 +664,19 @@ const AdminPage = () => {
         </Box>
 
         {success && (
-          <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>
+          <Alert severity="success" sx={{ mb: 3, mx: 2 }} onClose={() => setSuccess('')}>
             {success}
           </Alert>
         )}
 
         {error && (
-          <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>
+          <Alert severity="error" sx={{ mb: 3, mx: 2 }} onClose={() => setError('')}>
             {error}
           </Alert>
         )}
 
         {/* Tabs */}
-        <Paper elevation={2} sx={{ mb: 3 }}>
+        <Paper elevation={2} sx={{ mb: 3, mx: 2 }}>
           <Tabs
             value={activeTab}
             onChange={handleTabChange}
@@ -796,7 +769,7 @@ const AdminPage = () => {
                   </Grid>
                 </Grid>
 
-                {isKnockoutPhase() && (
+                {false && (
                   <>
                     <Typography variant="subtitle2" gutterBottom sx={{ mt: 3 }}>
                       Rigori (opzionale - solo se necessari)
