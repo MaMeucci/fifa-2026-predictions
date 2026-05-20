@@ -2,6 +2,7 @@ const Match = require('../models/Match');
 const Prediction = require('../models/Prediction');
 const Score = require('../models/Score');
 const User = require('../models/User');
+const KnockoutResults = require('../models/KnockoutResults');
 
 /**
  * Calculate scores for all users based on their predictions and match results
@@ -122,20 +123,20 @@ const calculateUserScore = async (userId, finishedMatches = null) => {
     // Calculate group stage points
     const groupStagePoints = calculateGroupStagePoints(prediction, finishedMatches, breakdown);
     
-    // Calculate knockout stage points (TODO: implement when knockout results are available)
-    // const knockoutPoints = calculateKnockoutPoints(prediction, breakdown);
+    // Calculate knockout stage points
+    const knockoutPoints = await calculateKnockoutPoints(prediction, breakdown);
     
-    // Calculate final rankings points (TODO: implement when tournament ends)
-    // const finalRankingsPoints = calculateFinalRankingsPoints(prediction, breakdown);
+    // Calculate final rankings points
+    const finalRankingsPoints = await calculateFinalRankingsPoints(prediction, breakdown);
     
-    // Calculate top scorer points (TODO: implement when tournament ends)
-    // const topScorerPoints = calculateTopScorerPoints(prediction, breakdown);
+    // Calculate top scorer points
+    const topScorerPoints = await calculateTopScorerPoints(prediction, breakdown);
     
-    // Calculate capiscione points (TODO: implement when tournament ends)
-    // const capiscionePoints = calculateCapiscionePoints(prediction, breakdown);
+    // Calculate capiscione points
+    const capiscionePoints = await calculateCapiscionePoints(prediction, breakdown);
 
     // Calculate total points
-    const totalPoints = groupStagePoints; // + knockoutPoints + finalRankingsPoints + topScorerPoints + capiscionePoints;
+    const totalPoints = groupStagePoints + knockoutPoints + finalRankingsPoints + topScorerPoints + capiscionePoints;
 
     // Save or update score
     const score = await Score.findOneAndUpdate(
@@ -227,48 +228,174 @@ const getSign = (homeScore, awayScore) => {
 
 /**
  * Calculate knockout stage points
- * TODO: Implement when knockout results are available
  */
-const calculateKnockoutPoints = (prediction, breakdown) => {
+const calculateKnockoutPoints = async (prediction, breakdown) => {
   let points = 0;
   
-  // Round of 16: 20 points per correct team, +5 for exact position
-  // Quarter-finals: 20 points per correct team
-  // Semi-finals: 30 points per correct team
-  // Final: 50 points per correct team
-  
-  // This will be implemented when we have actual knockout results
+  try {
+    const knockoutResults = await KnockoutResults.findOne();
+    
+    if (!knockoutResults) {
+      return 0; // No results yet
+    }
+    
+    // Round of 32 (Sedicesimi): 20 points per correct team
+    if (prediction.knockoutStage?.round16 && knockoutResults.round32) {
+      const predictedTeams = prediction.knockoutStage.round16.map(t => t.team?.code).filter(Boolean);
+      const actualTeams = knockoutResults.round32.map(m => m.winner?.code).filter(Boolean);
+      
+      let correctTeams = 0;
+      let exactPositions = 0;
+      
+      predictedTeams.forEach((teamCode, index) => {
+        if (actualTeams.includes(teamCode)) {
+          correctTeams++;
+          points += 20;
+          
+          // Check if position is exact (+5 points)
+          if (actualTeams[index] === teamCode) {
+            exactPositions++;
+            points += 5;
+          }
+        }
+      });
+      
+      breakdown.round16Teams.correct = correctTeams;
+      breakdown.round16Teams.exactPosition = exactPositions;
+      breakdown.round16Teams.points = correctTeams * 20 + exactPositions * 5;
+    }
+    
+    // Round of 16 (Ottavi): 20 points per correct team
+    if (prediction.knockoutStage?.quarterFinals && knockoutResults.round16) {
+      const predictedTeams = prediction.knockoutStage.quarterFinals.map(t => t.team?.code).filter(Boolean);
+      const actualTeams = knockoutResults.round16.map(m => m.winner?.code).filter(Boolean);
+      
+      let correctTeams = 0;
+      predictedTeams.forEach(teamCode => {
+        if (actualTeams.includes(teamCode)) {
+          correctTeams++;
+          points += 20;
+        }
+      });
+      
+      breakdown.quarterTeams.correct = correctTeams;
+      breakdown.quarterTeams.points = correctTeams * 20;
+    }
+    
+    // Quarter-finals (Quarti): 30 points per correct team
+    if (prediction.knockoutStage?.semiFinals && knockoutResults.quarterFinals) {
+      const predictedTeams = prediction.knockoutStage.semiFinals.map(t => t.team?.code).filter(Boolean);
+      const actualTeams = knockoutResults.quarterFinals.map(m => m.winner?.code).filter(Boolean);
+      
+      let correctTeams = 0;
+      predictedTeams.forEach(teamCode => {
+        if (actualTeams.includes(teamCode)) {
+          correctTeams++;
+          points += 30;
+        }
+      });
+      
+      breakdown.semiTeams.correct = correctTeams;
+      breakdown.semiTeams.points = correctTeams * 30;
+    }
+    
+    // Semi-finals (Semifinali): 50 points per correct team
+    if (prediction.knockoutStage?.final && knockoutResults.semiFinals) {
+      const predictedTeams = prediction.knockoutStage.final.map(t => t.team?.code).filter(Boolean);
+      const actualTeams = knockoutResults.semiFinals.map(m => m.winner?.code).filter(Boolean);
+      
+      let correctTeams = 0;
+      predictedTeams.forEach(teamCode => {
+        if (actualTeams.includes(teamCode)) {
+          correctTeams++;
+          points += 50;
+        }
+      });
+      
+      breakdown.finalTeams.correct = correctTeams;
+      breakdown.finalTeams.points = correctTeams * 50;
+    }
+    
+  } catch (error) {
+    console.error('Error calculating knockout points:', error);
+  }
   
   return points;
 };
 
 /**
  * Calculate final rankings points
- * TODO: Implement when tournament ends
  */
-const calculateFinalRankingsPoints = (prediction, breakdown) => {
+const calculateFinalRankingsPoints = async (prediction, breakdown) => {
   let points = 0;
   
-  // 1st place: 80 points
-  // 2nd place: 50 points
-  // 3rd place: 25 points
-  // 4th place: 25 points
-  
-  // This will be implemented when tournament ends
+  try {
+    const knockoutResults = await KnockoutResults.findOne();
+    
+    if (!knockoutResults || !knockoutResults.finalRankings) {
+      return 0;
+    }
+    
+    const actualRankings = knockoutResults.finalRankings;
+    
+    // 1st place: 80 points
+    if (prediction.finalRankings?.first?.code === actualRankings.first?.code) {
+      points += 80;
+      breakdown.winner.correct = true;
+      breakdown.winner.points = 80;
+    }
+    
+    // 2nd place: 50 points
+    if (prediction.finalRankings?.second?.code === actualRankings.second?.code) {
+      points += 50;
+      breakdown.runnerUp.correct = true;
+      breakdown.runnerUp.points = 50;
+    }
+    
+    // 3rd place: 25 points
+    if (prediction.finalRankings?.third?.code === actualRankings.third?.code) {
+      points += 25;
+      breakdown.third.correct = true;
+      breakdown.third.points = 25;
+    }
+    
+    // 4th place: 25 points
+    if (prediction.finalRankings?.fourth?.code === actualRankings.fourth?.code) {
+      points += 25;
+      breakdown.fourth.correct = true;
+      breakdown.fourth.points = 25;
+    }
+    
+  } catch (error) {
+    console.error('Error calculating final rankings points:', error);
+  }
   
   return points;
 };
 
 /**
  * Calculate top scorer points
- * TODO: Implement when tournament ends
  */
-const calculateTopScorerPoints = (prediction, breakdown) => {
+const calculateTopScorerPoints = async (prediction, breakdown) => {
   let points = 0;
   
-  // Correct top scorer: 30 points
-  
-  // This will be implemented when tournament ends
+  try {
+    const knockoutResults = await KnockoutResults.findOne();
+    
+    if (!knockoutResults || !knockoutResults.topScorer) {
+      return 0;
+    }
+    
+    // Correct top scorer: 30 points
+    if (prediction.topScorer?.playerName === knockoutResults.topScorer.playerName) {
+      points += 30;
+      breakdown.topScorer.correct = true;
+      breakdown.topScorer.points = 30;
+    }
+    
+  } catch (error) {
+    console.error('Error calculating top scorer points:', error);
+  }
   
   return points;
 };
