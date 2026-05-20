@@ -54,15 +54,17 @@ const PredictionsPage = () => {
 
   const isLocked = new Date() >= new Date(TOURNAMENT_CONFIG.lockDate);
 
-  // Load matches from API
+  // Load matches and user predictions from API
   useEffect(() => {
-    const loadMatches = async () => {
+    const loadData = async () => {
       try {
         setLoading(true);
-        const response = await api.get('/matches?phase=GROUP');
+        
+        // Load matches
+        const matchesResponse = await api.get('/matches?phase=GROUP');
         
         // Sort matches by date (chronological order)
-        const sortedMatches = response.data.data
+        const sortedMatches = matchesResponse.data.data
           .map(match => ({
             id: match._id,
             matchNumber: match.matchNumber,
@@ -75,27 +77,80 @@ const PredictionsPage = () => {
           }))
           .sort((a, b) => new Date(a.date) - new Date(b.date));
         
-        const initialPredictions = {};
-        sortedMatches.forEach(match => {
-          // Initialize predictions with default values: 0-0 and sign X
-          initialPredictions[match.id] = {
-            homeScore: '0',
-            awayScore: '0',
-            sign: MATCH_SIGNS.DRAW, // X
-          };
-        });
-        
         setMatches(sortedMatches);
-        setGroupPredictions(initialPredictions);
+        
+        // Load user's existing predictions
+        try {
+          const predictionsResponse = await api.get('/predictions/my');
+          const userPredictions = predictionsResponse.data.data;
+          
+          // Map existing predictions to state
+          const loadedPredictions = {};
+          sortedMatches.forEach(match => {
+            // Find prediction for this match
+            const existingPred = userPredictions.groupStage?.find(
+              p => p.match === match.id || p.match?._id === match.id
+            );
+            
+            if (existingPred) {
+              loadedPredictions[match.id] = {
+                homeScore: String(existingPred.homeScore),
+                awayScore: String(existingPred.awayScore),
+                sign: existingPred.sign,
+              };
+            } else {
+              // Initialize with default values
+              loadedPredictions[match.id] = {
+                homeScore: '0',
+                awayScore: '0',
+                sign: MATCH_SIGNS.DRAW,
+              };
+            }
+          });
+          
+          setGroupPredictions(loadedPredictions);
+          
+          // Load knockout predictions if available
+          if (userPredictions.finalRankings) {
+            setKnockoutPredictions({
+              winner: userPredictions.finalRankings.first?.name || '',
+              runnerUp: userPredictions.finalRankings.second?.name || '',
+              third: userPredictions.finalRankings.third?.name || '',
+              fourth: userPredictions.finalRankings.fourth?.name || '',
+              topScorer: userPredictions.topScorer?.playerName || '',
+            });
+          }
+          
+          // Load capiscione predictions if available
+          if (userPredictions.capiscione) {
+            setCapiscionePredictions({
+              top: userPredictions.capiscione.top?.name || '',
+              outsider: userPredictions.capiscione.outsider?.name || '',
+              materasso: userPredictions.capiscione.materasso?.name || '',
+            });
+          }
+        } catch (predErr) {
+          console.log('No existing predictions found, using defaults');
+          // Initialize with default values
+          const initialPredictions = {};
+          sortedMatches.forEach(match => {
+            initialPredictions[match.id] = {
+              homeScore: '0',
+              awayScore: '0',
+              sign: MATCH_SIGNS.DRAW,
+            };
+          });
+          setGroupPredictions(initialPredictions);
+        }
       } catch (err) {
-        console.error('Error loading matches:', err);
-        setError('Errore nel caricamento delle partite');
+        console.error('Error loading data:', err);
+        setError('Errore nel caricamento dei dati');
       } finally {
         setLoading(false);
       }
     };
 
-    loadMatches();
+    loadData();
   }, []);
 
   const handleTabChange = (event, newValue) => {
@@ -132,17 +187,57 @@ const PredictionsPage = () => {
       setSaving(true);
       setError('');
       
-      // TODO: Replace with actual API call
-      // await savePredictions({ groupPredictions, knockoutPredictions, capiscionePredictions });
+      // Prepare data for API
+      const groupStage = Object.entries(groupPredictions).map(([matchId, pred]) => ({
+        match: matchId,
+        homeScore: parseInt(pred.homeScore) || 0,
+        awayScore: parseInt(pred.awayScore) || 0,
+        sign: pred.sign,
+      }));
       
-      // Mock save
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Prepare knockout stage data
+      const knockoutStage = {
+        round16: [],
+        quarterFinals: [],
+        semiFinals: [],
+        final: [],
+      };
+      
+      // Prepare final rankings
+      const finalRankings = {
+        first: knockoutPredictions.winner ? { name: knockoutPredictions.winner, code: '' } : undefined,
+        second: knockoutPredictions.runnerUp ? { name: knockoutPredictions.runnerUp, code: '' } : undefined,
+        third: knockoutPredictions.third ? { name: knockoutPredictions.third, code: '' } : undefined,
+        fourth: knockoutPredictions.fourth ? { name: knockoutPredictions.fourth, code: '' } : undefined,
+      };
+      
+      // Prepare top scorer
+      const topScorer = knockoutPredictions.topScorer ? {
+        playerName: knockoutPredictions.topScorer,
+        team: { name: '', code: '' },
+      } : undefined;
+      
+      // Prepare capiscione
+      const capiscione = {
+        top: capiscionePredictions.top ? { name: capiscionePredictions.top, code: '' } : undefined,
+        outsider: capiscionePredictions.outsider ? { name: capiscionePredictions.outsider, code: '' } : undefined,
+        materasso: capiscionePredictions.materasso ? { name: capiscionePredictions.materasso, code: '' } : undefined,
+      };
+      
+      // Call API
+      await api.put('/predictions/my', {
+        groupStage,
+        knockoutStage,
+        finalRankings,
+        topScorer,
+        capiscione,
+      });
       
       setSuccess('Pronostici salvati con successo!');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
-      setError('Errore nel salvataggio dei pronostici');
-      console.error(err);
+      setError(err.response?.data?.message || 'Errore nel salvataggio dei pronostici');
+      console.error('Error saving predictions:', err);
     } finally {
       setSaving(false);
     }

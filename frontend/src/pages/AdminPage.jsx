@@ -254,14 +254,18 @@ const AdminPage = () => {
       setCalculating(true);
       setError('');
       
-      // TODO: Implement score calculation API
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Call the score calculation API
+      const response = await api.post('/scores/calculate');
       
-      setSuccess('Punteggi ricalcolati con successo!');
-      setTimeout(() => setSuccess(''), 3000);
+      if (response.data.success) {
+        setSuccess(`Punteggi ricalcolati con successo! ${response.data.data.scoresCalculated} utenti aggiornati.`);
+        setTimeout(() => setSuccess(''), 5000);
+      } else {
+        setError('Errore nel calcolo dei punteggi');
+      }
     } catch (err) {
-      setError('Errore nel calcolo dei punteggi');
-      console.error(err);
+      setError(err.response?.data?.message || 'Errore nel calcolo dei punteggi');
+      console.error('Error calculating scores:', err);
     } finally {
       setCalculating(false);
     }
