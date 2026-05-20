@@ -49,6 +49,7 @@ import {
   Person
 } from '@mui/icons-material';
 import api from '../services/api';
+import KnockoutManagement from '../components/KnockoutManagement';
 
 const AdminPage = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -86,7 +87,7 @@ const AdminPage = () => {
 
   // Load users when user management tab is active
   useEffect(() => {
-    if (activeTab === 2) {
+    if (activeTab === 3) {
       loadUsers();
       loadUserStats();
     }
@@ -708,7 +709,8 @@ const AdminPage = () => {
             variant="fullWidth"
             sx={{ borderBottom: 1, borderColor: 'divider' }}
           >
-            <Tab label="Risultati Partite" />
+            <Tab label="Risultati Gironi" />
+            <Tab label="Fase Finale" />
             <Tab label="Statistiche" />
             <Tab label="Gestione Utenti" />
           </Tabs>
@@ -717,8 +719,9 @@ const AdminPage = () => {
         {/* Tab Content */}
         <Box sx={{ mt: 3 }}>
           {activeTab === 0 && renderMatchResults()}
-          {activeTab === 1 && renderStatistics()}
-          {activeTab === 2 && renderUserManagement()}
+          {activeTab === 1 && <KnockoutManagement />}
+          {activeTab === 2 && renderStatistics()}
+          {activeTab === 3 && renderUserManagement()}
         </Box>
 
         {/* Confirm Dialog */}
