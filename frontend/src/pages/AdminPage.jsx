@@ -43,7 +43,7 @@ import {
   Search,
   PersonAdd,
   Block,
-  CheckCircleOutline,
+  CheckCircleOutlined,
   Delete,
   AdminPanelSettings,
   Person
@@ -612,7 +612,7 @@ const AdminPage = () => {
                   <TableCell align="center">
                     {user.isActive ? (
                       <Chip
-                        icon={<CheckCircleOutline />}
+                        icon={<CheckCircleOutlined />}
                         label="Attivo"
                         color="success"
                         size="small"
@@ -648,7 +648,7 @@ const AdminPage = () => {
                           size="small"
                           onClick={() => handleToggleUserStatus(user)}
                         >
-                          {user.isActive ? <Block /> : <CheckCircleOutline />}
+                          {user.isActive ? <Block /> : <CheckCircleOutlined />}
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Elimina utente">
