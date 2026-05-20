@@ -152,6 +152,22 @@ const knockoutResultsSchema = new mongoose.Schema(
       goals: Number
     },
     
+    // Capiscione
+    capiscione: {
+      top: {
+        name: String,
+        code: String,
+      },
+      outsider: {
+        name: String,
+        code: String,
+      },
+      materasso: {
+        name: String,
+        code: String,
+      }
+    },
+    
     lastUpdated: {
       type: Date,
       default: Date.now

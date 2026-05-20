@@ -402,16 +402,43 @@ const calculateTopScorerPoints = async (prediction, breakdown) => {
 
 /**
  * Calculate capiscione points
- * TODO: Implement when tournament ends
  */
-const calculateCapiscionePoints = (prediction, breakdown) => {
+const calculateCapiscionePoints = async (prediction, breakdown) => {
   let points = 0;
   
-  // Top group: 25 points
-  // Outsider group: 20 points
-  // Materasso group: 15 points
-  
-  // This will be implemented when tournament ends
+  try {
+    const knockoutResults = await KnockoutResults.findOne();
+    
+    if (!knockoutResults || !knockoutResults.capiscione) {
+      return 0;
+    }
+    
+    const actualCapiscione = knockoutResults.capiscione;
+    
+    // Top group: 25 points
+    if (prediction.capiscione?.top?.name === actualCapiscione.top?.name) {
+      points += 25;
+      breakdown.capiscione.top.correct = true;
+      breakdown.capiscione.top.points = 25;
+    }
+    
+    // Outsider group: 20 points
+    if (prediction.capiscione?.outsider?.name === actualCapiscione.outsider?.name) {
+      points += 20;
+      breakdown.capiscione.outsider.correct = true;
+      breakdown.capiscione.outsider.points = 20;
+    }
+    
+    // Materasso group: 15 points
+    if (prediction.capiscione?.materasso?.name === actualCapiscione.materasso?.name) {
+      points += 15;
+      breakdown.capiscione.materasso.correct = true;
+      breakdown.capiscione.materasso.points = 15;
+    }
+    
+  } catch (error) {
+    console.error('Error calculating capiscione points:', error);
+  }
   
   return points;
 };
