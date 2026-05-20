@@ -9,7 +9,7 @@ router.use(protect, admin);
 // Get all users
 router.get('/users', async (req, res) => {
   try {
-    const { page = 1, limit = 20, search = '', role = '' } = req.query;
+    const { page = 1, limit = 20, search = '', role = '', activeOnly = 'false' } = req.query;
     
     const query = {};
     
@@ -24,6 +24,11 @@ router.get('/users', async (req, res) => {
     // Filter by role
     if (role) {
       query.role = role;
+    }
+    
+    // Filter only active users
+    if (activeOnly === 'true') {
+      query.isActive = true;
     }
     
     const skip = (parseInt(page) - 1) * parseInt(limit);

@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { EmojiEvents, TrendingUp, TrendingDown } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -32,26 +33,18 @@ const DashboardPage = () => {
   const fetchLeaderboard = async () => {
     try {
       setLoading(true);
-      // TODO: Replace with actual API call
-      // const response = await fetch(`${API_URL}/scores/leaderboard`);
-      // const data = await response.json();
+      setError('');
       
-      // Mock data for now
-      const mockData = [
-        { rank: 1, username: 'Mario_Rossi', totalPoints: 245, exactResults: 12, correctSigns: 28, trend: 'up' },
-        { rank: 2, username: 'Luca_Bianchi', totalPoints: 238, exactResults: 11, correctSigns: 30, trend: 'same' },
-        { rank: 3, username: 'Anna_Verdi', totalPoints: 225, exactResults: 10, correctSigns: 27, trend: 'down' },
-        { rank: 4, username: user?.username || 'Tu', totalPoints: 210, exactResults: 9, correctSigns: 25, trend: 'up' },
-        { rank: 5, username: 'Paolo_Neri', totalPoints: 198, exactResults: 8, correctSigns: 24, trend: 'same' },
-      ];
+      // Fetch leaderboard from API
+      const response = await api.get('/scores/leaderboard');
+      const leaderboardData = response.data.data || [];
       
-      setLeaderboard(mockData);
+      setLeaderboard(leaderboardData);
       
       // Find current user's score
-      const userScore = mockData.find(item => item.username === user?.username);
+      const userScore = leaderboardData.find(item => item.username === user?.username);
       setMyScore(userScore);
       
-      setError('');
     } catch (err) {
       setError('Errore nel caricamento della classifica');
       console.error(err);
