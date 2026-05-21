@@ -110,7 +110,64 @@ const PredictionsPage = () => {
           
           setGroupPredictions(loadedPredictions);
           
-          // Load knockout predictions if available
+          // Load knockout stage bracket predictions if available
+          if (userPredictions.knockoutStage) {
+            const loadedBracket = {
+              round32: Array(16).fill(null).map(() => ['', '']),
+              round16: Array(8).fill(null).map(() => ['', '']),
+              quarters: Array(4).fill(null).map(() => ['', '']),
+              semis: Array(2).fill(null).map(() => ['', '']),
+              final: ['', ''],
+            };
+            
+            // Convert round16 (from API) to round32 (bracket format)
+            if (userPredictions.knockoutStage.round16) {
+              userPredictions.knockoutStage.round16.forEach((item, index) => {
+                const matchIndex = Math.floor(index / 2);
+                const position = index % 2;
+                if (matchIndex < 16 && loadedBracket.round32[matchIndex]) {
+                  loadedBracket.round32[matchIndex][position] = item.team?.name || '';
+                }
+              });
+            }
+            
+            // Convert quarterFinals (from API) to round16 (bracket format)
+            if (userPredictions.knockoutStage.quarterFinals) {
+              userPredictions.knockoutStage.quarterFinals.forEach((item, index) => {
+                const matchIndex = Math.floor(index / 2);
+                const position = index % 2;
+                if (matchIndex < 8 && loadedBracket.round16[matchIndex]) {
+                  loadedBracket.round16[matchIndex][position] = item.team?.name || '';
+                }
+              });
+            }
+            
+            // Convert semiFinals (from API) to quarters (bracket format)
+            if (userPredictions.knockoutStage.semiFinals) {
+              userPredictions.knockoutStage.semiFinals.forEach((item, index) => {
+                const matchIndex = Math.floor(index / 2);
+                const position = index % 2;
+                if (matchIndex < 4 && loadedBracket.quarters[matchIndex]) {
+                  loadedBracket.quarters[matchIndex][position] = item.team?.name || '';
+                }
+              });
+            }
+            
+            // Convert final (from API) to semis (bracket format)
+            if (userPredictions.knockoutStage.final) {
+              userPredictions.knockoutStage.final.forEach((item, index) => {
+                const matchIndex = Math.floor(index / 2);
+                const position = index % 2;
+                if (matchIndex < 2 && loadedBracket.semis[matchIndex]) {
+                  loadedBracket.semis[matchIndex][position] = item.team?.name || '';
+                }
+              });
+            }
+            
+            setBracketPredictions(loadedBracket);
+          }
+          
+          // Load final rankings predictions if available
           if (userPredictions.finalRankings) {
             setKnockoutPredictions({
               winner: userPredictions.finalRankings.first?.name || '',
