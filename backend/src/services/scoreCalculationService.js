@@ -241,14 +241,18 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
     
     // Round of 32 (Sedicesimi): 20 points per correct team
     if (prediction.knockoutStage?.round16 && knockoutResults.round32) {
-      const predictedTeams = prediction.knockoutStage.round16.map(t => t.team?.code).filter(Boolean);
-      const actualTeams = knockoutResults.round32.map(m => m.winner?.code).filter(Boolean);
+      const predictedTeams = prediction.knockoutStage.round16
+        .map(t => t.team?.code)
+        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+      const actualTeams = knockoutResults.round32
+        .map(m => m.winner?.code)
+        .filter(code => code && code.trim() !== ''); // Filter out empty strings
       
       let correctTeams = 0;
       let exactPositions = 0;
       
       predictedTeams.forEach((teamCode, index) => {
-        if (actualTeams.includes(teamCode)) {
+        if (teamCode && actualTeams.includes(teamCode)) {
           correctTeams++;
           points += 20;
           
@@ -267,12 +271,16 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
     
     // Round of 16 (Ottavi): 20 points per correct team
     if (prediction.knockoutStage?.quarterFinals && knockoutResults.round16) {
-      const predictedTeams = prediction.knockoutStage.quarterFinals.map(t => t.team?.code).filter(Boolean);
-      const actualTeams = knockoutResults.round16.map(m => m.winner?.code).filter(Boolean);
+      const predictedTeams = prediction.knockoutStage.quarterFinals
+        .map(t => t.team?.code)
+        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+      const actualTeams = knockoutResults.round16
+        .map(m => m.winner?.code)
+        .filter(code => code && code.trim() !== ''); // Filter out empty strings
       
       let correctTeams = 0;
       predictedTeams.forEach(teamCode => {
-        if (actualTeams.includes(teamCode)) {
+        if (teamCode && actualTeams.includes(teamCode)) {
           correctTeams++;
           points += 20;
         }
@@ -284,12 +292,16 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
     
     // Quarter-finals (Quarti): 30 points per correct team
     if (prediction.knockoutStage?.semiFinals && knockoutResults.quarterFinals) {
-      const predictedTeams = prediction.knockoutStage.semiFinals.map(t => t.team?.code).filter(Boolean);
-      const actualTeams = knockoutResults.quarterFinals.map(m => m.winner?.code).filter(Boolean);
+      const predictedTeams = prediction.knockoutStage.semiFinals
+        .map(t => t.team?.code)
+        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+      const actualTeams = knockoutResults.quarterFinals
+        .map(m => m.winner?.code)
+        .filter(code => code && code.trim() !== ''); // Filter out empty strings
       
       let correctTeams = 0;
       predictedTeams.forEach(teamCode => {
-        if (actualTeams.includes(teamCode)) {
+        if (teamCode && actualTeams.includes(teamCode)) {
           correctTeams++;
           points += 30;
         }
@@ -301,12 +313,16 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
     
     // Semi-finals (Semifinali): 50 points per correct team
     if (prediction.knockoutStage?.final && knockoutResults.semiFinals) {
-      const predictedTeams = prediction.knockoutStage.final.map(t => t.team?.code).filter(Boolean);
-      const actualTeams = knockoutResults.semiFinals.map(m => m.winner?.code).filter(Boolean);
+      const predictedTeams = prediction.knockoutStage.final
+        .map(t => t.team?.code)
+        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+      const actualTeams = knockoutResults.semiFinals
+        .map(m => m.winner?.code)
+        .filter(code => code && code.trim() !== ''); // Filter out empty strings
       
       let correctTeams = 0;
       predictedTeams.forEach(teamCode => {
-        if (actualTeams.includes(teamCode)) {
+        if (teamCode && actualTeams.includes(teamCode)) {
           correctTeams++;
           points += 50;
         }
@@ -339,28 +355,40 @@ const calculateFinalRankingsPoints = async (prediction, breakdown) => {
     const actualRankings = knockoutResults.finalRankings;
     
     // 1st place: 80 points
-    if (prediction.finalRankings?.first?.code === actualRankings.first?.code) {
+    if (prediction.finalRankings?.first?.code &&
+        actualRankings.first?.code &&
+        prediction.finalRankings.first.code.trim() !== '' &&
+        prediction.finalRankings.first.code === actualRankings.first.code) {
       points += 80;
       breakdown.winner.correct = true;
       breakdown.winner.points = 80;
     }
     
     // 2nd place: 50 points
-    if (prediction.finalRankings?.second?.code === actualRankings.second?.code) {
+    if (prediction.finalRankings?.second?.code &&
+        actualRankings.second?.code &&
+        prediction.finalRankings.second.code.trim() !== '' &&
+        prediction.finalRankings.second.code === actualRankings.second.code) {
       points += 50;
       breakdown.runnerUp.correct = true;
       breakdown.runnerUp.points = 50;
     }
     
     // 3rd place: 25 points
-    if (prediction.finalRankings?.third?.code === actualRankings.third?.code) {
+    if (prediction.finalRankings?.third?.code &&
+        actualRankings.third?.code &&
+        prediction.finalRankings.third.code.trim() !== '' &&
+        prediction.finalRankings.third.code === actualRankings.third.code) {
       points += 25;
       breakdown.third.correct = true;
       breakdown.third.points = 25;
     }
     
     // 4th place: 25 points
-    if (prediction.finalRankings?.fourth?.code === actualRankings.fourth?.code) {
+    if (prediction.finalRankings?.fourth?.code &&
+        actualRankings.fourth?.code &&
+        prediction.finalRankings.fourth.code.trim() !== '' &&
+        prediction.finalRankings.fourth.code === actualRankings.fourth.code) {
       points += 25;
       breakdown.fourth.correct = true;
       breakdown.fourth.points = 25;
@@ -387,7 +415,10 @@ const calculateTopScorerPoints = async (prediction, breakdown) => {
     }
     
     // Correct top scorer: 30 points
-    if (prediction.topScorer?.playerName === knockoutResults.topScorer.playerName) {
+    if (prediction.topScorer?.playerName &&
+        knockoutResults.topScorer.playerName &&
+        prediction.topScorer.playerName.trim() !== '' &&
+        prediction.topScorer.playerName === knockoutResults.topScorer.playerName) {
       points += 30;
       breakdown.topScorer.correct = true;
       breakdown.topScorer.points = 30;
@@ -416,21 +447,30 @@ const calculateCapiscionePoints = async (prediction, breakdown) => {
     const actualCapiscione = knockoutResults.capiscione;
     
     // Top group: 25 points
-    if (prediction.capiscione?.top?.name === actualCapiscione.top?.name) {
+    if (prediction.capiscione?.top?.name &&
+        actualCapiscione.top?.name &&
+        prediction.capiscione.top.name.trim() !== '' &&
+        prediction.capiscione.top.name === actualCapiscione.top.name) {
       points += 25;
       breakdown.capiscione.top.correct = true;
       breakdown.capiscione.top.points = 25;
     }
     
     // Outsider group: 20 points
-    if (prediction.capiscione?.outsider?.name === actualCapiscione.outsider?.name) {
+    if (prediction.capiscione?.outsider?.name &&
+        actualCapiscione.outsider?.name &&
+        prediction.capiscione.outsider.name.trim() !== '' &&
+        prediction.capiscione.outsider.name === actualCapiscione.outsider.name) {
       points += 20;
       breakdown.capiscione.outsider.correct = true;
       breakdown.capiscione.outsider.points = 20;
     }
     
     // Materasso group: 15 points
-    if (prediction.capiscione?.materasso?.name === actualCapiscione.materasso?.name) {
+    if (prediction.capiscione?.materasso?.name &&
+        actualCapiscione.materasso?.name &&
+        prediction.capiscione.materasso.name.trim() !== '' &&
+        prediction.capiscione.materasso.name === actualCapiscione.materasso.name) {
       points += 15;
       breakdown.capiscione.materasso.correct = true;
       breakdown.capiscione.materasso.points = 15;
