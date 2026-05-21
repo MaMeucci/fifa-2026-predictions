@@ -195,12 +195,28 @@ const PredictionsPage = () => {
         sign: pred.sign,
       }));
       
-      // Prepare knockout stage data
+      // Prepare knockout stage data from bracket predictions
       const knockoutStage = {
-        round16: [],
-        quarterFinals: [],
-        semiFinals: [],
-        final: [],
+        round16: bracketPredictions.round32.flatMap(match =>
+          match.filter(team => team && team.trim() !== '').map(team => ({
+            team: { name: team, code: '' }
+          }))
+        ),
+        quarterFinals: bracketPredictions.round16.flatMap(match =>
+          match.filter(team => team && team.trim() !== '').map(team => ({
+            team: { name: team, code: '' }
+          }))
+        ),
+        semiFinals: bracketPredictions.quarters.flatMap(match =>
+          match.filter(team => team && team.trim() !== '').map(team => ({
+            team: { name: team, code: '' }
+          }))
+        ),
+        final: bracketPredictions.semis.flatMap(match =>
+          match.filter(team => team && team.trim() !== '').map(team => ({
+            team: { name: team, code: '' }
+          }))
+        ),
       };
       
       // Prepare final rankings
