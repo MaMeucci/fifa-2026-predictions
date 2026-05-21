@@ -111,6 +111,7 @@ const PredictionsPage = () => {
           setGroupPredictions(loadedPredictions);
           
           // Load knockout stage bracket predictions if available
+          console.log('Loading knockout predictions:', userPredictions.knockoutStage);
           if (userPredictions.knockoutStage) {
             const loadedBracket = {
               round32: Array(16).fill(null).map(() => ['', '']),
