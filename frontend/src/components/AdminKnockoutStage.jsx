@@ -280,75 +280,73 @@ const AdminKnockoutStage = () => {
       />
 
       {/* Podium & Top Scorer */}
-      <Grid container spacing={3} sx={{ mt: 4, px: 2, mx: 0, width: '100%' }}>
-        <Grid item xs={12}>
-          <Paper elevation={2} sx={{ p: 3, bgcolor: 'warning.light', width: '100%' }}>
-            <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <EmojiEvents /> Podio e Capocannoniere
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={12} md={6}>
-                <Autocomplete
-                  size="small"
-                  value={finalRankings.winner || null}
-                  onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, winner: newValue || '' }))}
-                  options={allTeams}
-                  renderInput={(params) => (
-                    <TextField {...params} label="🥇 Vincitore" placeholder="Prima classificata" />
-                  )}
-                  freeSolo
-                />
-              </Grid>
-              <Grid item xs={12} sm={12} md={6}>
-                <Autocomplete
-                  size="small"
-                  value={finalRankings.runnerUp || null}
-                  onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, runnerUp: newValue || '' }))}
-                  options={allTeams}
-                  renderInput={(params) => (
-                    <TextField {...params} label="🥈 Seconda" placeholder="Seconda classificata" />
-                  )}
-                  freeSolo
-                />
-              </Grid>
-              <Grid item xs={12} sm={12} md={4}>
-                <Autocomplete
-                  size="small"
-                  value={finalRankings.third || null}
-                  onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, third: newValue || '' }))}
-                  options={allTeams}
-                  renderInput={(params) => (
-                    <TextField {...params} label="🥉 Terza" placeholder="Terza" />
-                  )}
-                  freeSolo
-                />
-              </Grid>
-              <Grid item xs={12} sm={12} md={4}>
-                <Autocomplete
-                  size="small"
-                  value={finalRankings.fourth || null}
-                  onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, fourth: newValue || '' }))}
-                  options={allTeams}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Quarta" placeholder="Quarta" />
-                  )}
-                  freeSolo
-                />
-              </Grid>
-              <Grid item xs={12} sm={12} md={4}>
-                <TextField
-                  label="⚽ Capocannoniere"
-                  size="small"
-                  fullWidth
-                  value={finalRankings.topScorer}
-                  onChange={(e) => setFinalRankings(prev => ({ ...prev, topScorer: e.target.value }))}
-                  placeholder="Nome giocatore"
-                />
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-      </Grid>
+      <Box sx={{ mt: 4, px: 2, width: '100%' }}>
+        <Paper elevation={2} sx={{ p: 3, bgcolor: 'warning.light' }}>
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <EmojiEvents /> Podio e Capocannoniere
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+            <Box sx={{ flex: '1 1 300px', minWidth: '250px' }}>
+              <Autocomplete
+                size="small"
+                value={finalRankings.winner || null}
+                onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, winner: newValue || '' }))}
+                options={allTeams}
+                renderInput={(params) => (
+                  <TextField {...params} label="🥇 Vincitore" placeholder="Prima classificata" />
+                )}
+                freeSolo
+              />
+            </Box>
+            <Box sx={{ flex: '1 1 300px', minWidth: '250px' }}>
+              <Autocomplete
+                size="small"
+                value={finalRankings.runnerUp || null}
+                onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, runnerUp: newValue || '' }))}
+                options={allTeams}
+                renderInput={(params) => (
+                  <TextField {...params} label="🥈 Seconda" placeholder="Seconda classificata" />
+                )}
+                freeSolo
+              />
+            </Box>
+            <Box sx={{ flex: '1 1 200px', minWidth: '200px' }}>
+              <Autocomplete
+                size="small"
+                value={finalRankings.third || null}
+                onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, third: newValue || '' }))}
+                options={allTeams}
+                renderInput={(params) => (
+                  <TextField {...params} label="🥉 Terza" placeholder="Terza" />
+                )}
+                freeSolo
+              />
+            </Box>
+            <Box sx={{ flex: '1 1 200px', minWidth: '200px' }}>
+              <Autocomplete
+                size="small"
+                value={finalRankings.fourth || null}
+                onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, fourth: newValue || '' }))}
+                options={allTeams}
+                renderInput={(params) => (
+                  <TextField {...params} label="Quarta" placeholder="Quarta" />
+                )}
+                freeSolo
+              />
+            </Box>
+            <Box sx={{ flex: '1 1 200px', minWidth: '200px' }}>
+              <TextField
+                label="⚽ Capocannoniere"
+                size="small"
+                fullWidth
+                value={finalRankings.topScorer}
+                onChange={(e) => setFinalRankings(prev => ({ ...prev, topScorer: e.target.value }))}
+                placeholder="Nome giocatore"
+              />
+            </Box>
+          </Box>
+        </Paper>
+      </Box>
     </Box>
   );
 };
