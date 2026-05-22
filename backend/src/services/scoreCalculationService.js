@@ -406,6 +406,47 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
       breakdown.finalTeams.points = correctTeams * 50;
     }
     
+    // Final match (Finale): 60 points per correct team
+    if (prediction.knockoutStage?.final && knockoutResults.final) {
+      const predictedTeams = prediction.knockoutStage.final
+        .map(t => t.team?.name)
+        .filter(name => name && name.trim() !== ''); // Filter out empty strings
+      
+      // Extract the 2 teams from final match (team1 and team2)
+      const actualTeams = [];
+      if (knockoutResults.final.team1?.name && knockoutResults.final.team1.name.trim() !== '') {
+        actualTeams.push(knockoutResults.final.team1.name);
+      }
+      if (knockoutResults.final.team2?.name && knockoutResults.final.team2.name.trim() !== '') {
+        actualTeams.push(knockoutResults.final.team2.name);
+      }
+      
+      const countedTeams = new Set();
+      let correctTeams = 0;
+      
+      console.log('=== FINALE SCORING ===');
+      console.log('Predicted teams:', predictedTeams);
+      console.log('Actual teams:', actualTeams);
+      
+      predictedTeams.forEach(teamName => {
+        if (teamName && actualTeams.includes(teamName) && !countedTeams.has(teamName)) {
+          countedTeams.add(teamName);
+          correctTeams++;
+          points += 60;
+          console.log(`✓ Team found: ${teamName} (+60 pts)`);
+        }
+      });
+      
+      console.log(`Total: ${correctTeams} teams correct, Points: ${correctTeams * 60}`);
+      
+      // Add to breakdown (we need to add this field to the breakdown object)
+      if (!breakdown.finalMatchTeams) {
+        breakdown.finalMatchTeams = { correct: 0, points: 0 };
+      }
+      breakdown.finalMatchTeams.correct = correctTeams;
+      breakdown.finalMatchTeams.points = correctTeams * 60;
+    }
+    
   } catch (error) {
     console.error('Error calculating knockout points:', error);
   }
