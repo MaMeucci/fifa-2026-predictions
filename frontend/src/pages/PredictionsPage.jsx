@@ -111,8 +111,9 @@ const PredictionsPage = () => {
           setGroupPredictions(loadedPredictions);
           
           // Load knockout stage bracket predictions if available
-          console.log('Loading knockout predictions:', userPredictions.knockoutStage);
           if (userPredictions.knockoutStage) {
+            console.log('Loading knockout predictions:', userPredictions.knockoutStage);
+            
             const loadedBracket = {
               round32: Array(16).fill(null).map(() => ['', '']),
               round16: Array(8).fill(null).map(() => ['', '']),
@@ -123,13 +124,19 @@ const PredictionsPage = () => {
             
             // Convert round16 (from API) to round32 (bracket format)
             if (userPredictions.knockoutStage.round16) {
+              console.log('round16 from API:', userPredictions.knockoutStage.round16);
+              console.log('round16 length:', userPredictions.knockoutStage.round16.length);
+              
               userPredictions.knockoutStage.round16.forEach((item, index) => {
                 const matchIndex = Math.floor(index / 2);
                 const position = index % 2;
+                console.log(`Index ${index}: matchIndex=${matchIndex}, position=${position}, team=${item.team?.name}`);
                 if (matchIndex < 16 && loadedBracket.round32[matchIndex]) {
                   loadedBracket.round32[matchIndex][position] = item.team?.name || '';
                 }
               });
+              
+              console.log('Loaded round32 bracket:', loadedBracket.round32);
             }
             
             // Convert quarterFinals (from API) to round16 (bracket format)
