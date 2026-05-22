@@ -18,6 +18,7 @@ import {
   Alert,
   Chip,
   CircularProgress,
+  Autocomplete,
 } from '@mui/material';
 import { Save, Lock, EmojiEvents } from '@mui/icons-material';
 import { GROUPS, MATCH_SIGNS, CAPISCIONE_GROUPS, TOURNAMENT_CONFIG } from '../utils/constants';
@@ -27,6 +28,7 @@ import TournamentBracket from '../components/TournamentBracket';
 const PredictionsPage = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [groupPredictions, setGroupPredictions] = useState({});
+  const [allTeams, setAllTeams] = useState([]);
   const [bracketPredictions, setBracketPredictions] = useState({
     round32: Array(16).fill(null).map(() => ['', '']),
     round16: Array(8).fill(null).map(() => ['', '']),
@@ -78,6 +80,14 @@ const PredictionsPage = () => {
           .sort((a, b) => new Date(a.date) - new Date(b.date));
         
         setMatches(sortedMatches);
+        
+        // Extract all unique teams for autocomplete
+        const teamsSet = new Set();
+        sortedMatches.forEach(match => {
+          teamsSet.add(match.home);
+          teamsSet.add(match.away);
+        });
+        setAllTeams(Array.from(teamsSet).sort());
         
         // Load user's existing predictions
         try {
@@ -462,47 +472,55 @@ const PredictionsPage = () => {
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  label="🥇 Vincitore"
+                <Autocomplete
                   size="small"
-                  fullWidth
-                  value={knockoutPredictions.winner}
-                  onChange={(e) => setKnockoutPredictions(prev => ({ ...prev, winner: e.target.value }))}
+                  value={knockoutPredictions.winner || null}
+                  onChange={(event, newValue) => setKnockoutPredictions(prev => ({ ...prev, winner: newValue || '' }))}
+                  options={allTeams}
                   disabled={isLocked}
-                  placeholder="Prima classificata"
+                  renderInput={(params) => (
+                    <TextField {...params} label="🥇 Vincitore" placeholder="Prima classificata" />
+                  )}
+                  freeSolo
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  label="🥈 Seconda"
+                <Autocomplete
                   size="small"
-                  fullWidth
-                  value={knockoutPredictions.runnerUp}
-                  onChange={(e) => setKnockoutPredictions(prev => ({ ...prev, runnerUp: e.target.value }))}
+                  value={knockoutPredictions.runnerUp || null}
+                  onChange={(event, newValue) => setKnockoutPredictions(prev => ({ ...prev, runnerUp: newValue || '' }))}
+                  options={allTeams}
                   disabled={isLocked}
-                  placeholder="Seconda classificata"
+                  renderInput={(params) => (
+                    <TextField {...params} label="🥈 Seconda" placeholder="Seconda classificata" />
+                  )}
+                  freeSolo
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={2}>
-                <TextField
-                  label="🥉 Terza"
+                <Autocomplete
                   size="small"
-                  fullWidth
-                  value={knockoutPredictions.third}
-                  onChange={(e) => setKnockoutPredictions(prev => ({ ...prev, third: e.target.value }))}
+                  value={knockoutPredictions.third || null}
+                  onChange={(event, newValue) => setKnockoutPredictions(prev => ({ ...prev, third: newValue || '' }))}
+                  options={allTeams}
                   disabled={isLocked}
-                  placeholder="Terza"
+                  renderInput={(params) => (
+                    <TextField {...params} label="🥉 Terza" placeholder="Terza" />
+                  )}
+                  freeSolo
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={2}>
-                <TextField
-                  label="Quarta"
+                <Autocomplete
                   size="small"
-                  fullWidth
-                  value={knockoutPredictions.fourth}
-                  onChange={(e) => setKnockoutPredictions(prev => ({ ...prev, fourth: e.target.value }))}
+                  value={knockoutPredictions.fourth || null}
+                  onChange={(event, newValue) => setKnockoutPredictions(prev => ({ ...prev, fourth: newValue || '' }))}
+                  options={allTeams}
                   disabled={isLocked}
-                  placeholder="Quarta"
+                  renderInput={(params) => (
+                    <TextField {...params} label="Quarta" placeholder="Quarta" />
+                  )}
+                  freeSolo
                 />
               </Grid>
               <Grid item xs={12} md={2}>

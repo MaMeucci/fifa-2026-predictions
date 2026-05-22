@@ -8,6 +8,7 @@ import {
   Alert,
   CircularProgress,
   TextField,
+  Autocomplete,
 } from '@mui/material';
 import { Save, Refresh, EmojiEvents } from '@mui/icons-material';
 import api from '../services/api';
@@ -18,6 +19,7 @@ const AdminKnockoutStage = () => {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
+  const [allTeams, setAllTeams] = useState([]);
   
   const [bracketPredictions, setBracketPredictions] = useState({
     round32: Array(16).fill(null).map(() => ['', '']),
@@ -37,7 +39,26 @@ const AdminKnockoutStage = () => {
 
   useEffect(() => {
     loadData();
+    loadTeams();
   }, []);
+
+  const loadTeams = async () => {
+    try {
+      const response = await api.get('/matches?phase=GROUP');
+      const matches = response.data.data;
+      
+      // Extract all unique teams
+      const teamsSet = new Set();
+      matches.forEach(match => {
+        teamsSet.add(match.homeTeam.name);
+        teamsSet.add(match.awayTeam.name);
+      });
+      
+      setAllTeams(Array.from(teamsSet).sort());
+    } catch (error) {
+      console.error('Error loading teams:', error);
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -267,43 +288,51 @@ const AdminKnockoutStage = () => {
             </Typography>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  label="🥇 Vincitore"
+                <Autocomplete
                   size="small"
-                  fullWidth
-                  value={finalRankings.winner}
-                  onChange={(e) => setFinalRankings(prev => ({ ...prev, winner: e.target.value }))}
-                  placeholder="Prima classificata"
+                  value={finalRankings.winner || null}
+                  onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, winner: newValue || '' }))}
+                  options={allTeams}
+                  renderInput={(params) => (
+                    <TextField {...params} label="🥇 Vincitore" placeholder="Prima classificata" />
+                  )}
+                  freeSolo
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  label="🥈 Seconda"
+                <Autocomplete
                   size="small"
-                  fullWidth
-                  value={finalRankings.runnerUp}
-                  onChange={(e) => setFinalRankings(prev => ({ ...prev, runnerUp: e.target.value }))}
-                  placeholder="Seconda classificata"
+                  value={finalRankings.runnerUp || null}
+                  onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, runnerUp: newValue || '' }))}
+                  options={allTeams}
+                  renderInput={(params) => (
+                    <TextField {...params} label="🥈 Seconda" placeholder="Seconda classificata" />
+                  )}
+                  freeSolo
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={2}>
-                <TextField
-                  label="🥉 Terza"
+                <Autocomplete
                   size="small"
-                  fullWidth
-                  value={finalRankings.third}
-                  onChange={(e) => setFinalRankings(prev => ({ ...prev, third: e.target.value }))}
-                  placeholder="Terza"
+                  value={finalRankings.third || null}
+                  onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, third: newValue || '' }))}
+                  options={allTeams}
+                  renderInput={(params) => (
+                    <TextField {...params} label="🥉 Terza" placeholder="Terza" />
+                  )}
+                  freeSolo
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={2}>
-                <TextField
-                  label="Quarta"
+                <Autocomplete
                   size="small"
-                  fullWidth
-                  value={finalRankings.fourth}
-                  onChange={(e) => setFinalRankings(prev => ({ ...prev, fourth: e.target.value }))}
-                  placeholder="Quarta"
+                  value={finalRankings.fourth || null}
+                  onChange={(event, newValue) => setFinalRankings(prev => ({ ...prev, fourth: newValue || '' }))}
+                  options={allTeams}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Quarta" placeholder="Quarta" />
+                  )}
+                  freeSolo
                 />
               </Grid>
               <Grid item xs={12} md={2}>
