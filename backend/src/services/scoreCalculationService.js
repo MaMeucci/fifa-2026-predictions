@@ -239,14 +239,22 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
       return 0; // No results yet
     }
     
-    // Round of 32 (Sedicesimi): 20 points per correct team
+    // Round of 32 (Sedicesimi): 20 points per correct team, +5 for exact position
     if (prediction.knockoutStage?.round16 && knockoutResults.round32) {
       const predictedTeams = prediction.knockoutStage.round16
         .map(t => t.team?.code)
         .filter(code => code && code.trim() !== ''); // Filter out empty strings
-      const actualTeams = knockoutResults.round32
-        .map(m => m.winner?.code)
-        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+      
+      // Extract all 32 teams from round32 matches (team1 and team2)
+      const actualTeams = [];
+      knockoutResults.round32.forEach(match => {
+        if (match.team1?.code && match.team1.code.trim() !== '') {
+          actualTeams.push(match.team1.code);
+        }
+        if (match.team2?.code && match.team2.code.trim() !== '') {
+          actualTeams.push(match.team2.code);
+        }
+      });
       
       let correctTeams = 0;
       let exactPositions = 0;
@@ -274,9 +282,17 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
       const predictedTeams = prediction.knockoutStage.quarterFinals
         .map(t => t.team?.code)
         .filter(code => code && code.trim() !== ''); // Filter out empty strings
-      const actualTeams = knockoutResults.round16
-        .map(m => m.winner?.code)
-        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+      
+      // Extract all 16 teams from round16 matches (team1 and team2)
+      const actualTeams = [];
+      knockoutResults.round16.forEach(match => {
+        if (match.team1?.code && match.team1.code.trim() !== '') {
+          actualTeams.push(match.team1.code);
+        }
+        if (match.team2?.code && match.team2.code.trim() !== '') {
+          actualTeams.push(match.team2.code);
+        }
+      });
       
       let correctTeams = 0;
       predictedTeams.forEach(teamCode => {
@@ -295,9 +311,17 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
       const predictedTeams = prediction.knockoutStage.semiFinals
         .map(t => t.team?.code)
         .filter(code => code && code.trim() !== ''); // Filter out empty strings
-      const actualTeams = knockoutResults.quarterFinals
-        .map(m => m.winner?.code)
-        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+      
+      // Extract all 8 teams from quarterFinals matches (team1 and team2)
+      const actualTeams = [];
+      knockoutResults.quarterFinals.forEach(match => {
+        if (match.team1?.code && match.team1.code.trim() !== '') {
+          actualTeams.push(match.team1.code);
+        }
+        if (match.team2?.code && match.team2.code.trim() !== '') {
+          actualTeams.push(match.team2.code);
+        }
+      });
       
       let correctTeams = 0;
       predictedTeams.forEach(teamCode => {
@@ -316,9 +340,17 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
       const predictedTeams = prediction.knockoutStage.final
         .map(t => t.team?.code)
         .filter(code => code && code.trim() !== ''); // Filter out empty strings
-      const actualTeams = knockoutResults.semiFinals
-        .map(m => m.winner?.code)
-        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+      
+      // Extract all 4 teams from semiFinals matches (team1 and team2)
+      const actualTeams = [];
+      knockoutResults.semiFinals.forEach(match => {
+        if (match.team1?.code && match.team1.code.trim() !== '') {
+          actualTeams.push(match.team1.code);
+        }
+        if (match.team2?.code && match.team2.code.trim() !== '') {
+          actualTeams.push(match.team2.code);
+        }
+      });
       
       let correctTeams = 0;
       predictedTeams.forEach(teamCode => {
