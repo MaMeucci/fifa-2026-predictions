@@ -287,7 +287,7 @@ const AdminKnockoutStage = () => {
               <EmojiEvents /> Podio e Capocannoniere
             </Typography>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={6} lg={3}>
                 <Autocomplete
                   size="small"
                   value={finalRankings.winner || null}
@@ -299,7 +299,7 @@ const AdminKnockoutStage = () => {
                   freeSolo
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={6} lg={3}>
                 <Autocomplete
                   size="small"
                   value={finalRankings.runnerUp || null}
@@ -311,7 +311,7 @@ const AdminKnockoutStage = () => {
                   freeSolo
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={2}>
+              <Grid item xs={12} sm={6} md={4} lg={2}>
                 <Autocomplete
                   size="small"
                   value={finalRankings.third || null}
@@ -323,7 +323,7 @@ const AdminKnockoutStage = () => {
                   freeSolo
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={2}>
+              <Grid item xs={12} sm={6} md={4} lg={2}>
                 <Autocomplete
                   size="small"
                   value={finalRankings.fourth || null}
@@ -335,7 +335,7 @@ const AdminKnockoutStage = () => {
                   freeSolo
                 />
               </Grid>
-              <Grid item xs={12} md={2}>
+              <Grid item xs={12} md={4} lg={2}>
                 <TextField
                   label="⚽ Capocannoniere"
                   size="small"
