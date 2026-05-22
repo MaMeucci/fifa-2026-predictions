@@ -256,21 +256,33 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
         }
       });
       
+      // Use Set to track already counted teams (avoid duplicates)
+      const countedTeams = new Set();
       let correctTeams = 0;
       let exactPositions = 0;
       
+      console.log('=== SEDICESIMI SCORING ===');
+      console.log('Predicted teams:', predictedTeams);
+      console.log('Actual teams:', actualTeams);
+      
       predictedTeams.forEach((teamName, index) => {
-        if (teamName && actualTeams.includes(teamName)) {
+        if (teamName && actualTeams.includes(teamName) && !countedTeams.has(teamName)) {
+          countedTeams.add(teamName);
           correctTeams++;
           points += 20;
+          console.log(`✓ Team found: ${teamName} (+20 pts)`);
           
           // Check if position is exact (+5 points)
           if (actualTeams[index] === teamName) {
             exactPositions++;
             points += 5;
+            console.log(`✓ Exact position for: ${teamName} (+5 pts)`);
           }
         }
       });
+      
+      console.log(`Total: ${correctTeams} teams correct, ${exactPositions} exact positions`);
+      console.log(`Points: ${correctTeams * 20 + exactPositions * 5}`);
       
       breakdown.round16Teams.correct = correctTeams;
       breakdown.round16Teams.exactPosition = exactPositions;
@@ -294,13 +306,23 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
         }
       });
       
+      const countedTeams = new Set();
       let correctTeams = 0;
+      
+      console.log('=== OTTAVI SCORING ===');
+      console.log('Predicted teams:', predictedTeams);
+      console.log('Actual teams:', actualTeams);
+      
       predictedTeams.forEach(teamName => {
-        if (teamName && actualTeams.includes(teamName)) {
+        if (teamName && actualTeams.includes(teamName) && !countedTeams.has(teamName)) {
+          countedTeams.add(teamName);
           correctTeams++;
           points += 20;
+          console.log(`✓ Team found: ${teamName} (+20 pts)`);
         }
       });
+      
+      console.log(`Total: ${correctTeams} teams correct, Points: ${correctTeams * 20}`);
       
       breakdown.quarterTeams.correct = correctTeams;
       breakdown.quarterTeams.points = correctTeams * 20;
@@ -323,13 +345,23 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
         }
       });
       
+      const countedTeams = new Set();
       let correctTeams = 0;
+      
+      console.log('=== QUARTI SCORING ===');
+      console.log('Predicted teams:', predictedTeams);
+      console.log('Actual teams:', actualTeams);
+      
       predictedTeams.forEach(teamName => {
-        if (teamName && actualTeams.includes(teamName)) {
+        if (teamName && actualTeams.includes(teamName) && !countedTeams.has(teamName)) {
+          countedTeams.add(teamName);
           correctTeams++;
           points += 30;
+          console.log(`✓ Team found: ${teamName} (+30 pts)`);
         }
       });
+      
+      console.log(`Total: ${correctTeams} teams correct, Points: ${correctTeams * 30}`);
       
       breakdown.semiTeams.correct = correctTeams;
       breakdown.semiTeams.points = correctTeams * 30;
@@ -352,13 +384,23 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
         }
       });
       
+      const countedTeams = new Set();
       let correctTeams = 0;
-      predictedTeams.forEach(teamCode => {
-        if (teamCode && actualTeams.includes(teamCode)) {
+      
+      console.log('=== SEMIFINALI SCORING ===');
+      console.log('Predicted teams:', predictedTeams);
+      console.log('Actual teams:', actualTeams);
+      
+      predictedTeams.forEach(teamName => {
+        if (teamName && actualTeams.includes(teamName) && !countedTeams.has(teamName)) {
+          countedTeams.add(teamName);
           correctTeams++;
           points += 50;
+          console.log(`✓ Team found: ${teamName} (+50 pts)`);
         }
       });
+      
+      console.log(`Total: ${correctTeams} teams correct, Points: ${correctTeams * 50}`);
       
       breakdown.finalTeams.correct = correctTeams;
       breakdown.finalTeams.points = correctTeams * 50;
