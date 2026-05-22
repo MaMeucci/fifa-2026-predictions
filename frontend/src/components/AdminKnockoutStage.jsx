@@ -88,9 +88,16 @@ const AdminKnockoutStage = () => {
         
         // Final
         if (data.final && data.final.team1) {
+          console.log('Loading final data:', data.final);
+          console.log('team1:', data.final.team1?.name);
+          console.log('team2:', data.final.team2?.name);
+          
+          const finalArray = [data.final.team1?.name || '', data.final.team2?.name || ''];
+          console.log('Final array:', finalArray);
+          
           setBracketPredictions(prev => ({
             ...prev,
-            final: [data.final.team1?.name || '', data.final.team2?.name || '']
+            final: finalArray
           }));
         }
         
