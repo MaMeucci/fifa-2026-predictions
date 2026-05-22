@@ -123,10 +123,19 @@ const AdminKnockoutStage = () => {
   const handleBracketChange = (round, matchIndex, teamIndex, value) => {
     setBracketPredictions(prev => {
       const newPredictions = { ...prev };
-      const newRound = [...newPredictions[round]];
-      newRound[matchIndex] = [...newRound[matchIndex]];
-      newRound[matchIndex][teamIndex] = value;
-      newPredictions[round] = newRound;
+      
+      // Special handling for 'final' which is a simple array, not array of arrays
+      if (round === 'final') {
+        const newFinal = [...newPredictions.final];
+        newFinal[teamIndex] = value;
+        newPredictions.final = newFinal;
+      } else {
+        const newRound = [...newPredictions[round]];
+        newRound[matchIndex] = [...newRound[matchIndex]];
+        newRound[matchIndex][teamIndex] = value;
+        newPredictions[round] = newRound;
+      }
+      
       return newPredictions;
     });
   };
