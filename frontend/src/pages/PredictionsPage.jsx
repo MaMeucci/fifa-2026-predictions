@@ -172,6 +172,17 @@ const PredictionsPage = () => {
               });
             }
             
+            // Convert finalists (from API) to final (bracket format)
+            if (userPredictions.knockoutStage.finalists) {
+              console.log('Loading finalists:', userPredictions.knockoutStage.finalists);
+              userPredictions.knockoutStage.finalists.forEach((item, index) => {
+                if (index < 2) {
+                  loadedBracket.final[index] = item.team?.name || '';
+                }
+              });
+              console.log('Loaded final bracket:', loadedBracket.final);
+            }
+            
             setBracketPredictions(loadedBracket);
           }
           
@@ -283,6 +294,9 @@ const PredictionsPage = () => {
             team: { name: team || '', code: '' }
           }))
         ),
+        finalists: bracketPredictions.final.map(team => ({
+          team: { name: team || '', code: '' }
+        })),
       };
       
       // Prepare final rankings
