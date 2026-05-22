@@ -261,25 +261,26 @@ const PredictionsPage = () => {
       }));
       
       // Prepare knockout stage data from bracket predictions
+      // IMPORTANT: Do NOT filter empty teams - maintain array structure for position matching
       const knockoutStage = {
         round16: bracketPredictions.round32.flatMap(match =>
-          match.filter(team => team && team.trim() !== '').map(team => ({
-            team: { name: team, code: '' }
+          match.map(team => ({
+            team: { name: team || '', code: '' }
           }))
         ),
         quarterFinals: bracketPredictions.round16.flatMap(match =>
-          match.filter(team => team && team.trim() !== '').map(team => ({
-            team: { name: team, code: '' }
+          match.map(team => ({
+            team: { name: team || '', code: '' }
           }))
         ),
         semiFinals: bracketPredictions.quarters.flatMap(match =>
-          match.filter(team => team && team.trim() !== '').map(team => ({
-            team: { name: team, code: '' }
+          match.map(team => ({
+            team: { name: team || '', code: '' }
           }))
         ),
         final: bracketPredictions.semis.flatMap(match =>
-          match.filter(team => team && team.trim() !== '').map(team => ({
-            team: { name: team, code: '' }
+          match.map(team => ({
+            team: { name: team || '', code: '' }
           }))
         ),
       };
