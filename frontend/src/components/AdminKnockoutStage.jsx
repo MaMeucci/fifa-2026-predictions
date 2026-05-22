@@ -136,6 +136,10 @@ const AdminKnockoutStage = () => {
       setSaving(true);
       setError('');
       
+      console.log('=== SAVING ADMIN DATA ===');
+      console.log('bracketPredictions.final:', bracketPredictions.final);
+      console.log('finalRankings:', finalRankings);
+      
       // Convert bracket format to knockout results format
       const knockoutResults = {
         round32: bracketPredictions.round32.map((match, i) => ({
@@ -163,21 +167,29 @@ const AdminKnockoutStage = () => {
           winner: { name: '', code: '' }
         })),
         final: {
-          team1: { name: bracketPredictions.final[0], code: '' },
-          team2: { name: bracketPredictions.final[1], code: '' },
+          team1: { name: bracketPredictions.final[0] || '', code: '' },
+          team2: { name: bracketPredictions.final[1] || '', code: '' },
           winner: { name: '', code: '' }
         },
-        finalRankings: {
-          first: { name: finalRankings.winner, code: '' },
-          second: { name: finalRankings.runnerUp, code: '' },
-          third: { name: finalRankings.third, code: '' },
-          fourth: { name: finalRankings.fourth, code: '' }
-        },
-        topScorer: {
-          playerName: finalRankings.topScorer,
-          team: { name: '', code: '' }
-        }
       };
+      
+      console.log('Final object being saved:', knockoutResults.final);
+      console.log('team1.name:', knockoutResults.final.team1.name);
+      console.log('team2.name:', knockoutResults.final.team2.name);
+      
+      knockoutResults.finalRankings = {
+        first: { name: finalRankings.winner, code: '' },
+        second: { name: finalRankings.runnerUp, code: '' },
+        third: { name: finalRankings.third, code: '' },
+        fourth: { name: finalRankings.fourth, code: '' }
+      };
+      
+      knockoutResults.topScorer = {
+        playerName: finalRankings.topScorer,
+        team: { name: '', code: '' }
+      };
+      
+      console.log('Complete data being sent:', JSON.stringify(knockoutResults, null, 2));
       
       await api.put('/knockout-results', knockoutResults);
       
