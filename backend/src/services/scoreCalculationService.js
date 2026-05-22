@@ -469,45 +469,65 @@ const calculateFinalRankingsPoints = async (prediction, breakdown) => {
     
     const actualRankings = knockoutResults.finalRankings;
     
+    console.log('=== FINAL RANKINGS SCORING ===');
+    console.log('Predicted rankings:', {
+      first: prediction.finalRankings?.first?.name,
+      second: prediction.finalRankings?.second?.name,
+      third: prediction.finalRankings?.third?.name,
+      fourth: prediction.finalRankings?.fourth?.name
+    });
+    console.log('Actual rankings:', {
+      first: actualRankings.first?.name,
+      second: actualRankings.second?.name,
+      third: actualRankings.third?.name,
+      fourth: actualRankings.fourth?.name
+    });
+    
     // 1st place: 80 points
-    if (prediction.finalRankings?.first?.code &&
-        actualRankings.first?.code &&
-        prediction.finalRankings.first.code.trim() !== '' &&
-        prediction.finalRankings.first.code === actualRankings.first.code) {
+    if (prediction.finalRankings?.first?.name &&
+        actualRankings.first?.name &&
+        prediction.finalRankings.first.name.trim() !== '' &&
+        prediction.finalRankings.first.name === actualRankings.first.name) {
       points += 80;
       breakdown.winner.correct = true;
       breakdown.winner.points = 80;
+      console.log('✓ 1st place correct: +80 pts');
     }
     
     // 2nd place: 50 points
-    if (prediction.finalRankings?.second?.code &&
-        actualRankings.second?.code &&
-        prediction.finalRankings.second.code.trim() !== '' &&
-        prediction.finalRankings.second.code === actualRankings.second.code) {
+    if (prediction.finalRankings?.second?.name &&
+        actualRankings.second?.name &&
+        prediction.finalRankings.second.name.trim() !== '' &&
+        prediction.finalRankings.second.name === actualRankings.second.name) {
       points += 50;
       breakdown.runnerUp.correct = true;
       breakdown.runnerUp.points = 50;
+      console.log('✓ 2nd place correct: +50 pts');
     }
     
     // 3rd place: 25 points
-    if (prediction.finalRankings?.third?.code &&
-        actualRankings.third?.code &&
-        prediction.finalRankings.third.code.trim() !== '' &&
-        prediction.finalRankings.third.code === actualRankings.third.code) {
+    if (prediction.finalRankings?.third?.name &&
+        actualRankings.third?.name &&
+        prediction.finalRankings.third.name.trim() !== '' &&
+        prediction.finalRankings.third.name === actualRankings.third.name) {
       points += 25;
       breakdown.third.correct = true;
       breakdown.third.points = 25;
+      console.log('✓ 3rd place correct: +25 pts');
     }
     
     // 4th place: 25 points
-    if (prediction.finalRankings?.fourth?.code &&
-        actualRankings.fourth?.code &&
-        prediction.finalRankings.fourth.code.trim() !== '' &&
-        prediction.finalRankings.fourth.code === actualRankings.fourth.code) {
+    if (prediction.finalRankings?.fourth?.name &&
+        actualRankings.fourth?.name &&
+        prediction.finalRankings.fourth.name.trim() !== '' &&
+        prediction.finalRankings.fourth.name === actualRankings.fourth.name) {
       points += 25;
       breakdown.fourth.correct = true;
       breakdown.fourth.points = 25;
+      console.log('✓ 4th place correct: +25 pts');
     }
+    
+    console.log(`Total final rankings points: ${points}`);
     
   } catch (error) {
     console.error('Error calculating final rankings points:', error);
