@@ -407,8 +407,8 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
     }
     
     // Final match (Finale): 60 points per correct team
-    if (prediction.knockoutStage?.final && knockoutResults.final) {
-      const predictedTeams = prediction.knockoutStage.final
+    if (prediction.knockoutStage?.finalists && knockoutResults.final) {
+      const predictedTeams = prediction.knockoutStage.finalists
         .map(t => t.team?.name)
         .filter(name => name && name.trim() !== ''); // Filter out empty strings
       

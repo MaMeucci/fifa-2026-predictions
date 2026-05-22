@@ -63,8 +63,16 @@ const predictionSchema = new mongoose.Schema({
       },
     }],
     
-    // Final (2 teams)
+    // Final (4 teams - semifinalists)
     final: [{
+      team: {
+        name: String,
+        code: String,
+      },
+    }],
+    
+    // Finalists (2 teams)
+    finalists: [{
       team: {
         name: String,
         code: String,
