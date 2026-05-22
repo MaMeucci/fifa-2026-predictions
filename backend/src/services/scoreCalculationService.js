@@ -242,30 +242,30 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
     // Round of 32 (Sedicesimi): 20 points per correct team, +5 for exact position
     if (prediction.knockoutStage?.round16 && knockoutResults.round32) {
       const predictedTeams = prediction.knockoutStage.round16
-        .map(t => t.team?.code)
-        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+        .map(t => t.team?.name)
+        .filter(name => name && name.trim() !== ''); // Filter out empty strings
       
       // Extract all 32 teams from round32 matches (team1 and team2)
       const actualTeams = [];
       knockoutResults.round32.forEach(match => {
-        if (match.team1?.code && match.team1.code.trim() !== '') {
-          actualTeams.push(match.team1.code);
+        if (match.team1?.name && match.team1.name.trim() !== '') {
+          actualTeams.push(match.team1.name);
         }
-        if (match.team2?.code && match.team2.code.trim() !== '') {
-          actualTeams.push(match.team2.code);
+        if (match.team2?.name && match.team2.name.trim() !== '') {
+          actualTeams.push(match.team2.name);
         }
       });
       
       let correctTeams = 0;
       let exactPositions = 0;
       
-      predictedTeams.forEach((teamCode, index) => {
-        if (teamCode && actualTeams.includes(teamCode)) {
+      predictedTeams.forEach((teamName, index) => {
+        if (teamName && actualTeams.includes(teamName)) {
           correctTeams++;
           points += 20;
           
           // Check if position is exact (+5 points)
-          if (actualTeams[index] === teamCode) {
+          if (actualTeams[index] === teamName) {
             exactPositions++;
             points += 5;
           }
@@ -280,23 +280,23 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
     // Round of 16 (Ottavi): 20 points per correct team
     if (prediction.knockoutStage?.quarterFinals && knockoutResults.round16) {
       const predictedTeams = prediction.knockoutStage.quarterFinals
-        .map(t => t.team?.code)
-        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+        .map(t => t.team?.name)
+        .filter(name => name && name.trim() !== ''); // Filter out empty strings
       
       // Extract all 16 teams from round16 matches (team1 and team2)
       const actualTeams = [];
       knockoutResults.round16.forEach(match => {
-        if (match.team1?.code && match.team1.code.trim() !== '') {
-          actualTeams.push(match.team1.code);
+        if (match.team1?.name && match.team1.name.trim() !== '') {
+          actualTeams.push(match.team1.name);
         }
-        if (match.team2?.code && match.team2.code.trim() !== '') {
-          actualTeams.push(match.team2.code);
+        if (match.team2?.name && match.team2.name.trim() !== '') {
+          actualTeams.push(match.team2.name);
         }
       });
       
       let correctTeams = 0;
-      predictedTeams.forEach(teamCode => {
-        if (teamCode && actualTeams.includes(teamCode)) {
+      predictedTeams.forEach(teamName => {
+        if (teamName && actualTeams.includes(teamName)) {
           correctTeams++;
           points += 20;
         }
@@ -309,23 +309,23 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
     // Quarter-finals (Quarti): 30 points per correct team
     if (prediction.knockoutStage?.semiFinals && knockoutResults.quarterFinals) {
       const predictedTeams = prediction.knockoutStage.semiFinals
-        .map(t => t.team?.code)
-        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+        .map(t => t.team?.name)
+        .filter(name => name && name.trim() !== ''); // Filter out empty strings
       
       // Extract all 8 teams from quarterFinals matches (team1 and team2)
       const actualTeams = [];
       knockoutResults.quarterFinals.forEach(match => {
-        if (match.team1?.code && match.team1.code.trim() !== '') {
-          actualTeams.push(match.team1.code);
+        if (match.team1?.name && match.team1.name.trim() !== '') {
+          actualTeams.push(match.team1.name);
         }
-        if (match.team2?.code && match.team2.code.trim() !== '') {
-          actualTeams.push(match.team2.code);
+        if (match.team2?.name && match.team2.name.trim() !== '') {
+          actualTeams.push(match.team2.name);
         }
       });
       
       let correctTeams = 0;
-      predictedTeams.forEach(teamCode => {
-        if (teamCode && actualTeams.includes(teamCode)) {
+      predictedTeams.forEach(teamName => {
+        if (teamName && actualTeams.includes(teamName)) {
           correctTeams++;
           points += 30;
         }
@@ -338,17 +338,17 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
     // Semi-finals (Semifinali): 50 points per correct team
     if (prediction.knockoutStage?.final && knockoutResults.semiFinals) {
       const predictedTeams = prediction.knockoutStage.final
-        .map(t => t.team?.code)
-        .filter(code => code && code.trim() !== ''); // Filter out empty strings
+        .map(t => t.team?.name)
+        .filter(name => name && name.trim() !== ''); // Filter out empty strings
       
       // Extract all 4 teams from semiFinals matches (team1 and team2)
       const actualTeams = [];
       knockoutResults.semiFinals.forEach(match => {
-        if (match.team1?.code && match.team1.code.trim() !== '') {
-          actualTeams.push(match.team1.code);
+        if (match.team1?.name && match.team1.name.trim() !== '') {
+          actualTeams.push(match.team1.name);
         }
-        if (match.team2?.code && match.team2.code.trim() !== '') {
-          actualTeams.push(match.team2.code);
+        if (match.team2?.name && match.team2.name.trim() !== '') {
+          actualTeams.push(match.team2.name);
         }
       });
       
