@@ -10,10 +10,13 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import LockIcon from '@mui/icons-material/Lock';
 
 const HomePage = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
   
   // Check if tournament has started (for demo purposes, using a mock date)
   const tournamentStarted = new Date() >= new Date(TOURNAMENT_CONFIG.startDate);
+  
+  // Admin can always see all predictions
+  const canViewAllPredictions = tournamentStarted || isAdmin();
 
   return (
     <Container maxWidth="lg">
@@ -176,30 +179,30 @@ const HomePage = () => {
                 {/* Pronostici Completi */}
                 <Grid item xs={12} md={6}>
                   <Tooltip
-                    title={!tournamentStarted ? "Disponibile dall'inizio del torneo (11 Giugno 2026)" : ""}
+                    title={!canViewAllPredictions ? "Disponibile dall'inizio del torneo (11 Giugno 2026)" : ""}
                     arrow
                   >
                     <span>
                       <Card
                         sx={{
                           height: '100%',
-                          cursor: tournamentStarted ? 'pointer' : 'not-allowed',
+                          cursor: canViewAllPredictions ? 'pointer' : 'not-allowed',
                           transition: 'all 0.3s',
-                          opacity: tournamentStarted ? 1 : 0.6,
+                          opacity: canViewAllPredictions ? 1 : 0.6,
                           boxShadow: 2,
-                          '&:hover': tournamentStarted ? {
+                          '&:hover': canViewAllPredictions ? {
                             transform: 'translateY(-4px)',
                             boxShadow: 8
                           } : {}
                         }}
-                        component={tournamentStarted ? Link : 'div'}
-                        to={tournamentStarted ? ROUTES.ALL_PREDICTIONS : undefined}
+                        component={canViewAllPredictions ? Link : 'div'}
+                        to={canViewAllPredictions ? ROUTES.ALL_PREDICTIONS : undefined}
                         style={{ textDecoration: 'none' }}
                       >
                         <CardContent sx={{ textAlign: 'center', py: 4 }}>
                           <Box sx={{ position: 'relative', display: 'inline-block' }}>
-                            <VisibilityIcon sx={{ fontSize: 60, color: tournamentStarted ? 'secondary.main' : 'grey.500', mb: 2 }} />
-                            {!tournamentStarted && (
+                            <VisibilityIcon sx={{ fontSize: 60, color: canViewAllPredictions ? 'secondary.main' : 'grey.500', mb: 2 }} />
+                            {!canViewAllPredictions && (
                               <LockIcon
                                 sx={{
                                   position: 'absolute',
@@ -211,21 +214,21 @@ const HomePage = () => {
                               />
                             )}
                           </Box>
-                          <Typography variant="h5" gutterBottom color={tournamentStarted ? 'secondary' : 'text.secondary'}>
+                          <Typography variant="h5" gutterBottom color={canViewAllPredictions ? 'secondary' : 'text.secondary'}>
                             Pronostici Completi
                           </Typography>
                           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                             Visualizza i pronostici di tutti i giocatori
                           </Typography>
                           <Button
-                            variant={tournamentStarted ? "contained" : "outlined"}
+                            variant={canViewAllPredictions ? "contained" : "outlined"}
                             color="secondary"
                             size="large"
                             fullWidth
-                            disabled={!tournamentStarted}
-                            startIcon={tournamentStarted ? <VisibilityIcon /> : <LockIcon />}
+                            disabled={!canViewAllPredictions}
+                            startIcon={canViewAllPredictions ? <VisibilityIcon /> : <LockIcon />}
                           >
-                            {tournamentStarted ? 'Vedi Tutti' : 'Bloccato'}
+                            {canViewAllPredictions ? 'Vedi Tutti' : 'Bloccato'}
                           </Button>
                         </CardContent>
                       </Card>
