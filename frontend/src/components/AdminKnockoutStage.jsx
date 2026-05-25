@@ -21,6 +21,8 @@ import TournamentBracket from './TournamentBracket';
 import { CAPISCIONE_GROUPS } from '../utils/constants';
 
 const AdminKnockoutStage = () => {
+  console.log('🔧 AdminKnockoutStage component loaded - VERSION 2.0 with Capiscione');
+  
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState('');
