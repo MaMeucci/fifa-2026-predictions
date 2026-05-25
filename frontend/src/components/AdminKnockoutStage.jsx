@@ -147,7 +147,13 @@ const AdminKnockoutStage = () => {
         
         // Capiscione
         if (data.capiscione) {
+          console.log('Loading capiscione data:', data.capiscione);
           setCapiscionePredictions({
+            top: data.capiscione.top?.name || '',
+            outsider: data.capiscione.outsider?.name || '',
+            materasso: data.capiscione.materasso?.name || '',
+          });
+          console.log('Capiscione predictions set:', {
             top: data.capiscione.top?.name || '',
             outsider: data.capiscione.outsider?.name || '',
             materasso: data.capiscione.materasso?.name || '',
@@ -190,6 +196,7 @@ const AdminKnockoutStage = () => {
       console.log('=== SAVING ADMIN DATA ===');
       console.log('bracketPredictions.final:', bracketPredictions.final);
       console.log('finalRankings:', finalRankings);
+      console.log('capiscionePredictions:', capiscionePredictions);
       
       // Convert bracket format to knockout results format
       const knockoutResults = {
