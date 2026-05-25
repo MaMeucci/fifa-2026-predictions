@@ -136,7 +136,10 @@ exports.getAllPredictions = async (req, res, next) => {
       });
     }
     
-    const predictions = await Prediction.find({ isLocked: true })
+    // Admins can see all predictions (locked or not), users only see locked ones
+    const query = req.user.role === 'admin' ? {} : { isLocked: true };
+    
+    const predictions = await Prediction.find(query)
       .populate('user', 'username email')
       .populate('groupStage.match', 'matchNumber homeTeam awayTeam date group phase')
       .select('-__v');
