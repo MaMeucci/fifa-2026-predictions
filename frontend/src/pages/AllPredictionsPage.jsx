@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Container,
   Box,
@@ -19,102 +19,53 @@ import {
   Avatar,
   Alert,
   AlertTitle,
+  CircularProgress,
+  Pagination,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Divider,
 } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SportsIcon from '@mui/icons-material/Sports';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import PersonIcon from '@mui/icons-material/Person';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import api from '../services/api';
 
 const AllPredictionsPage = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [predictions, setPredictions] = useState([]);
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 10;
 
-  // Mock data - Replace with real API calls
-  const mockPlayers = [
-    { id: 1, username: 'Mario Rossi', avatar: 'MR' },
-    { id: 2, username: 'Luigi Verdi', avatar: 'LV' },
-    { id: 3, username: 'Anna Bianchi', avatar: 'AB' },
-  ];
+  useEffect(() => {
+    loadAllPredictions();
+  }, []);
 
-  const mockGroupPredictions = [
-    {
-      playerId: 1,
-      playerName: 'Mario Rossi',
-      match: 'Italia vs Brasile',
-      homeScore: 2,
-      awayScore: 1,
-      sign: '1',
-    },
-    {
-      playerId: 2,
-      playerName: 'Luigi Verdi',
-      match: 'Italia vs Brasile',
-      homeScore: 1,
-      awayScore: 1,
-      sign: 'X',
-    },
-    {
-      playerId: 3,
-      playerName: 'Anna Bianchi',
-      match: 'Italia vs Brasile',
-      homeScore: 0,
-      awayScore: 2,
-      sign: '2',
-    },
-  ];
-
-  const mockKnockoutPredictions = [
-    {
-      playerId: 1,
-      playerName: 'Mario Rossi',
-      round: 'Finale',
-      team1: 'Brasile',
-      team2: 'Argentina',
-      winner: 'Brasile',
-    },
-    {
-      playerId: 2,
-      playerName: 'Luigi Verdi',
-      round: 'Finale',
-      team1: 'Francia',
-      team2: 'Spagna',
-      winner: 'Francia',
-    },
-    {
-      playerId: 3,
-      playerName: 'Anna Bianchi',
-      round: 'Finale',
-      team1: 'Inghilterra',
-      team2: 'Germania',
-      winner: 'Inghilterra',
-    },
-  ];
-
-  const mockCapiscionePredictions = [
-    {
-      playerId: 1,
-      playerName: 'Mario Rossi',
-      top: 'Brasile',
-      outsider: 'Portogallo',
-      materasso: 'Messico',
-    },
-    {
-      playerId: 2,
-      playerName: 'Luigi Verdi',
-      top: 'Argentina',
-      outsider: 'Olanda',
-      materasso: 'Giappone',
-    },
-    {
-      playerId: 3,
-      playerName: 'Anna Bianchi',
-      top: 'Francia',
-      outsider: 'Uruguay',
-      materasso: 'Senegal',
-    },
-  ];
+  const loadAllPredictions = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const response = await api.get('/predictions/all');
+      setPredictions(response.data.data || []);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Errore nel caricamento dei pronostici');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
+    setPage(1);
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
 
   const getSignColor = (sign) => {
@@ -130,8 +81,44 @@ const AllPredictionsPage = () => {
     }
   };
 
+  const getUserInitials = (username) => {
+    return username?.split(' ').map(n => n[0]).join('').toUpperCase() || '?';
+  };
+
+  if (loading) {
+    return (
+      <Container maxWidth="lg">
+        <Box sx={{ py: 8, textAlign: 'center' }}>
+          <CircularProgress size={60} />
+          <Typography variant="h6" sx={{ mt: 2 }}>
+            Caricamento pronostici...
+          </Typography>
+        </Box>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="lg">
+        <Box sx={{ py: 4 }}>
+          <Alert severity="error">
+            <AlertTitle>Errore</AlertTitle>
+            {error}
+          </Alert>
+        </Box>
+      </Container>
+    );
+  }
+
+  // Pagination for group stage
+  const paginatedPredictions = predictions.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
+
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="xl">
       <Box sx={{ py: 4 }}>
         {/* Header */}
         <Box sx={{ mb: 4, textAlign: 'center' }}>
@@ -144,182 +131,335 @@ const AllPredictionsPage = () => {
           </Typography>
         </Box>
 
-        {/* Info Alert */}
-        <Alert severity="info" sx={{ mb: 4 }}>
-          <AlertTitle>Informazione</AlertTitle>
-          Questa sezione mostra i pronostici di tutti i partecipanti. I dati sono visibili solo dopo l'inizio del torneo.
-        </Alert>
-
-        {/* Players Summary */}
-        <Card sx={{ mb: 4 }}>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
-              Giocatori Partecipanti
-            </Typography>
-            <Grid container spacing={2}>
-              {mockPlayers.map((player) => (
-                <Grid item xs={12} sm={6} md={4} key={player.id}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Avatar sx={{ bgcolor: 'primary.main' }}>
-                      {player.avatar}
-                    </Avatar>
-                    <Typography variant="body1">{player.username}</Typography>
-                  </Box>
+        {predictions.length === 0 ? (
+          <Alert severity="info">
+            <AlertTitle>Nessun pronostico disponibile</AlertTitle>
+            Non ci sono ancora pronostici bloccati da visualizzare.
+          </Alert>
+        ) : (
+          <>
+            {/* Players Summary */}
+            <Card sx={{ mb: 4 }}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Giocatori Partecipanti ({predictions.length})
+                </Typography>
+                <Grid container spacing={2}>
+                  {predictions.map((pred) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={pred._id}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Avatar sx={{ bgcolor: 'primary.main' }}>
+                          {getUserInitials(pred.user?.username)}
+                        </Avatar>
+                        <Typography variant="body1">{pred.user?.username}</Typography>
+                      </Box>
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
 
-        {/* Tabs */}
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-          <Tabs value={activeTab} onChange={handleTabChange} variant="fullWidth">
-            <Tab icon={<SportsIcon />} label="Fase a Gironi" />
-            <Tab icon={<EmojiEventsIcon />} label="Fase Finale" />
-            <Tab icon={<PersonIcon />} label="Angolo del Capiscione" />
-          </Tabs>
-        </Box>
+            {/* Tabs */}
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
+              <Tabs value={activeTab} onChange={handleTabChange} variant="fullWidth">
+                <Tab icon={<SportsIcon />} label="Fase a Gironi" />
+                <Tab icon={<EmojiEventsIcon />} label="Fase Finale" />
+                <Tab icon={<PersonIcon />} label="Angolo del Capiscione" />
+              </Tabs>
+            </Box>
 
-        {/* Tab Content */}
-        {activeTab === 0 && (
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Pronostici Fase a Gironi
-              </Typography>
-              <TableContainer component={Paper} variant="outlined">
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Giocatore</TableCell>
-                      <TableCell>Partita</TableCell>
-                      <TableCell align="center">Risultato</TableCell>
-                      <TableCell align="center">Segno</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {mockGroupPredictions.map((pred, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main', fontSize: '0.875rem' }}>
-                              {pred.playerName.split(' ').map(n => n[0]).join('')}
-                            </Avatar>
-                            {pred.playerName}
-                          </Box>
-                        </TableCell>
-                        <TableCell>{pred.match}</TableCell>
-                        <TableCell align="center">
-                          <Typography variant="body1" fontWeight="bold">
-                            {pred.homeScore} - {pred.awayScore}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Chip
-                            label={pred.sign}
-                            color={getSignColor(pred.sign)}
-                            size="small"
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
-        )}
+            {/* Tab Content - Group Stage */}
+            {activeTab === 0 && (
+              <Box>
+                {paginatedPredictions.map((prediction) => (
+                  <Accordion key={prediction._id} sx={{ mb: 2 }}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                        <Avatar sx={{ bgcolor: 'primary.main' }}>
+                          {getUserInitials(prediction.user?.username)}
+                        </Avatar>
+                        <Typography variant="h6">{prediction.user?.username}</Typography>
+                        <Chip 
+                          label={`${prediction.groupStage?.length || 0} partite`} 
+                          size="small" 
+                          sx={{ ml: 'auto' }}
+                        />
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <TableContainer component={Paper} variant="outlined">
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Match #</TableCell>
+                              <TableCell>Gruppo</TableCell>
+                              <TableCell>Partita</TableCell>
+                              <TableCell align="center">Risultato</TableCell>
+                              <TableCell align="center">Segno</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {prediction.groupStage?.map((pred, index) => (
+                              <TableRow key={index}>
+                                <TableCell>
+                                  <Chip label={pred.match?.matchNumber || '-'} size="small" />
+                                </TableCell>
+                                <TableCell>
+                                  <Chip 
+                                    label={`Gruppo ${pred.match?.group || '-'}`} 
+                                    size="small" 
+                                    color="primary" 
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  {pred.match?.homeTeam?.name || '?'} vs {pred.match?.awayTeam?.name || '?'}
+                                </TableCell>
+                                <TableCell align="center">
+                                  <Typography variant="body2" fontWeight="bold">
+                                    {pred.homeScore} - {pred.awayScore}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell align="center">
+                                  <Chip
+                                    label={pred.sign}
+                                    color={getSignColor(pred.sign)}
+                                    size="small"
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+                
+                {predictions.length > itemsPerPage && (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                    <Pagination
+                      count={Math.ceil(predictions.length / itemsPerPage)}
+                      page={page}
+                      onChange={handlePageChange}
+                      color="primary"
+                    />
+                  </Box>
+                )}
+              </Box>
+            )}
 
-        {activeTab === 1 && (
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Pronostici Fase Finale
-              </Typography>
-              <TableContainer component={Paper} variant="outlined">
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Giocatore</TableCell>
-                      <TableCell>Fase</TableCell>
-                      <TableCell>Squadra 1</TableCell>
-                      <TableCell>Squadra 2</TableCell>
-                      <TableCell>Vincitore</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {mockKnockoutPredictions.map((pred, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main', fontSize: '0.875rem' }}>
-                              {pred.playerName.split(' ').map(n => n[0]).join('')}
-                            </Avatar>
-                            {pred.playerName}
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Chip label={pred.round} color="primary" size="small" />
-                        </TableCell>
-                        <TableCell>{pred.team1}</TableCell>
-                        <TableCell>{pred.team2}</TableCell>
-                        <TableCell>
-                          <Typography variant="body1" fontWeight="bold" color="primary">
-                            {pred.winner}
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
-        )}
+            {/* Tab Content - Knockout Stage */}
+            {activeTab === 1 && (
+              <Box>
+                {predictions.map((prediction) => (
+                  <Accordion key={prediction._id} sx={{ mb: 2 }}>
+                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Avatar sx={{ bgcolor: 'secondary.main' }}>
+                          {getUserInitials(prediction.user?.username)}
+                        </Avatar>
+                        <Typography variant="h6">{prediction.user?.username}</Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Grid container spacing={3}>
+                        {/* Round of 32 */}
+                        {prediction.knockoutStage?.round32?.length > 0 && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                              Sedicesimi di Finale
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                              {prediction.knockoutStage.round32.map((team, idx) => (
+                                <Chip key={idx} label={team.name} color="primary" variant="outlined" />
+                              ))}
+                            </Box>
+                            <Divider sx={{ my: 2 }} />
+                          </Grid>
+                        )}
 
-        {activeTab === 2 && (
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Angolo del Capiscione
-              </Typography>
-              <TableContainer component={Paper} variant="outlined">
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Giocatore</TableCell>
-                      <TableCell>Top</TableCell>
-                      <TableCell>Outsider</TableCell>
-                      <TableCell>Materasso</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {mockCapiscionePredictions.map((pred, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <Avatar sx={{ width: 32, height: 32, bgcolor: 'warning.main', fontSize: '0.875rem' }}>
-                              {pred.playerName.split(' ').map(n => n[0]).join('')}
-                            </Avatar>
-                            {pred.playerName}
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <Chip label={pred.top} color="success" />
-                        </TableCell>
-                        <TableCell>
-                          <Chip label={pred.outsider} color="warning" />
-                        </TableCell>
-                        <TableCell>
-                          <Chip label={pred.materasso} color="error" />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
+                        {/* Round of 16 */}
+                        {prediction.knockoutStage?.round16?.length > 0 && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                              Ottavi di Finale
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                              {prediction.knockoutStage.round16.map((team, idx) => (
+                                <Chip key={idx} label={team.name} color="primary" variant="outlined" />
+                              ))}
+                            </Box>
+                            <Divider sx={{ my: 2 }} />
+                          </Grid>
+                        )}
+
+                        {/* Quarter Finals */}
+                        {prediction.knockoutStage?.quarterFinals?.length > 0 && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                              Quarti di Finale
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                              {prediction.knockoutStage.quarterFinals.map((team, idx) => (
+                                <Chip key={idx} label={team.name} color="secondary" variant="outlined" />
+                              ))}
+                            </Box>
+                            <Divider sx={{ my: 2 }} />
+                          </Grid>
+                        )}
+
+                        {/* Semi Finals */}
+                        {prediction.knockoutStage?.semiFinals?.length > 0 && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                              Semifinali
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                              {prediction.knockoutStage.semiFinals.map((team, idx) => (
+                                <Chip key={idx} label={team.name} color="warning" variant="outlined" />
+                              ))}
+                            </Box>
+                            <Divider sx={{ my: 2 }} />
+                          </Grid>
+                        )}
+
+                        {/* Final */}
+                        {prediction.knockoutStage?.final?.length > 0 && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                              Finale
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                              {prediction.knockoutStage.final.map((team, idx) => (
+                                <Chip key={idx} label={team.name} color="error" />
+                              ))}
+                            </Box>
+                            <Divider sx={{ my: 2 }} />
+                          </Grid>
+                        )}
+
+                        {/* Final Rankings */}
+                        {prediction.finalRankings && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                              Podio
+                            </Typography>
+                            <Grid container spacing={2}>
+                              <Grid item xs={6} sm={3}>
+                                <Paper sx={{ p: 2, textAlign: 'center', bgcolor: '#FFD700' }}>
+                                  <Typography variant="caption">1° Posto</Typography>
+                                  <Typography variant="body1" fontWeight="bold">
+                                    {prediction.finalRankings.first?.name || '-'}
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                              <Grid item xs={6} sm={3}>
+                                <Paper sx={{ p: 2, textAlign: 'center', bgcolor: '#C0C0C0' }}>
+                                  <Typography variant="caption">2° Posto</Typography>
+                                  <Typography variant="body1" fontWeight="bold">
+                                    {prediction.finalRankings.second?.name || '-'}
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                              <Grid item xs={6} sm={3}>
+                                <Paper sx={{ p: 2, textAlign: 'center', bgcolor: '#CD7F32' }}>
+                                  <Typography variant="caption">3° Posto</Typography>
+                                  <Typography variant="body1" fontWeight="bold">
+                                    {prediction.finalRankings.third?.name || '-'}
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                              <Grid item xs={6} sm={3}>
+                                <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'grey.300' }}>
+                                  <Typography variant="caption">4° Posto</Typography>
+                                  <Typography variant="body1" fontWeight="bold">
+                                    {prediction.finalRankings.fourth?.name || '-'}
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                            </Grid>
+                            <Divider sx={{ my: 2 }} />
+                          </Grid>
+                        )}
+
+                        {/* Top Scorer */}
+                        {prediction.topScorer?.name && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                              Capocannoniere
+                            </Typography>
+                            <Chip 
+                              label={prediction.topScorer.name} 
+                              color="success" 
+                              icon={<SportsIcon />}
+                            />
+                          </Grid>
+                        )}
+                      </Grid>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+              </Box>
+            )}
+
+            {/* Tab Content - Capiscione */}
+            {activeTab === 2 && (
+              <Card>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Angolo del Capiscione
+                  </Typography>
+                  <TableContainer component={Paper} variant="outlined">
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Giocatore</TableCell>
+                          <TableCell>Top</TableCell>
+                          <TableCell>Outsider</TableCell>
+                          <TableCell>Materasso</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {predictions.map((pred) => (
+                          <TableRow key={pred._id}>
+                            <TableCell>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Avatar sx={{ width: 32, height: 32, bgcolor: 'warning.main', fontSize: '0.875rem' }}>
+                                  {getUserInitials(pred.user?.username)}
+                                </Avatar>
+                                {pred.user?.username}
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Chip 
+                                label={pred.capiscione?.top?.name || '-'} 
+                                color="success" 
+                                size="small"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Chip 
+                                label={pred.capiscione?.outsider?.name || '-'} 
+                                color="warning" 
+                                size="small"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Chip 
+                                label={pred.capiscione?.materasso?.name || '-'} 
+                                color="error" 
+                                size="small"
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
+            )}
+          </>
         )}
       </Box>
     </Container>
