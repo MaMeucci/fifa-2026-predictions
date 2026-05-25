@@ -48,7 +48,8 @@ router.put('/', protect, admin, async (req, res) => {
       final,
       thirdPlace,
       finalRankings,
-      topScorer
+      topScorer,
+      capiscione
     } = req.body;
     
     let results = await KnockoutResults.findOne();
@@ -66,6 +67,7 @@ router.put('/', protect, admin, async (req, res) => {
     if (thirdPlace !== undefined) results.thirdPlace = thirdPlace;
     if (finalRankings !== undefined) results.finalRankings = finalRankings;
     if (topScorer !== undefined) results.topScorer = topScorer;
+    if (capiscione !== undefined) results.capiscione = capiscione;
     
     results.lastUpdated = new Date();
     
