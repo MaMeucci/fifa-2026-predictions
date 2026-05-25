@@ -9,10 +9,16 @@ import {
   CircularProgress,
   TextField,
   Autocomplete,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Chip,
 } from '@mui/material';
 import { Save, Refresh, EmojiEvents } from '@mui/icons-material';
 import api from '../services/api';
 import TournamentBracket from './TournamentBracket';
+import { CAPISCIONE_GROUPS } from '../utils/constants';
 
 const AdminKnockoutStage = () => {
   const [loading, setLoading] = useState(true);
@@ -35,6 +41,12 @@ const AdminKnockoutStage = () => {
     third: '',
     fourth: '',
     topScorer: '',
+  });
+
+  const [capiscionePredictions, setCapiscionePredictions] = useState({
+    top: '',
+    outsider: '',
+    materasso: '',
   });
 
   useEffect(() => {
@@ -132,6 +144,15 @@ const AdminKnockoutStage = () => {
             topScorer: data.topScorer?.playerName || '',
           });
         }
+        
+        // Capiscione
+        if (data.capiscione) {
+          setCapiscionePredictions({
+            top: data.capiscione.top?.name || '',
+            outsider: data.capiscione.outsider?.name || '',
+            materasso: data.capiscione.materasso?.name || '',
+          });
+        }
       }
     } catch (err) {
       setError('Errore nel caricamento dei dati');
@@ -217,6 +238,12 @@ const AdminKnockoutStage = () => {
       knockoutResults.topScorer = {
         playerName: finalRankings.topScorer,
         team: { name: '', code: '' }
+      };
+      
+      knockoutResults.capiscione = {
+        top: { name: capiscionePredictions.top, code: '' },
+        outsider: { name: capiscionePredictions.outsider, code: '' },
+        materasso: { name: capiscionePredictions.materasso, code: '' }
       };
       
       console.log('Complete data being sent:', JSON.stringify(knockoutResults, null, 2));
@@ -345,6 +372,65 @@ const AdminKnockoutStage = () => {
               />
             </Box>
           </Box>
+        </Paper>
+      </Box>
+
+      {/* Angolo del Capiscione */}
+      <Box sx={{ mt: 4, px: 2, width: '100%' }}>
+        <Paper elevation={2} sx={{ p: 3, bgcolor: 'info.light' }}>
+          <Typography variant="h6" gutterBottom>
+            Angolo del Capiscione
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            Seleziona le squadre vincenti per ogni categoria
+          </Typography>
+
+          <Grid container spacing={3}>
+            {Object.entries(CAPISCIONE_GROUPS).map(([key, group]) => (
+              <Grid item xs={12} md={4} key={key}>
+                <Paper elevation={1} sx={{ p: 2, height: '100%', bgcolor: 'background.paper' }}>
+                  <Typography variant="subtitle1" gutterBottom sx={{ color: 'primary.main', fontWeight: 'bold' }}>
+                    {group.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    {group.description}
+                  </Typography>
+                  
+                  <Box sx={{ mb: 2 }}>
+                    {group.teams.map(team => (
+                      <Chip
+                        key={team}
+                        label={team}
+                        size="small"
+                        sx={{ m: 0.5 }}
+                        variant="outlined"
+                      />
+                    ))}
+                  </Box>
+
+                  <FormControl fullWidth size="small">
+                    <InputLabel>Seleziona squadra</InputLabel>
+                    <Select
+                      value={capiscionePredictions[key.toLowerCase()] || ''}
+                      onChange={(e) => setCapiscionePredictions(prev => ({
+                        ...prev,
+                        [key.toLowerCase()]: e.target.value,
+                      }))}
+                      label="Seleziona squadra"
+                    >
+                      {group.teams.map(team => (
+                        <MenuItem key={team} value={team}>{team}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                  <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
+                    Punti: {group.points}
+                  </Typography>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
         </Paper>
       </Box>
     </Box>

@@ -48,9 +48,13 @@ const Navbar = () => {
 
   const pages = [
     { name: 'Home', path: ROUTES.HOME },
-    { name: 'I Miei Pronostici', path: ROUTES.PREDICTIONS },
     { name: 'Classifica', path: ROUTES.DASHBOARD },
   ];
+
+  // Only show predictions page for non-admin users
+  if (!isAdmin()) {
+    pages.splice(1, 0, { name: 'I Miei Pronostici', path: ROUTES.PREDICTIONS });
+  }
 
   if (isAdmin()) {
     pages.push({ name: 'Admin', path: ROUTES.ADMIN });
