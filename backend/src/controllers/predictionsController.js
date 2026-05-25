@@ -121,15 +121,15 @@ exports.lockMyPredictions = async (req, res, next) => {
   }
 };
 
-// @desc    Get all predictions (only after tournament starts)
+// @desc    Get all predictions (only after tournament starts or for admins)
 // @route   GET /api/predictions/all
 // @access  Private
 exports.getAllPredictions = async (req, res, next) => {
   try {
     const settings = await Settings.getSettings();
     
-    // Check if tournament has started
-    if (!settings.hasTournamentStarted()) {
+    // Check if tournament has started (admins can always see)
+    if (!settings.hasTournamentStarted() && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'Predictions will be visible after tournament starts',
@@ -138,6 +138,7 @@ exports.getAllPredictions = async (req, res, next) => {
     
     const predictions = await Prediction.find({ isLocked: true })
       .populate('user', 'username email')
+      .populate('groupStage.match', 'matchNumber homeTeam awayTeam date group phase')
       .select('-__v');
     
     res.status(200).json({
