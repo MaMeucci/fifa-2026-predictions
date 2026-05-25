@@ -50,7 +50,6 @@ import {
 } from '@mui/icons-material';
 import api from '../services/api';
 import AdminKnockoutStage from '../components/AdminKnockoutStage';
-import AdminCapiscione from '../components/AdminCapiscione';
 
 const AdminPage = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -87,7 +86,7 @@ const AdminPage = () => {
 
   // Load users when user management tab is active
   useEffect(() => {
-    if (activeTab === 4) {
+    if (activeTab === 3) {
       loadUsers();
       loadUserStats();
     }
@@ -685,7 +684,6 @@ const AdminPage = () => {
           >
             <Tab label="Risultati Gironi" />
             <Tab label="Fase Finale" />
-            <Tab label="Angolo del Capiscione" />
             <Tab label="Statistiche" />
             <Tab label="Gestione Utenti" />
           </Tabs>
@@ -695,9 +693,8 @@ const AdminPage = () => {
         <Box sx={{ mt: 3 }}>
           {activeTab === 0 && renderMatchResults()}
           {activeTab === 1 && <AdminKnockoutStage />}
-          {activeTab === 2 && <AdminCapiscione />}
-          {activeTab === 3 && renderStatistics()}
-          {activeTab === 4 && renderUserManagement()}
+          {activeTab === 2 && renderStatistics()}
+          {activeTab === 3 && renderUserManagement()}
         </Box>
 
         {/* Confirm Dialog */}
