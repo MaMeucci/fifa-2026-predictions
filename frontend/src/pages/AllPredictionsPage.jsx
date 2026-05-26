@@ -87,7 +87,7 @@ const AllPredictionsPage = () => {
 
   // Calculate points for a single match prediction
   const calculateMatchPoints = (pred) => {
-    if (!pred.match?.homeScore === undefined || pred.match?.awayScore === undefined) {
+    if (pred.match?.homeScore === undefined || pred.match?.awayScore === undefined) {
       return 0; // Match not played yet
     }
 
@@ -102,16 +102,26 @@ const AllPredictionsPage = () => {
     // Check exact score (6 points)
     if (actualHomeScore === predictedHomeScore && actualAwayScore === predictedAwayScore) {
       points += 6;
-    }
-
-    // Check sign (3 points) - always checked
-    const actualSign = actualHomeScore > actualAwayScore ? '1' :
-                       actualHomeScore < actualAwayScore ? '2' : 'X';
-    if (actualSign === predictedSign) {
+      // If exact score, sign is automatically correct, so add 3 more points
       points += 3;
+    } else {
+      // Check sign only if exact score was not matched (3 points)
+      const actualSign = actualHomeScore > actualAwayScore ? '1' :
+                         actualHomeScore < actualAwayScore ? '2' : 'X';
+      if (actualSign === predictedSign) {
+        points += 3;
+      }
     }
 
     return points;
+  };
+
+  // Get chip color based on points
+  const getPointsColor = (points) => {
+    if (points === 9) return 'success';      // Verde - risultato esatto + segno
+    if (points === 6) return 'warning';      // Giallo - solo risultato esatto (impossibile)
+    if (points === 3) return 'orange';       // Arancione - solo segno
+    return 'default';                        // Grigio - nessun punto
   };
 
   if (loading) {
@@ -261,9 +271,10 @@ const AllPredictionsPage = () => {
                                   <TableCell align="center">
                                     <Chip
                                       label={matchPoints > 0 ? `${matchPoints} pt` : '-'}
-                                      color={matchPoints >= 6 ? 'success' : matchPoints >= 3 ? 'warning' : 'default'}
+                                      color={getPointsColor(matchPoints)}
                                       size="small"
                                       variant={matchPoints > 0 ? 'filled' : 'outlined'}
+                                      sx={matchPoints === 3 ? { bgcolor: '#ff9800', color: 'white' } : {}}
                                     />
                                   </TableCell>
                                 </TableRow>
