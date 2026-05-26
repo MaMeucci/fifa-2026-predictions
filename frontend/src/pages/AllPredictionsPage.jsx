@@ -100,17 +100,16 @@ const AllPredictionsPage = () => {
     let points = 0;
 
     // Check exact score (6 points)
-    if (actualHomeScore === predictedHomeScore && actualAwayScore === predictedAwayScore) {
+    const isExactScore = actualHomeScore === predictedHomeScore && actualAwayScore === predictedAwayScore;
+    if (isExactScore) {
       points += 6;
-      // If exact score, sign is automatically correct, so add 3 more points
+    }
+
+    // Check sign (3 points) - ALWAYS checked independently
+    const actualSign = actualHomeScore > actualAwayScore ? '1' :
+                       actualHomeScore < actualAwayScore ? '2' : 'X';
+    if (actualSign === predictedSign) {
       points += 3;
-    } else {
-      // Check sign only if exact score was not matched (3 points)
-      const actualSign = actualHomeScore > actualAwayScore ? '1' :
-                         actualHomeScore < actualAwayScore ? '2' : 'X';
-      if (actualSign === predictedSign) {
-        points += 3;
-      }
     }
 
     return points;
