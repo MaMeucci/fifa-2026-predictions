@@ -141,7 +141,7 @@ exports.getAllPredictions = async (req, res, next) => {
     
     const allPredictions = await Prediction.find(query)
       .populate('user', 'username email role')
-      .populate('groupStage.match', 'matchNumber homeTeam awayTeam date group phase homeScore awayScore')
+      .populate('groupStage.match', 'matchNumber homeTeam awayTeam date group phase result')
       .select('-__v');
     
     // Filter out admin predictions - only show regular users' predictions

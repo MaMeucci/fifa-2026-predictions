@@ -50,6 +50,15 @@ const AllPredictionsPage = () => {
       setLoading(true);
       setError('');
       const response = await api.get('/predictions/all');
+      console.log('🔍 DEBUG - Full API Response:', response.data);
+      console.log('🔍 DEBUG - Predictions:', response.data.data);
+      if (response.data.data && response.data.data.length > 0) {
+        console.log('🔍 DEBUG - First prediction:', response.data.data[0]);
+        if (response.data.data[0].groupStage && response.data.data[0].groupStage.length > 0) {
+          console.log('🔍 DEBUG - First match:', response.data.data[0].groupStage[0]);
+          console.log('🔍 DEBUG - Match data:', response.data.data[0].groupStage[0].match);
+        }
+      }
       setPredictions(response.data.data || []);
     } catch (err) {
       setError(err.response?.data?.message || 'Errore nel caricamento dei pronostici');
@@ -87,12 +96,13 @@ const AllPredictionsPage = () => {
 
   // Calculate points for a single match prediction
   const calculateMatchPoints = (pred) => {
-    if (pred.match?.homeScore === undefined || pred.match?.awayScore === undefined) {
+    // Check if match has results - now checking inside result object
+    if (!pred.match?.result || pred.match.result.homeScore === undefined || pred.match.result.awayScore === undefined) {
       return 0; // Match not played yet
     }
 
-    const actualHomeScore = pred.match.homeScore;
-    const actualAwayScore = pred.match.awayScore;
+    const actualHomeScore = pred.match.result.homeScore;
+    const actualAwayScore = pred.match.result.awayScore;
     const predictedHomeScore = pred.homeScore;
     const predictedAwayScore = pred.awayScore;
     const predictedSign = pred.sign;
