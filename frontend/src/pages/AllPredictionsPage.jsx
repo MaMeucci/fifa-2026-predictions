@@ -97,8 +97,8 @@ const AllPredictionsPage = () => {
   // Calculate points for a single match prediction
   const calculateMatchPoints = (pred) => {
     // Check if match has results - now checking inside result object
-    if (!pred.match?.result || pred.match.result.homeScore === undefined || pred.match.result.awayScore === undefined) {
-      return 0; // Match not played yet
+    if (!pred.match?.result || pred.match.result.homeScore === null || pred.match.result.awayScore === null) {
+      return null; // Match not played yet - return null to distinguish from 0 points
     }
 
     const actualHomeScore = pred.match.result.homeScore;
@@ -279,10 +279,10 @@ const AllPredictionsPage = () => {
                                   </TableCell>
                                   <TableCell align="center">
                                     <Chip
-                                      label={matchPoints > 0 ? `${matchPoints} pt` : '-'}
-                                      color={getPointsColor(matchPoints)}
+                                      label={matchPoints === null ? '-' : `${matchPoints} pt`}
+                                      color={matchPoints === null ? 'default' : getPointsColor(matchPoints)}
                                       size="small"
-                                      variant={matchPoints > 0 ? 'filled' : 'outlined'}
+                                      variant={matchPoints === null ? 'outlined' : 'filled'}
                                       sx={matchPoints === 3 ? { bgcolor: '#ff9800', color: 'white' } : {}}
                                     />
                                   </TableCell>
