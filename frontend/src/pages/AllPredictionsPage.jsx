@@ -468,6 +468,7 @@ const AllPredictionsPage = () => {
                           <TableCell>Top</TableCell>
                           <TableCell>Outsider</TableCell>
                           <TableCell>Materasso</TableCell>
+                          <TableCell>Capocannoniere</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -496,10 +497,18 @@ const AllPredictionsPage = () => {
                               />
                             </TableCell>
                             <TableCell>
-                              <Chip 
-                                label={pred.capiscione?.materasso?.name || '-'} 
-                                color="error" 
+                              <Chip
+                                label={pred.capiscione?.materasso?.name || '-'}
+                                color="error"
                                 size="small"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Chip
+                                label={pred.topScorer?.playerName || pred.topScorer?.name || '-'}
+                                color="info"
+                                size="small"
+                                icon={<SportsIcon />}
                               />
                             </TableCell>
                           </TableRow>
