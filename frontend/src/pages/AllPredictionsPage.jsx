@@ -85,6 +85,35 @@ const AllPredictionsPage = () => {
     return username?.split(' ').map(n => n[0]).join('').toUpperCase() || '?';
   };
 
+  // Calculate points for a single match prediction
+  const calculateMatchPoints = (pred) => {
+    if (!pred.match?.homeScore === undefined || pred.match?.awayScore === undefined) {
+      return 0; // Match not played yet
+    }
+
+    const actualHomeScore = pred.match.homeScore;
+    const actualAwayScore = pred.match.awayScore;
+    const predictedHomeScore = pred.homeScore;
+    const predictedAwayScore = pred.awayScore;
+    const predictedSign = pred.sign;
+
+    let points = 0;
+
+    // Check exact score (6 points)
+    if (actualHomeScore === predictedHomeScore && actualAwayScore === predictedAwayScore) {
+      points += 6;
+    }
+
+    // Check sign (3 points) - always checked
+    const actualSign = actualHomeScore > actualAwayScore ? '1' :
+                       actualHomeScore < actualAwayScore ? '2' : 'X';
+    if (actualSign === predictedSign) {
+      points += 3;
+    }
+
+    return points;
+  };
+
   if (loading) {
     return (
       <Container maxWidth="lg">
@@ -196,38 +225,50 @@ const AllPredictionsPage = () => {
                               <TableCell>Partita</TableCell>
                               <TableCell align="center">Risultato</TableCell>
                               <TableCell align="center">Segno</TableCell>
+                              <TableCell align="center">Punti</TableCell>
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {prediction.groupStage?.map((pred, index) => (
-                              <TableRow key={index}>
-                                <TableCell>
-                                  <Chip label={pred.match?.matchNumber || '-'} size="small" />
-                                </TableCell>
-                                <TableCell>
-                                  <Chip 
-                                    label={`Gruppo ${pred.match?.group || '-'}`} 
-                                    size="small" 
-                                    color="primary" 
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  {pred.match?.homeTeam?.name || '?'} vs {pred.match?.awayTeam?.name || '?'}
-                                </TableCell>
-                                <TableCell align="center">
-                                  <Typography variant="body2" fontWeight="bold">
-                                    {pred.homeScore} - {pred.awayScore}
-                                  </Typography>
-                                </TableCell>
-                                <TableCell align="center">
-                                  <Chip
-                                    label={pred.sign}
-                                    color={getSignColor(pred.sign)}
-                                    size="small"
-                                  />
-                                </TableCell>
-                              </TableRow>
-                            ))}
+                            {prediction.groupStage?.map((pred, index) => {
+                              const matchPoints = calculateMatchPoints(pred);
+                              return (
+                                <TableRow key={index}>
+                                  <TableCell>
+                                    <Chip label={pred.match?.matchNumber || '-'} size="small" />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Chip
+                                      label={`Gruppo ${pred.match?.group || '-'}`}
+                                      size="small"
+                                      color="primary"
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    {pred.match?.homeTeam?.name || '?'} vs {pred.match?.awayTeam?.name || '?'}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    <Typography variant="body2" fontWeight="bold">
+                                      {pred.homeScore} - {pred.awayScore}
+                                    </Typography>
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    <Chip
+                                      label={pred.sign}
+                                      color={getSignColor(pred.sign)}
+                                      size="small"
+                                    />
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    <Chip
+                                      label={matchPoints > 0 ? `${matchPoints} pt` : '-'}
+                                      color={matchPoints >= 6 ? 'success' : matchPoints >= 3 ? 'warning' : 'default'}
+                                      size="small"
+                                      variant={matchPoints > 0 ? 'filled' : 'outlined'}
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
                           </TableBody>
                         </Table>
                       </TableContainer>
@@ -271,7 +312,7 @@ const AllPredictionsPage = () => {
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {prediction.knockoutStage.round32.map((team, idx) => (
-                                <Chip key={idx} label={team.name} color="primary" variant="outlined" />
+                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="primary" variant="outlined" />
                               ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
@@ -286,7 +327,7 @@ const AllPredictionsPage = () => {
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {prediction.knockoutStage.round16.map((team, idx) => (
-                                <Chip key={idx} label={team.name} color="primary" variant="outlined" />
+                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="primary" variant="outlined" />
                               ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
@@ -301,7 +342,7 @@ const AllPredictionsPage = () => {
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {prediction.knockoutStage.quarterFinals.map((team, idx) => (
-                                <Chip key={idx} label={team.name} color="secondary" variant="outlined" />
+                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="secondary" variant="outlined" />
                               ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
@@ -316,7 +357,7 @@ const AllPredictionsPage = () => {
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {prediction.knockoutStage.semiFinals.map((team, idx) => (
-                                <Chip key={idx} label={team.name} color="warning" variant="outlined" />
+                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="warning" variant="outlined" />
                               ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
@@ -331,7 +372,7 @@ const AllPredictionsPage = () => {
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {prediction.knockoutStage.final.map((team, idx) => (
-                                <Chip key={idx} label={team.name} color="error" />
+                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="error" />
                               ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
@@ -388,9 +429,9 @@ const AllPredictionsPage = () => {
                             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
                               Capocannoniere
                             </Typography>
-                            <Chip 
-                              label={prediction.topScorer.name} 
-                              color="success" 
+                            <Chip
+                              label={prediction.topScorer.playerName || prediction.topScorer.name || '-'}
+                              color="success"
                               icon={<SportsIcon />}
                             />
                           </Grid>
