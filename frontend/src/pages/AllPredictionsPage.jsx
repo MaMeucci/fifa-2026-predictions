@@ -369,12 +369,11 @@ const AllPredictionsPage = () => {
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {correctResults.round16
-                                .filter(team => team.position != null && team.position > 0)
-                                .sort((a, b) => a.position - b.position)
+                                .sort((a, b) => (a.position || 999) - (b.position || 999))
                                 .map((team, idx) => (
                                   <Chip
                                     key={idx}
-                                    label={`${team.position}. ${team.team?.name || team.name || '-'}`}
+                                    label={team.position ? `${team.position}. ${team.team?.name || team.name || '-'}` : (team.team?.name || team.name || '-')}
                                     color="success"
                                     size="small"
                                   />
@@ -477,12 +476,11 @@ const AllPredictionsPage = () => {
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {prediction.knockoutStage.round16
-                                .filter(team => team.position != null && team.position > 0)
-                                .sort((a, b) => a.position - b.position)
+                                .sort((a, b) => (a.position || 999) - (b.position || 999))
                                 .map((team, idx) => (
                                   <Chip
                                     key={idx}
-                                    label={`${team.position}. ${team.team?.name || team.name || '-'}`}
+                                    label={team.position ? `${team.position}. ${team.team?.name || team.name || '-'}` : (team.team?.name || team.name || '-')}
                                     color="primary"
                                     variant="outlined"
                                     size="small"
