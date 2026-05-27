@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Container,
   Box,
@@ -41,18 +41,65 @@ const AllPredictionsPage = () => {
   const [correctResults, setCorrectResults] = useState(null);
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
+  
+  // Define the bracket display order (same as TournamentBracket.jsx)
+  // This is the order in which matches appear visually in the bracket
+  const BRACKET_DISPLAY_ORDER = useMemo(() => ({
+    round32: [1, 4, 0, 2, 10, 11, 8, 9, 3, 5, 6, 7, 13, 15, 12, 14], // matchIndex order from TournamentBracket
+    round16: [0, 1, 2, 3, 4, 5, 6, 7], // Sequential for other rounds
+    quarterFinals: [0, 1, 2, 3],
+    semiFinals: [0, 1]
+  }), []);
 
   useEffect(() => {
     loadAllPredictions();
     loadCorrectResults();
   }, []);
 
+  // Helper function to reorder user predictions according to bracket display order
+  const reorderPredictionsByBracket = (predictions) => {
+    if (!predictions || !Array.isArray(predictions)) return predictions;
+    
+    return predictions.map(pred => {
+      if (!pred.knockoutStage) return pred;
+      
+      const reordered = { ...pred };
+      reordered.knockoutStage = { ...pred.knockoutStage };
+      
+      // Reorder round16 (Sedicesimi) according to bracket display order
+      if (pred.knockoutStage.round16 && Array.isArray(pred.knockoutStage.round16)) {
+        const originalTeams = pred.knockoutStage.round16;
+        const reorderedTeams = [];
+        
+        // Map from bracket display order to original array indices
+        BRACKET_DISPLAY_ORDER.round32.forEach(displayIndex => {
+          // Each match has 2 teams, so multiply by 2
+          const team1Index = displayIndex * 2;
+          const team2Index = displayIndex * 2 + 1;
+          
+          reorderedTeams.push(originalTeams[team1Index] || { team: { name: '', code: '' } });
+          reorderedTeams.push(originalTeams[team2Index] || { team: { name: '', code: '' } });
+        });
+        
+        reordered.knockoutStage.round16 = reorderedTeams;
+      }
+      
+      // Other rounds are already in sequential order, no need to reorder
+      
+      return reordered;
+    });
+  };
+
   const loadAllPredictions = async () => {
     try {
       setLoading(true);
       setError('');
       const response = await api.get('/predictions/all');
-      setPredictions(response.data.data || []);
+      const rawPredictions = response.data.data || [];
+      
+      // Reorder predictions to match bracket display order
+      const reorderedPredictions = reorderPredictionsByBracket(rawPredictions);
+      setPredictions(reorderedPredictions);
     } catch (err) {
       setError(err.response?.data?.message || 'Errore nel caricamento dei pronostici');
       console.error(err);
