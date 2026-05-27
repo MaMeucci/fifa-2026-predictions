@@ -80,12 +80,9 @@ const AllPredictionsPage = () => {
         capiscione: data?.capiscione || {}
       };
       
-      // Extract teams from round32 matches (Sedicesimi) - MUST sort by matchNumber first!
+      // Extract teams from round32 matches (Sedicesimi) - keep array order as inserted by admin
       if (data?.round32 && Array.isArray(data.round32)) {
-        // Sort matches by matchNumber to ensure correct order
-        const sortedMatches = [...data.round32].sort((a, b) => a.matchNumber - b.matchNumber);
-        
-        sortedMatches.forEach((match) => {
+        data.round32.forEach((match) => {
           // Add team1 if exists, otherwise add placeholder
           transformedResults.round32.push({
             name: match.team1?.name || '',
@@ -99,11 +96,9 @@ const AllPredictionsPage = () => {
         });
       }
       
-      // Extract teams from round16 matches (Ottavi) - sort by matchNumber
+      // Extract teams from round16 matches (Ottavi) - keep array order
       if (data?.round16 && Array.isArray(data.round16)) {
-        const sortedMatches = [...data.round16].sort((a, b) => a.matchNumber - b.matchNumber);
-        
-        sortedMatches.forEach((match) => {
+        data.round16.forEach((match) => {
           transformedResults.round16.push({
             name: match.team1?.name || '',
             code: match.team1?.code || ''
@@ -115,11 +110,9 @@ const AllPredictionsPage = () => {
         });
       }
       
-      // Extract teams from quarterFinals matches (Quarti) - sort by matchNumber
+      // Extract teams from quarterFinals matches (Quarti) - keep array order
       if (data?.quarterFinals && Array.isArray(data.quarterFinals)) {
-        const sortedMatches = [...data.quarterFinals].sort((a, b) => a.matchNumber - b.matchNumber);
-        
-        sortedMatches.forEach((match) => {
+        data.quarterFinals.forEach((match) => {
           transformedResults.quarterFinals.push({
             name: match.team1?.name || '',
             code: match.team1?.code || ''
@@ -131,11 +124,9 @@ const AllPredictionsPage = () => {
         });
       }
       
-      // Extract teams from semiFinals matches (Semifinali) - sort by matchNumber
+      // Extract teams from semiFinals matches (Semifinali) - keep array order
       if (data?.semiFinals && Array.isArray(data.semiFinals)) {
-        const sortedMatches = [...data.semiFinals].sort((a, b) => a.matchNumber - b.matchNumber);
-        
-        sortedMatches.forEach((match) => {
+        data.semiFinals.forEach((match) => {
           transformedResults.semiFinals.push({
             name: match.team1?.name || '',
             code: match.team1?.code || ''
