@@ -68,108 +68,88 @@ const AllPredictionsPage = () => {
       const data = response.data.data;
       
       // Transform KnockoutResults format to match prediction format
-      // KnockoutResults has matches with team1/team2, we need to extract teams with positions
+      // Extract teams from matches in order, without arbitrary position numbers
       const transformedResults = {
         round32: [],
         round16: [],
         quarterFinals: [],
         semiFinals: [],
-        final: {},
+        final: [],
         finalRankings: data?.finalRankings || {},
         topScorer: data?.topScorer || {},
         capiscione: data?.capiscione || {}
       };
       
-      // Extract teams from round32 matches (Sedicesimi)
+      // Extract teams from round32 matches (Sedicesimi) - in order
       if (data?.round32 && Array.isArray(data.round32)) {
-        data.round32.forEach((match, index) => {
-          if (match.team1?.name) {
-            transformedResults.round32.push({
-              name: match.team1.name,
-              code: match.team1.code,
-              position: (index * 2) + 1 // Position 1, 3, 5, 7...
-            });
-          }
-          if (match.team2?.name) {
-            transformedResults.round32.push({
-              name: match.team2.name,
-              code: match.team2.code,
-              position: (index * 2) + 2 // Position 2, 4, 6, 8...
-            });
-          }
+        data.round32.forEach((match) => {
+          // Add team1 if exists, otherwise add placeholder
+          transformedResults.round32.push({
+            name: match.team1?.name || '',
+            code: match.team1?.code || ''
+          });
+          // Add team2 if exists, otherwise add placeholder
+          transformedResults.round32.push({
+            name: match.team2?.name || '',
+            code: match.team2?.code || ''
+          });
         });
       }
       
       // Extract teams from round16 matches (Ottavi)
       if (data?.round16 && Array.isArray(data.round16)) {
         data.round16.forEach((match) => {
-          if (match.team1?.name) {
-            transformedResults.round16.push({
-              name: match.team1.name,
-              code: match.team1.code
-            });
-          }
-          if (match.team2?.name) {
-            transformedResults.round16.push({
-              name: match.team2.name,
-              code: match.team2.code
-            });
-          }
+          transformedResults.round16.push({
+            name: match.team1?.name || '',
+            code: match.team1?.code || ''
+          });
+          transformedResults.round16.push({
+            name: match.team2?.name || '',
+            code: match.team2?.code || ''
+          });
         });
       }
       
       // Extract teams from quarterFinals matches (Quarti)
       if (data?.quarterFinals && Array.isArray(data.quarterFinals)) {
         data.quarterFinals.forEach((match) => {
-          if (match.team1?.name) {
-            transformedResults.quarterFinals.push({
-              name: match.team1.name,
-              code: match.team1.code
-            });
-          }
-          if (match.team2?.name) {
-            transformedResults.quarterFinals.push({
-              name: match.team2.name,
-              code: match.team2.code
-            });
-          }
+          transformedResults.quarterFinals.push({
+            name: match.team1?.name || '',
+            code: match.team1?.code || ''
+          });
+          transformedResults.quarterFinals.push({
+            name: match.team2?.name || '',
+            code: match.team2?.code || ''
+          });
         });
       }
       
       // Extract teams from semiFinals matches (Semifinali)
       if (data?.semiFinals && Array.isArray(data.semiFinals)) {
         data.semiFinals.forEach((match) => {
-          if (match.team1?.name) {
-            transformedResults.semiFinals.push({
-              name: match.team1.name,
-              code: match.team1.code
-            });
-          }
-          if (match.team2?.name) {
-            transformedResults.semiFinals.push({
-              name: match.team2.name,
-              code: match.team2.code
-            });
-          }
+          transformedResults.semiFinals.push({
+            name: match.team1?.name || '',
+            code: match.team1?.code || ''
+          });
+          transformedResults.semiFinals.push({
+            name: match.team2?.name || '',
+            code: match.team2?.code || ''
+          });
         });
       }
       
       // Extract teams from final match (Finale)
       if (data?.final) {
-        const finalTeams = [];
-        if (data.final.team1?.name) {
-          finalTeams.push({
-            name: data.final.team1.name,
-            code: data.final.team1.code
+        if (data.final.team1?.name || data.final.team2?.name) {
+          transformedResults.final.push({
+            name: data.final.team1?.name || '',
+            code: data.final.team1?.code || ''
+          });
+          transformedResults.final.push({
+            name: data.final.team2?.name || '',
+            code: data.final.team2?.code || ''
           });
         }
-        if (data.final.team2?.name) {
-          finalTeams.push({
-            name: data.final.team2.name,
-            code: data.final.team2.code
-          });
-        }
-        transformedResults.final = finalTeams;
       }
       
       console.log('Transformed results:', transformedResults);
@@ -488,16 +468,14 @@ const AllPredictionsPage = () => {
                               </Typography>
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {correctResults.round32
-                                .sort((a, b) => (a.position || 999) - (b.position || 999))
-                                .map((team, idx) => (
-                                  <Chip
-                                    key={idx}
-                                    label={team.position ? `${team.position}. ${team.name || '-'}` : (team.name || '-')}
-                                    color="success"
-                                    size="small"
-                                  />
-                                ))}
+                              {correctResults.round32.map((team, idx) => (
+                                <Chip
+                                  key={idx}
+                                  label={team.name || '-'}
+                                  color="success"
+                                  size="small"
+                                />
+                              ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
                           </Grid>
@@ -555,7 +533,7 @@ const AllPredictionsPage = () => {
                         )}
                         
                         {/* Finale */}
-                        {correctResults?.finalists && Array.isArray(correctResults.finalists) && correctResults.finalists.length > 0 && (
+                        {correctResults?.final && Array.isArray(correctResults.final) && correctResults.final.length > 0 && (
                           <Grid item xs={12}>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                               <Typography variant="subtitle1" fontWeight="bold">
@@ -563,8 +541,8 @@ const AllPredictionsPage = () => {
                               </Typography>
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {correctResults.finalists.map((team, idx) => (
-                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
+                              {correctResults.final.map((team, idx) => (
+                                <Chip key={idx} label={team.name || '-'} color="success" size="small" />
                               ))}
                             </Box>
                           </Grid>
@@ -594,26 +572,24 @@ const AllPredictionsPage = () => {
                               <Typography variant="subtitle1" fontWeight="bold">
                                 Sedicesimi di Finale
                               </Typography>
-                              {correctResults?.round16 && (
+                              {correctResults?.round32 && (
                                 <Chip
-                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.round16, correctResults.round16, 20, 5)} pt`}
+                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.round16, correctResults.round32, 20, 5)} pt`}
                                   color="primary"
                                   size="small"
                                 />
                               )}
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {prediction.knockoutStage.round16
-                                .sort((a, b) => (a.position || 999) - (b.position || 999))
-                                .map((team, idx) => (
-                                  <Chip
-                                    key={idx}
-                                    label={team.position ? `${team.position}. ${team.team?.name || team.name || '-'}` : (team.team?.name || team.name || '-')}
-                                    color="primary"
-                                    variant="outlined"
-                                    size="small"
-                                  />
-                                ))}
+                              {prediction.knockoutStage.round16.map((team, idx) => (
+                                <Chip
+                                  key={idx}
+                                  label={team.team?.name || team.name || '-'}
+                                  color="primary"
+                                  variant="outlined"
+                                  size="small"
+                                />
+                              ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
                           </Grid>
@@ -626,9 +602,9 @@ const AllPredictionsPage = () => {
                               <Typography variant="subtitle1" fontWeight="bold">
                                 Ottavi di Finale
                               </Typography>
-                              {correctResults?.quarterFinals && (
+                              {correctResults?.round16 && (
                                 <Chip
-                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.quarterFinals, correctResults.quarterFinals, 20)} pt`}
+                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.quarterFinals, correctResults.round16, 20)} pt`}
                                   color="secondary"
                                   size="small"
                                 />
@@ -650,9 +626,9 @@ const AllPredictionsPage = () => {
                               <Typography variant="subtitle1" fontWeight="bold">
                                 Quarti di Finale
                               </Typography>
-                              {correctResults?.semiFinals && (
+                              {correctResults?.quarterFinals && (
                                 <Chip
-                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.semiFinals, correctResults.semiFinals, 30)} pt`}
+                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.semiFinals, correctResults.quarterFinals, 30)} pt`}
                                   color="warning"
                                   size="small"
                                 />
@@ -674,9 +650,9 @@ const AllPredictionsPage = () => {
                               <Typography variant="subtitle1" fontWeight="bold">
                                 Semifinali
                               </Typography>
-                              {correctResults?.final && (
+                              {correctResults?.semiFinals && (
                                 <Chip
-                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.final, correctResults.final, 50)} pt`}
+                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.final, correctResults.semiFinals, 50)} pt`}
                                   color="error"
                                   size="small"
                                 />
@@ -698,9 +674,9 @@ const AllPredictionsPage = () => {
                               <Typography variant="subtitle1" fontWeight="bold">
                                 Finale
                               </Typography>
-                              {correctResults?.finalists && (
+                              {correctResults?.final && (
                                 <Chip
-                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.finalists, correctResults.finalists, 60)} pt`}
+                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.finalists, correctResults.final, 60)} pt`}
                                   color="error"
                                   size="small"
                                 />
