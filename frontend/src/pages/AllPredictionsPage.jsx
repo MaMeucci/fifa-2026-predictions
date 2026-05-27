@@ -38,11 +38,13 @@ const AllPredictionsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [predictions, setPredictions] = useState([]);
+  const [correctResults, setCorrectResults] = useState(null);
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
 
   useEffect(() => {
     loadAllPredictions();
+    loadCorrectResults();
   }, []);
 
   const loadAllPredictions = async () => {
@@ -50,21 +52,21 @@ const AllPredictionsPage = () => {
       setLoading(true);
       setError('');
       const response = await api.get('/predictions/all');
-      console.log('🔍 DEBUG - Full API Response:', response.data);
-      console.log('🔍 DEBUG - Predictions:', response.data.data);
-      if (response.data.data && response.data.data.length > 0) {
-        console.log('🔍 DEBUG - First prediction:', response.data.data[0]);
-        if (response.data.data[0].groupStage && response.data.data[0].groupStage.length > 0) {
-          console.log('🔍 DEBUG - First match:', response.data.data[0].groupStage[0]);
-          console.log('🔍 DEBUG - Match data:', response.data.data[0].groupStage[0].match);
-        }
-      }
       setPredictions(response.data.data || []);
     } catch (err) {
       setError(err.response?.data?.message || 'Errore nel caricamento dei pronostici');
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadCorrectResults = async () => {
+    try {
+      const response = await api.get('/knockout-results');
+      setCorrectResults(response.data.data);
+    } catch (err) {
+      console.error('Error loading correct results:', err);
     }
   };
 
@@ -131,6 +133,31 @@ const AllPredictionsPage = () => {
     if (points === 6) return 'warning';      // Giallo - solo risultato esatto (impossibile)
     if (points === 3) return 'orange';       // Arancione - solo segno
     return 'default';                        // Grigio - nessun punto
+  };
+
+  // Calculate knockout stage points for a specific phase
+  const calculateKnockoutPoints = (predictedTeams, correctTeams, pointsPerTeam, positionBonus = 0) => {
+    if (!correctTeams || correctTeams.length === 0) return 0;
+    
+    let points = 0;
+    const correctTeamNames = correctTeams.map(t => t.team?.name || t.name).filter(Boolean);
+    
+    predictedTeams?.forEach((pred, index) => {
+      const predTeamName = pred.team?.name || pred.name;
+      if (predTeamName && correctTeamNames.includes(predTeamName)) {
+        points += pointsPerTeam;
+        
+        // Check position bonus for round16 (sedicesimi)
+        if (positionBonus > 0) {
+          const correctIndex = correctTeams.findIndex(t => (t.team?.name || t.name) === predTeamName);
+          if (correctIndex === index) {
+            points += positionBonus;
+          }
+        }
+      }
+    });
+    
+    return points;
   };
 
   if (loading) {
@@ -335,14 +362,53 @@ const AllPredictionsPage = () => {
                         {/* Round of 16 - Actually Sedicesimi (32 teams) */}
                         {prediction.knockoutStage?.round16?.length > 0 && (
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Sedicesimi di Finale
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {prediction.knockoutStage.round16.map((team, idx) => (
-                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="primary" variant="outlined" />
-                              ))}
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                Sedicesimi di Finale
+                              </Typography>
+                              {correctResults?.round16 && (
+                                <Chip
+                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.round16, correctResults.round16, 20, 5)} pt`}
+                                  color="primary"
+                                  size="small"
+                                />
+                              )}
                             </Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                              Pronostici:
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                              {prediction.knockoutStage.round16
+                                .sort((a, b) => (a.position || 0) - (b.position || 0))
+                                .map((team, idx) => (
+                                  <Chip
+                                    key={idx}
+                                    label={team.team?.name || team.name || '-'}
+                                    color="primary"
+                                    variant="outlined"
+                                    size="small"
+                                  />
+                                ))}
+                            </Box>
+                            {correctResults?.round16 && correctResults.round16.length > 0 && (
+                              <>
+                                <Typography variant="caption" color="success.main" sx={{ mb: 1, display: 'block', fontWeight: 'bold' }}>
+                                  Risultati Corretti:
+                                </Typography>
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                  {correctResults.round16
+                                    .sort((a, b) => (a.position || 0) - (b.position || 0))
+                                    .map((team, idx) => (
+                                      <Chip
+                                        key={idx}
+                                        label={team.team?.name || team.name || '-'}
+                                        color="success"
+                                        size="small"
+                                      />
+                                    ))}
+                                </Box>
+                              </>
+                            )}
                             <Divider sx={{ my: 2 }} />
                           </Grid>
                         )}
@@ -350,14 +416,38 @@ const AllPredictionsPage = () => {
                         {/* Quarter Finals - Actually Ottavi (16 teams) */}
                         {prediction.knockoutStage?.quarterFinals?.length > 0 && (
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Ottavi di Finale
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                Ottavi di Finale
+                              </Typography>
+                              {correctResults?.quarterFinals && (
+                                <Chip
+                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.quarterFinals, correctResults.quarterFinals, 20)} pt`}
+                                  color="secondary"
+                                  size="small"
+                                />
+                              )}
+                            </Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                              Pronostici:
                             </Typography>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
                               {prediction.knockoutStage.quarterFinals.map((team, idx) => (
-                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="secondary" variant="outlined" />
+                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="secondary" variant="outlined" size="small" />
                               ))}
                             </Box>
+                            {correctResults?.quarterFinals && correctResults.quarterFinals.length > 0 && (
+                              <>
+                                <Typography variant="caption" color="success.main" sx={{ mb: 1, display: 'block', fontWeight: 'bold' }}>
+                                  Risultati Corretti:
+                                </Typography>
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                  {correctResults.quarterFinals.map((team, idx) => (
+                                    <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
+                                  ))}
+                                </Box>
+                              </>
+                            )}
                             <Divider sx={{ my: 2 }} />
                           </Grid>
                         )}
@@ -365,14 +455,38 @@ const AllPredictionsPage = () => {
                         {/* Semi Finals - Actually Quarti (8 teams) */}
                         {prediction.knockoutStage?.semiFinals?.length > 0 && (
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Quarti di Finale
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                Quarti di Finale
+                              </Typography>
+                              {correctResults?.semiFinals && (
+                                <Chip
+                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.semiFinals, correctResults.semiFinals, 30)} pt`}
+                                  color="warning"
+                                  size="small"
+                                />
+                              )}
+                            </Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                              Pronostici:
                             </Typography>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
                               {prediction.knockoutStage.semiFinals.map((team, idx) => (
-                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="warning" variant="outlined" />
+                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="warning" variant="outlined" size="small" />
                               ))}
                             </Box>
+                            {correctResults?.semiFinals && correctResults.semiFinals.length > 0 && (
+                              <>
+                                <Typography variant="caption" color="success.main" sx={{ mb: 1, display: 'block', fontWeight: 'bold' }}>
+                                  Risultati Corretti:
+                                </Typography>
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                  {correctResults.semiFinals.map((team, idx) => (
+                                    <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
+                                  ))}
+                                </Box>
+                              </>
+                            )}
                             <Divider sx={{ my: 2 }} />
                           </Grid>
                         )}
@@ -380,14 +494,38 @@ const AllPredictionsPage = () => {
                         {/* Final - Actually Semifinali (4 teams) */}
                         {prediction.knockoutStage?.final?.length > 0 && (
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Semifinali
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                Semifinali
+                              </Typography>
+                              {correctResults?.final && (
+                                <Chip
+                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.final, correctResults.final, 50)} pt`}
+                                  color="error"
+                                  size="small"
+                                />
+                              )}
+                            </Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                              Pronostici:
                             </Typography>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
                               {prediction.knockoutStage.final.map((team, idx) => (
-                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="error" variant="outlined" />
+                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="error" variant="outlined" size="small" />
                               ))}
                             </Box>
+                            {correctResults?.final && correctResults.final.length > 0 && (
+                              <>
+                                <Typography variant="caption" color="success.main" sx={{ mb: 1, display: 'block', fontWeight: 'bold' }}>
+                                  Risultati Corretti:
+                                </Typography>
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                  {correctResults.final.map((team, idx) => (
+                                    <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
+                                  ))}
+                                </Box>
+                              </>
+                            )}
                             <Divider sx={{ my: 2 }} />
                           </Grid>
                         )}
@@ -395,14 +533,38 @@ const AllPredictionsPage = () => {
                         {/* Finalists - Actually Finale (2 teams) */}
                         {prediction.knockoutStage?.finalists?.length > 0 && (
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Finale
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                Finale
+                              </Typography>
+                              {correctResults?.finalists && (
+                                <Chip
+                                  label={`${calculateKnockoutPoints(prediction.knockoutStage.finalists, correctResults.finalists, 60)} pt`}
+                                  color="error"
+                                  size="small"
+                                />
+                              )}
+                            </Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                              Pronostici:
                             </Typography>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
                               {prediction.knockoutStage.finalists.map((team, idx) => (
-                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="error" />
+                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="error" size="small" />
                               ))}
                             </Box>
+                            {correctResults?.finalists && correctResults.finalists.length > 0 && (
+                              <>
+                                <Typography variant="caption" color="success.main" sx={{ mb: 1, display: 'block', fontWeight: 'bold' }}>
+                                  Risultati Corretti:
+                                </Typography>
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                  {correctResults.finalists.map((team, idx) => (
+                                    <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
+                                  ))}
+                                </Box>
+                              </>
+                            )}
                             <Divider sx={{ my: 2 }} />
                           </Grid>
                         )}
