@@ -364,9 +364,11 @@ const AllPredictionsPage = () => {
                         {/* Sedicesimi */}
                         {correctResults?.round16 && Array.isArray(correctResults.round16) && correctResults.round16.length > 0 && (
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Sedicesimi di Finale
-                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                Sedicesimi di Finale
+                              </Typography>
+                            </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {correctResults.round16
                                 .sort((a, b) => (a.position || 999) - (b.position || 999))
@@ -386,9 +388,11 @@ const AllPredictionsPage = () => {
                         {/* Ottavi */}
                         {correctResults?.quarterFinals && Array.isArray(correctResults.quarterFinals) && correctResults.quarterFinals.length > 0 && (
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Ottavi di Finale
-                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                Ottavi di Finale
+                              </Typography>
+                            </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {correctResults.quarterFinals.map((team, idx) => (
                                 <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
@@ -401,9 +405,11 @@ const AllPredictionsPage = () => {
                         {/* Quarti */}
                         {correctResults?.semiFinals && Array.isArray(correctResults.semiFinals) && correctResults.semiFinals.length > 0 && (
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Quarti di Finale
-                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                Quarti di Finale
+                              </Typography>
+                            </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {correctResults.semiFinals.map((team, idx) => (
                                 <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
@@ -416,9 +422,11 @@ const AllPredictionsPage = () => {
                         {/* Semifinali */}
                         {correctResults?.final && Array.isArray(correctResults.final) && correctResults.final.length > 0 && (
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Semifinali
-                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                Semifinali
+                              </Typography>
+                            </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {correctResults.final.map((team, idx) => (
                                 <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
@@ -431,9 +439,11 @@ const AllPredictionsPage = () => {
                         {/* Finale */}
                         {correctResults?.finalists && Array.isArray(correctResults.finalists) && correctResults.finalists.length > 0 && (
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Finale
-                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                Finale
+                              </Typography>
+                            </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {correctResults.finalists.map((team, idx) => (
                                 <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
