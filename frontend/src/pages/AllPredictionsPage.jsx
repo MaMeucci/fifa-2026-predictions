@@ -143,21 +143,29 @@ const AllPredictionsPage = () => {
     let points = 0;
     const correctTeamNames = correctTeams.map(t => t.team?.name || t.name).filter(Boolean);
     
+    // Debug logging
+    console.log('calculateKnockoutPoints - pointsPerTeam:', pointsPerTeam);
+    console.log('correctTeamNames:', correctTeamNames);
+    console.log('predictedTeams:', predictedTeams.map(p => ({ name: p.team?.name || p.name, position: p.position })));
+    
     predictedTeams.forEach((pred, index) => {
       const predTeamName = pred.team?.name || pred.name;
       if (predTeamName && correctTeamNames.includes(predTeamName)) {
         points += pointsPerTeam;
+        console.log(`Match found: ${predTeamName} at index ${index}, points: ${pointsPerTeam}`);
         
         // Check position bonus for round16 (sedicesimi)
         if (positionBonus > 0) {
           const correctIndex = correctTeams.findIndex(t => (t.team?.name || t.name) === predTeamName);
           if (correctIndex === index) {
             points += positionBonus;
+            console.log(`Position bonus: ${positionBonus} for ${predTeamName}`);
           }
         }
       }
     });
     
+    console.log('Total points:', points);
     return points;
   };
 
