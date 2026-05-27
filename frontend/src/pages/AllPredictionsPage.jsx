@@ -137,12 +137,13 @@ const AllPredictionsPage = () => {
 
   // Calculate knockout stage points for a specific phase
   const calculateKnockoutPoints = (predictedTeams, correctTeams, pointsPerTeam, positionBonus = 0) => {
-    if (!correctTeams || correctTeams.length === 0) return 0;
+    if (!correctTeams || !Array.isArray(correctTeams) || correctTeams.length === 0) return 0;
+    if (!predictedTeams || !Array.isArray(predictedTeams)) return 0;
     
     let points = 0;
     const correctTeamNames = correctTeams.map(t => t.team?.name || t.name).filter(Boolean);
     
-    predictedTeams?.forEach((pred, index) => {
+    predictedTeams.forEach((pred, index) => {
       const predTeamName = pred.team?.name || pred.name;
       if (predTeamName && correctTeamNames.includes(predTeamName)) {
         points += pointsPerTeam;
@@ -390,7 +391,7 @@ const AllPredictionsPage = () => {
                                   />
                                 ))}
                             </Box>
-                            {correctResults?.round16 && correctResults.round16.length > 0 && (
+                            {correctResults?.round16 && Array.isArray(correctResults.round16) && correctResults.round16.length > 0 && (
                               <>
                                 <Typography variant="caption" color="success.main" sx={{ mb: 1, display: 'block', fontWeight: 'bold' }}>
                                   Risultati Corretti:
@@ -436,7 +437,7 @@ const AllPredictionsPage = () => {
                                 <Chip key={idx} label={team.team?.name || team.name || '-'} color="secondary" variant="outlined" size="small" />
                               ))}
                             </Box>
-                            {correctResults?.quarterFinals && correctResults.quarterFinals.length > 0 && (
+                            {correctResults?.quarterFinals && Array.isArray(correctResults.quarterFinals) && correctResults.quarterFinals.length > 0 && (
                               <>
                                 <Typography variant="caption" color="success.main" sx={{ mb: 1, display: 'block', fontWeight: 'bold' }}>
                                   Risultati Corretti:
@@ -475,7 +476,7 @@ const AllPredictionsPage = () => {
                                 <Chip key={idx} label={team.team?.name || team.name || '-'} color="warning" variant="outlined" size="small" />
                               ))}
                             </Box>
-                            {correctResults?.semiFinals && correctResults.semiFinals.length > 0 && (
+                            {correctResults?.semiFinals && Array.isArray(correctResults.semiFinals) && correctResults.semiFinals.length > 0 && (
                               <>
                                 <Typography variant="caption" color="success.main" sx={{ mb: 1, display: 'block', fontWeight: 'bold' }}>
                                   Risultati Corretti:
@@ -514,7 +515,7 @@ const AllPredictionsPage = () => {
                                 <Chip key={idx} label={team.team?.name || team.name || '-'} color="error" variant="outlined" size="small" />
                               ))}
                             </Box>
-                            {correctResults?.final && correctResults.final.length > 0 && (
+                            {correctResults?.final && Array.isArray(correctResults.final) && correctResults.final.length > 0 && (
                               <>
                                 <Typography variant="caption" color="success.main" sx={{ mb: 1, display: 'block', fontWeight: 'bold' }}>
                                   Risultati Corretti:
@@ -553,7 +554,7 @@ const AllPredictionsPage = () => {
                                 <Chip key={idx} label={team.team?.name || team.name || '-'} color="error" size="small" />
                               ))}
                             </Box>
-                            {correctResults?.finalists && correctResults.finalists.length > 0 && (
+                            {correctResults?.finalists && Array.isArray(correctResults.finalists) && correctResults.finalists.length > 0 && (
                               <>
                                 <Typography variant="caption" color="success.main" sx={{ mb: 1, display: 'block', fontWeight: 'bold' }}>
                                   Risultati Corretti:
