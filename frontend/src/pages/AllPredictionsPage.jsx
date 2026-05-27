@@ -242,7 +242,8 @@ const AllPredictionsPage = () => {
                               <TableCell>Match #</TableCell>
                               <TableCell>Gruppo</TableCell>
                               <TableCell>Partita</TableCell>
-                              <TableCell align="center">Risultato</TableCell>
+                              <TableCell align="center">Esito</TableCell>
+                              <TableCell align="center">Pronostico</TableCell>
                               <TableCell align="center">Segno</TableCell>
                               <TableCell align="center">Punti</TableCell>
                             </TableRow>
@@ -264,6 +265,13 @@ const AllPredictionsPage = () => {
                                   </TableCell>
                                   <TableCell>
                                     {pred.match?.homeTeam?.name || '?'} vs {pred.match?.awayTeam?.name || '?'}
+                                  </TableCell>
+                                  <TableCell align="center">
+                                    <Typography variant="body2" fontWeight="bold" color="primary">
+                                      {pred.match?.result?.homeScore !== null && pred.match?.result?.awayScore !== null
+                                        ? `${pred.match.result.homeScore} - ${pred.match.result.awayScore}`
+                                        : '-'}
+                                    </Typography>
                                   </TableCell>
                                   <TableCell align="center">
                                     <Typography variant="body2" fontWeight="bold">
@@ -324,26 +332,11 @@ const AllPredictionsPage = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Grid container spacing={3}>
-                        {/* Round of 32 */}
-                        {prediction.knockoutStage?.round32?.length > 0 && (
-                          <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Sedicesimi di Finale
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {prediction.knockoutStage.round32.map((team, idx) => (
-                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="primary" variant="outlined" />
-                              ))}
-                            </Box>
-                            <Divider sx={{ my: 2 }} />
-                          </Grid>
-                        )}
-
-                        {/* Round of 16 */}
+                        {/* Round of 16 - Actually Sedicesimi (32 teams) */}
                         {prediction.knockoutStage?.round16?.length > 0 && (
                           <Grid item xs={12}>
                             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Ottavi di Finale
+                              Sedicesimi di Finale
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {prediction.knockoutStage.round16.map((team, idx) => (
@@ -354,11 +347,11 @@ const AllPredictionsPage = () => {
                           </Grid>
                         )}
 
-                        {/* Quarter Finals */}
+                        {/* Quarter Finals - Actually Ottavi (16 teams) */}
                         {prediction.knockoutStage?.quarterFinals?.length > 0 && (
                           <Grid item xs={12}>
                             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Quarti di Finale
+                              Ottavi di Finale
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {prediction.knockoutStage.quarterFinals.map((team, idx) => (
@@ -369,11 +362,11 @@ const AllPredictionsPage = () => {
                           </Grid>
                         )}
 
-                        {/* Semi Finals */}
+                        {/* Semi Finals - Actually Quarti (8 teams) */}
                         {prediction.knockoutStage?.semiFinals?.length > 0 && (
                           <Grid item xs={12}>
                             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Semifinali
+                              Quarti di Finale
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {prediction.knockoutStage.semiFinals.map((team, idx) => (
@@ -384,14 +377,29 @@ const AllPredictionsPage = () => {
                           </Grid>
                         )}
 
-                        {/* Final */}
+                        {/* Final - Actually Semifinali (4 teams) */}
                         {prediction.knockoutStage?.final?.length > 0 && (
+                          <Grid item xs={12}>
+                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                              Semifinali
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                              {prediction.knockoutStage.final.map((team, idx) => (
+                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="error" variant="outlined" />
+                              ))}
+                            </Box>
+                            <Divider sx={{ my: 2 }} />
+                          </Grid>
+                        )}
+
+                        {/* Finalists - Actually Finale (2 teams) */}
+                        {prediction.knockoutStage?.finalists?.length > 0 && (
                           <Grid item xs={12}>
                             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
                               Finale
                             </Typography>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {prediction.knockoutStage.final.map((team, idx) => (
+                              {prediction.knockoutStage.finalists.map((team, idx) => (
                                 <Chip key={idx} label={team.team?.name || team.name || '-'} color="error" />
                               ))}
                             </Box>
