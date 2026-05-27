@@ -115,7 +115,7 @@ const AllPredictionsPage = () => {
       const data = response.data.data;
       
       // Transform KnockoutResults format to match prediction format
-      // Extract teams from matches in order, without arbitrary position numbers
+      // Extract teams from matches and reorder according to bracket display order
       const transformedResults = {
         round32: [],
         round16: [],
@@ -127,19 +127,28 @@ const AllPredictionsPage = () => {
         capiscione: data?.capiscione || {}
       };
       
-      // Extract teams from round32 matches (Sedicesimi) - keep array order as inserted by admin
+      // Extract teams from round32 matches (Sedicesimi) and reorder by bracket display order
       if (data?.round32 && Array.isArray(data.round32)) {
+        // First, extract all teams in original order
+        const allTeams = [];
         data.round32.forEach((match) => {
-          // Add team1 if exists, otherwise add placeholder
-          transformedResults.round32.push({
+          allTeams.push({
             name: match.team1?.name || '',
             code: match.team1?.code || ''
           });
-          // Add team2 if exists, otherwise add placeholder
-          transformedResults.round32.push({
+          allTeams.push({
             name: match.team2?.name || '',
             code: match.team2?.code || ''
           });
+        });
+        
+        // Then reorder according to bracket display order
+        BRACKET_DISPLAY_ORDER.round32.forEach(displayIndex => {
+          const team1Index = displayIndex * 2;
+          const team2Index = displayIndex * 2 + 1;
+          
+          transformedResults.round32.push(allTeams[team1Index] || { name: '', code: '' });
+          transformedResults.round32.push(allTeams[team2Index] || { name: '', code: '' });
         });
       }
       
