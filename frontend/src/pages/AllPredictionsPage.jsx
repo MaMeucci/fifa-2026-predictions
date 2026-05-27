@@ -64,7 +64,116 @@ const AllPredictionsPage = () => {
   const loadCorrectResults = async () => {
     try {
       const response = await api.get('/knockout-results');
-      setCorrectResults(response.data.data);
+      console.log('Knockout results response:', response.data);
+      const data = response.data.data;
+      
+      // Transform KnockoutResults format to match prediction format
+      // KnockoutResults has matches with team1/team2, we need to extract teams with positions
+      const transformedResults = {
+        round32: [],
+        round16: [],
+        quarterFinals: [],
+        semiFinals: [],
+        final: {},
+        finalRankings: data?.finalRankings || {},
+        topScorer: data?.topScorer || {},
+        capiscione: data?.capiscione || {}
+      };
+      
+      // Extract teams from round32 matches (Sedicesimi)
+      if (data?.round32 && Array.isArray(data.round32)) {
+        data.round32.forEach((match, index) => {
+          if (match.team1?.name) {
+            transformedResults.round32.push({
+              name: match.team1.name,
+              code: match.team1.code,
+              position: (index * 2) + 1 // Position 1, 3, 5, 7...
+            });
+          }
+          if (match.team2?.name) {
+            transformedResults.round32.push({
+              name: match.team2.name,
+              code: match.team2.code,
+              position: (index * 2) + 2 // Position 2, 4, 6, 8...
+            });
+          }
+        });
+      }
+      
+      // Extract teams from round16 matches (Ottavi)
+      if (data?.round16 && Array.isArray(data.round16)) {
+        data.round16.forEach((match) => {
+          if (match.team1?.name) {
+            transformedResults.round16.push({
+              name: match.team1.name,
+              code: match.team1.code
+            });
+          }
+          if (match.team2?.name) {
+            transformedResults.round16.push({
+              name: match.team2.name,
+              code: match.team2.code
+            });
+          }
+        });
+      }
+      
+      // Extract teams from quarterFinals matches (Quarti)
+      if (data?.quarterFinals && Array.isArray(data.quarterFinals)) {
+        data.quarterFinals.forEach((match) => {
+          if (match.team1?.name) {
+            transformedResults.quarterFinals.push({
+              name: match.team1.name,
+              code: match.team1.code
+            });
+          }
+          if (match.team2?.name) {
+            transformedResults.quarterFinals.push({
+              name: match.team2.name,
+              code: match.team2.code
+            });
+          }
+        });
+      }
+      
+      // Extract teams from semiFinals matches (Semifinali)
+      if (data?.semiFinals && Array.isArray(data.semiFinals)) {
+        data.semiFinals.forEach((match) => {
+          if (match.team1?.name) {
+            transformedResults.semiFinals.push({
+              name: match.team1.name,
+              code: match.team1.code
+            });
+          }
+          if (match.team2?.name) {
+            transformedResults.semiFinals.push({
+              name: match.team2.name,
+              code: match.team2.code
+            });
+          }
+        });
+      }
+      
+      // Extract teams from final match (Finale)
+      if (data?.final) {
+        const finalTeams = [];
+        if (data.final.team1?.name) {
+          finalTeams.push({
+            name: data.final.team1.name,
+            code: data.final.team1.code
+          });
+        }
+        if (data.final.team2?.name) {
+          finalTeams.push({
+            name: data.final.team2.name,
+            code: data.final.team2.code
+          });
+        }
+        transformedResults.final = finalTeams;
+      }
+      
+      console.log('Transformed results:', transformedResults);
+      setCorrectResults(transformedResults);
     } catch (err) {
       console.error('Error loading correct results:', err);
     }
@@ -141,7 +250,8 @@ const AllPredictionsPage = () => {
     if (!predictedTeams || !Array.isArray(predictedTeams)) return 0;
     
     let points = 0;
-    const correctTeamNames = correctTeams.map(t => t.team?.name || t.name).filter(Boolean);
+    // Now using transformed format with direct 'name' field
+    const correctTeamNames = correctTeams.map(t => t.name).filter(Boolean);
     
     // Debug logging
     console.log('calculateKnockoutPoints - pointsPerTeam:', pointsPerTeam);
@@ -156,7 +266,7 @@ const AllPredictionsPage = () => {
         
         // Check position bonus for round16 (sedicesimi)
         if (positionBonus > 0) {
-          const correctIndex = correctTeams.findIndex(t => (t.team?.name || t.name) === predTeamName);
+          const correctIndex = correctTeams.findIndex(t => t.name === predTeamName);
           if (correctIndex === index) {
             points += positionBonus;
             console.log(`Position bonus: ${positionBonus} for ${predTeamName}`);
@@ -370,7 +480,7 @@ const AllPredictionsPage = () => {
                     <AccordionDetails>
                       <Grid container spacing={3}>
                         {/* Sedicesimi */}
-                        {correctResults?.round16 && Array.isArray(correctResults.round16) && correctResults.round16.length > 0 && (
+                        {correctResults?.round32 && Array.isArray(correctResults.round32) && correctResults.round32.length > 0 && (
                           <Grid item xs={12}>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                               <Typography variant="subtitle1" fontWeight="bold">
@@ -378,12 +488,12 @@ const AllPredictionsPage = () => {
                               </Typography>
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {correctResults.round16
+                              {correctResults.round32
                                 .sort((a, b) => (a.position || 999) - (b.position || 999))
                                 .map((team, idx) => (
                                   <Chip
                                     key={idx}
-                                    label={team.position ? `${team.position}. ${team.team?.name || team.name || '-'}` : (team.team?.name || team.name || '-')}
+                                    label={team.position ? `${team.position}. ${team.name || '-'}` : (team.name || '-')}
                                     color="success"
                                     size="small"
                                   />
@@ -394,7 +504,7 @@ const AllPredictionsPage = () => {
                         )}
                         
                         {/* Ottavi */}
-                        {correctResults?.quarterFinals && Array.isArray(correctResults.quarterFinals) && correctResults.quarterFinals.length > 0 && (
+                        {correctResults?.round16 && Array.isArray(correctResults.round16) && correctResults.round16.length > 0 && (
                           <Grid item xs={12}>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                               <Typography variant="subtitle1" fontWeight="bold">
@@ -402,8 +512,8 @@ const AllPredictionsPage = () => {
                               </Typography>
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {correctResults.quarterFinals.map((team, idx) => (
-                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
+                              {correctResults.round16.map((team, idx) => (
+                                <Chip key={idx} label={team.name || '-'} color="success" size="small" />
                               ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
@@ -411,7 +521,7 @@ const AllPredictionsPage = () => {
                         )}
                         
                         {/* Quarti */}
-                        {correctResults?.semiFinals && Array.isArray(correctResults.semiFinals) && correctResults.semiFinals.length > 0 && (
+                        {correctResults?.quarterFinals && Array.isArray(correctResults.quarterFinals) && correctResults.quarterFinals.length > 0 && (
                           <Grid item xs={12}>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                               <Typography variant="subtitle1" fontWeight="bold">
@@ -419,8 +529,8 @@ const AllPredictionsPage = () => {
                               </Typography>
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {correctResults.semiFinals.map((team, idx) => (
-                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
+                              {correctResults.quarterFinals.map((team, idx) => (
+                                <Chip key={idx} label={team.name || '-'} color="success" size="small" />
                               ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
@@ -428,7 +538,7 @@ const AllPredictionsPage = () => {
                         )}
                         
                         {/* Semifinali */}
-                        {correctResults?.final && Array.isArray(correctResults.final) && correctResults.final.length > 0 && (
+                        {correctResults?.semiFinals && Array.isArray(correctResults.semiFinals) && correctResults.semiFinals.length > 0 && (
                           <Grid item xs={12}>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
                               <Typography variant="subtitle1" fontWeight="bold">
@@ -436,8 +546,8 @@ const AllPredictionsPage = () => {
                               </Typography>
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {correctResults.final.map((team, idx) => (
-                                <Chip key={idx} label={team.team?.name || team.name || '-'} color="success" size="small" />
+                              {correctResults.semiFinals.map((team, idx) => (
+                                <Chip key={idx} label={team.name || '-'} color="success" size="small" />
                               ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
