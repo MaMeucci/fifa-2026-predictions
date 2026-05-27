@@ -201,27 +201,28 @@ const AdminKnockoutStage = () => {
       console.log('capiscionePredictions:', capiscionePredictions);
       
       // Convert bracket format to knockout results format
+      // Use correct FIFA 2026 match numbers for proper ordering
       const knockoutResults = {
         round32: bracketPredictions.round32.map((match, i) => ({
-          matchNumber: i + 1,
+          matchNumber: 73 + i, // Sedicesimi: matches 73-88
           team1: { name: match[0], code: '' },
           team2: { name: match[1], code: '' },
           winner: { name: '', code: '' } // Will be filled by admin later
         })),
         round16: bracketPredictions.round16.map((match, i) => ({
-          matchNumber: i + 1,
+          matchNumber: 89 + i, // Ottavi: matches 89-96
           team1: { name: match[0], code: '' },
           team2: { name: match[1], code: '' },
           winner: { name: '', code: '' }
         })),
         quarterFinals: bracketPredictions.quarters.map((match, i) => ({
-          matchNumber: i + 1,
+          matchNumber: 97 + i, // Quarti: matches 97-100
           team1: { name: match[0], code: '' },
           team2: { name: match[1], code: '' },
           winner: { name: '', code: '' }
         })),
         semiFinals: bracketPredictions.semis.map((match, i) => ({
-          matchNumber: i + 1,
+          matchNumber: 101 + i, // Semifinali: matches 101-102
           team1: { name: match[0], code: '' },
           team2: { name: match[1], code: '' },
           winner: { name: '', code: '' }
