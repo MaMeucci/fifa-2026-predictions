@@ -23,7 +23,7 @@ import {
 import { Save, Lock, EmojiEvents } from '@mui/icons-material';
 import { GROUPS, MATCH_SIGNS, CAPISCIONE_GROUPS, TOURNAMENT_CONFIG } from '../utils/constants';
 import api from '../services/api';
-import TournamentBracket from '../components/TournamentBracket';
+import TournamentBracketSymmetric from '../components/TournamentBracketSymmetric';
 
 const PredictionsPage = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -457,7 +457,7 @@ const PredictionsPage = () => {
         Inserisci le squadre che prevedi passeranno ad ogni turno. Il tabellone mostra tutti i match dalla fase a 32 squadre fino alla finale.
       </Alert>
 
-      <TournamentBracket
+      <TournamentBracketSymmetric
         predictions={bracketPredictions}
         onChange={handleBracketChange}
         isLocked={isLocked}

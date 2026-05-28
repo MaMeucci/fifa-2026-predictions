@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { Save, Refresh, EmojiEvents } from '@mui/icons-material';
 import api from '../services/api';
-import TournamentBracket from './TournamentBracket';
+import TournamentBracketSymmetric from './TournamentBracketSymmetric';
 import { CAPISCIONE_GROUPS } from '../utils/constants';
 
 const AdminKnockoutStage = () => {
@@ -310,7 +310,7 @@ const AdminKnockoutStage = () => {
         Inserisci le squadre che si sono qualificate ad ogni turno. Il tabellone mostra tutti i match dalla fase a 32 squadre fino alla finale.
       </Alert>
 
-      <TournamentBracket
+      <TournamentBracketSymmetric
         predictions={bracketPredictions}
         onChange={handleBracketChange}
         isLocked={false}

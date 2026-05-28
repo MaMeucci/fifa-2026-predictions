@@ -1,0 +1,272 @@
+.bracket-symmetric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 50%, #1a472a 100%);
+  min-height: 800px;
+  overflow-x: auto;
+  position: relative;
+}
+
+/* Left and Right Sides */
+.bracket-side {
+  display: flex;
+  gap: 30px;
+  flex: 1;
+}
+
+.left-side {
+  justify-content: flex-end;
+}
+
+.right-side {
+  justify-content: flex-start;
+}
+
+/* Each Round Column */
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 180px;
+}
+
+.round-label {
+  color: white;
+  font-weight: bold;
+  font-size: 0.7rem;
+  text-align: center;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* Compact Match Box */
+.match-box-compact {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 4px;
+  padding: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.match-box-compact:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.match-header {
+  font-size: 0.65rem;
+  color: #666;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1;
+}
+
+.team-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.team-badge {
+  background: #d32f2f;
+  color: white;
+  font-weight: bold;
+  font-size: 0.6rem;
+  padding: 3px 5px;
+  border-radius: 3px;
+  min-width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Center - Final */
+.bracket-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  min-width: 300px;
+  padding: 0 20px;
+}
+
+.trophy-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.trophy-icon {
+  font-size: 5rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.fifa-logo {
+  color: white;
+  font-weight: 900;
+  font-size: 3rem;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+  letter-spacing: 8px;
+}
+
+.final-match {
+  background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+  border-radius: 12px;
+  padding: 20px;
+  width: 100%;
+  max-width: 350px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.final-title {
+  color: #1a472a;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+}
+
+.final-info {
+  display: block;
+  color: #2d5a3d;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+.final-teams {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.final-teams .MuiAutocomplete-root input {
+  background: white;
+  font-weight: 600;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.third-place {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.75rem;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Autocomplete Styling */
+.match-box-compact .MuiAutocomplete-root input {
+  padding: 6px 8px;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.match-box-compact .MuiOutlinedInput-root {
+  background: white;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .bracket-symmetric {
+    gap: 15px;
+    padding: 20px 15px;
+  }
+  
+  .bracket-side {
+    gap: 20px;
+  }
+  
+  .bracket-round {
+    min-width: 160px;
+    gap: 15px;
+  }
+  
+  .bracket-center {
+    min-width: 250px;
+  }
+  
+  .trophy-icon {
+    font-size: 4rem;
+  }
+  
+  .fifa-logo {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .bracket-symmetric {
+    gap: 10px;
+    padding: 15px 10px;
+  }
+  
+  .bracket-side {
+    gap: 15px;
+  }
+  
+  .bracket-round {
+    min-width: 140px;
+    gap: 12px;
+  }
+  
+  .match-box-compact {
+    padding: 6px;
+  }
+  
+  .bracket-center {
+    min-width: 220px;
+  }
+  
+  .final-match {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 900px) {
+  .bracket-symmetric {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .bracket-side {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .left-side, .right-side {
+    justify-content: center;
+  }
+  
+  .bracket-round {
+    min-width: 100%;
+  }
+  
+  .bracket-center {
+    order: -1;
+    min-width: 100%;
+  }
+}
+
+/* Made with Bob */
