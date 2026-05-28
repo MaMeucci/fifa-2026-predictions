@@ -2,6 +2,7 @@ import { Box, TextField, Typography, Paper, Autocomplete } from '@mui/material';
 import { useState, useEffect } from 'react';
 import './TournamentBracketSymmetric.css';
 import api from '../services/api';
+import worldCupTrophy from '../assets/world-cup-trophy..png';
 
 const TournamentBracketSymmetric = ({ predictions, onChange, isLocked }) => {
   const [teamsByGroup, setTeamsByGroup] = useState({});
@@ -142,7 +143,7 @@ const TournamentBracketSymmetric = ({ predictions, onChange, isLocked }) => {
       {/* Center - Final */}
       <Box className="bracket-center">
         <Box className="trophy-container">
-          <Box className="trophy-icon">🏆</Box>
+          <img src={worldCupTrophy} alt="FIFA World Cup Trophy" className="trophy-image" />
           <Typography variant="h4" className="fifa-logo">FIFA</Typography>
         </Box>
         <Paper className="final-match" elevation={6}>
