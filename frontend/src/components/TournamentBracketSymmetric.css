@@ -29,10 +29,42 @@
 .bracket-round {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly; /* Distribute matches evenly - scales with zoom */
   min-width: 180px;
-  min-height: 100%; /* Take full height to distribute properly */
   position: relative;
+}
+
+/* Spacing for Round of 32 - normal gap */
+.bracket-side.left-side .bracket-round:first-of-type .match-box-compact,
+.bracket-side.right-side .bracket-round:last-of-type .match-box-compact {
+  margin-bottom: 20px;
+}
+
+/* Spacing for Round of 16 - double gap to center between R32 pairs */
+.bracket-side.left-side .bracket-round:nth-of-type(2) .match-box-compact,
+.bracket-side.right-side .bracket-round:nth-of-type(3) .match-box-compact {
+  margin-bottom: 180px; /* Height of 2 R32 matches + gap */
+}
+
+.bracket-side.left-side .bracket-round:nth-of-type(2) .match-box-compact:first-of-type,
+.bracket-side.right-side .bracket-round:nth-of-type(3) .match-box-compact:first-of-type {
+  margin-top: 90px; /* Half of R32 match height to center */
+}
+
+/* Spacing for Quarter-finals - quadruple gap to center between R16 pairs */
+.bracket-side.left-side .bracket-round:nth-of-type(3) .match-box-compact,
+.bracket-side.right-side .bracket-round:nth-of-type(2) .match-box-compact {
+  margin-bottom: 380px; /* Height of 2 R16 matches + their gaps */
+}
+
+.bracket-side.left-side .bracket-round:nth-of-type(3) .match-box-compact:first-of-type,
+.bracket-side.right-side .bracket-round:nth-of-type(2) .match-box-compact:first-of-type {
+  margin-top: 280px; /* Offset to center between R16 pairs */
+}
+
+/* Spacing for Semi-finals - center between Quarter-finals pairs */
+.bracket-side.left-side .bracket-round:nth-of-type(4) .match-box-compact,
+.bracket-side.right-side .bracket-round:nth-of-type(1) .match-box-compact {
+  margin-top: 470px; /* Offset to center between Quarter-finals */
 }
 
 .round-label {
