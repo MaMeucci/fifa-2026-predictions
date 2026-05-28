@@ -197,6 +197,9 @@ const AdminPage = () => {
         console.error(err);
       }
     });
+    setConfirmDialogOpen(true);
+  };
+
   const handleResetPassword = (user) => {
     setSelectedUser(user);
     setNewPassword('');
@@ -222,9 +225,6 @@ const AdminPage = () => {
       setError(err.response?.data?.message || 'Errore nel reset della password');
       console.error(err);
     }
-  };
-
-    setConfirmDialogOpen(true);
   };
 
   const handleTabChange = (event, newValue) => {
