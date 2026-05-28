@@ -315,6 +315,60 @@ const AllPredictionsPage = () => {
     return points;
   };
 
+  // Calculate podium points
+  const calculatePodiumPoints = (prediction) => {
+    if (!correctResults?.finalRankings || !prediction?.finalRankings) return 0;
+    
+    let points = 0;
+    // First place: 80 points
+    if (prediction.finalRankings.first?.name === correctResults.finalRankings.first?.name) {
+      points += 80;
+    }
+    // Second place: 50 points
+    if (prediction.finalRankings.second?.name === correctResults.finalRankings.second?.name) {
+      points += 50;
+    }
+    // Third place: 25 points
+    if (prediction.finalRankings.third?.name === correctResults.finalRankings.third?.name) {
+      points += 25;
+    }
+    // Fourth place: 25 points
+    if (prediction.finalRankings.fourth?.name === correctResults.finalRankings.fourth?.name) {
+      points += 25;
+    }
+    return points;
+  };
+
+  // Calculate top scorer points
+  const calculateTopScorerPoints = (prediction) => {
+    if (!correctResults?.topScorer || !prediction?.topScorer) return 0;
+    
+    const predName = prediction.topScorer.playerName || prediction.topScorer.name;
+    const correctName = correctResults.topScorer.playerName || correctResults.topScorer.name;
+    
+    return predName === correctName ? 30 : 0;
+  };
+
+  // Calculate capiscione points
+  const calculateCapiscionePoints = (prediction) => {
+    if (!correctResults?.capiscione || !prediction?.capiscione) return 0;
+    
+    let points = 0;
+    // Top: 25 points
+    if (prediction.capiscione.top?.name === correctResults.capiscione.top?.name) {
+      points += 25;
+    }
+    // Outsider: 20 points
+    if (prediction.capiscione.outsider?.name === correctResults.capiscione.outsider?.name) {
+      points += 20;
+    }
+    // Materasso: 15 points
+    if (prediction.capiscione.materasso?.name === correctResults.capiscione.materasso?.name) {
+      points += 15;
+    }
+    return points;
+  };
+
   if (loading) {
     return (
       <Container maxWidth="lg">
@@ -530,6 +584,7 @@ const AllPredictionsPage = () => {
                                   label={team.name || '-'}
                                   color="success"
                                   size="small"
+                                  sx={{ color: 'white', fontWeight: 'bold' }}
                                 />
                               ))}
                             </Box>
@@ -547,7 +602,7 @@ const AllPredictionsPage = () => {
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {correctResults.round16.map((team, idx) => (
-                                <Chip key={idx} label={team.name || '-'} color="success" size="small" />
+                                <Chip key={idx} label={team.name || '-'} color="success" size="small" sx={{ color: 'white', fontWeight: 'bold' }} />
                               ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
@@ -564,7 +619,7 @@ const AllPredictionsPage = () => {
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {correctResults.quarterFinals.map((team, idx) => (
-                                <Chip key={idx} label={team.name || '-'} color="success" size="small" />
+                                <Chip key={idx} label={team.name || '-'} color="success" size="small" sx={{ color: 'white', fontWeight: 'bold' }} />
                               ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
@@ -581,7 +636,7 @@ const AllPredictionsPage = () => {
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {correctResults.semiFinals.map((team, idx) => (
-                                <Chip key={idx} label={team.name || '-'} color="success" size="small" />
+                                <Chip key={idx} label={team.name || '-'} color="success" size="small" sx={{ color: 'white', fontWeight: 'bold' }} />
                               ))}
                             </Box>
                             <Divider sx={{ my: 2 }} />
@@ -598,7 +653,7 @@ const AllPredictionsPage = () => {
                             </Box>
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                               {correctResults.final.map((team, idx) => (
-                                <Chip key={idx} label={team.name || '-'} color="success" size="small" />
+                                <Chip key={idx} label={team.name || '-'} color="success" size="small" sx={{ color: 'white', fontWeight: 'bold' }} />
                               ))}
                             </Box>
                           </Grid>
@@ -750,9 +805,18 @@ const AllPredictionsPage = () => {
                         {/* Final Rankings */}
                         {prediction.finalRankings && (
                           <Grid item xs={12}>
-                            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                              Podio
-                            </Typography>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold">
+                                Podio
+                              </Typography>
+                              {correctResults && (
+                                <Chip
+                                  label={`${calculatePodiumPoints(prediction) + calculateTopScorerPoints(prediction)} pt`}
+                                  color="info"
+                                  size="small"
+                                />
+                              )}
+                            </Box>
                             <Grid container spacing={2}>
                               <Grid item xs={6} sm={3}>
                                 <Paper sx={{ p: 2, textAlign: 'center', bgcolor: '#FFD700' }}>
@@ -827,6 +891,7 @@ const AllPredictionsPage = () => {
                           <TableCell>Outsider</TableCell>
                           <TableCell>Materasso</TableCell>
                           <TableCell>Capocannoniere</TableCell>
+                          <TableCell align="center">Punti</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -868,6 +933,15 @@ const AllPredictionsPage = () => {
                                 size="small"
                                 icon={<SportsIcon />}
                               />
+                            </TableCell>
+                            <TableCell align="center">
+                              {correctResults && (
+                                <Chip
+                                  label={`${calculateCapiscionePoints(pred) + calculateTopScorerPoints(pred)} pt`}
+                                  color="primary"
+                                  size="small"
+                                />
+                              )}
                             </TableCell>
                           </TableRow>
                         ))}
