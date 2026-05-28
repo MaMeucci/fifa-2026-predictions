@@ -98,60 +98,61 @@
 }
 
 /* Spacing adjustments for vertical layout */
+/* Base match height + spacing */
 .round-32 {
   min-width: 220px;
 }
 
 .round-32 .match-box {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .round-32 .match-box:first-of-type {
   margin-top: 40px;
 }
 
+/* Round of 16: each match centered between 2 Round of 32 matches */
+/* Match height ~100px + margin 30px = 130px per match */
+/* Each R16 match should be at: first_R32 + (130px * 0.5) + (130px * match_pair_index * 2) */
 .round-16 {
   min-width: 220px;
 }
 
-.round-16 .match-box {
-  margin-bottom: 160px;
-}
+.round-16 .match-box:nth-child(2) { margin-top: 105px; }  /* 40 + 130*0.5 */
+.round-16 .match-box:nth-child(3) { margin-top: 260px; }  /* 130*2 */
+.round-16 .match-box:nth-child(4) { margin-top: 260px; }
+.round-16 .match-box:nth-child(5) { margin-top: 260px; }
+.round-16 .match-box:nth-child(6) { margin-top: 260px; }
+.round-16 .match-box:nth-child(7) { margin-top: 260px; }
+.round-16 .match-box:nth-child(8) { margin-top: 260px; }
+.round-16 .match-box:nth-child(9) { margin-top: 260px; }
 
-.round-16 .match-box:first-of-type {
-  margin-top: 110px;
-}
-
+/* Quarter-finals: each match centered between 2 Round of 16 matches */
+/* Each quarter should be at middle of 2 R16 matches */
 .quarters {
   min-width: 220px;
 }
 
-.quarters .match-box {
-  margin-bottom: 380px;
-}
+.quarters .match-box:nth-child(2) { margin-top: 235px; }  /* 105 + 260*0.5 */
+.quarters .match-box:nth-child(3) { margin-top: 520px; }  /* 260*2 */
+.quarters .match-box:nth-child(4) { margin-top: 520px; }
+.quarters .match-box:nth-child(5) { margin-top: 520px; }
 
-.quarters .match-box:first-of-type {
-  margin-top: 250px;
-}
-
+/* Semi-finals: each match centered between 2 Quarter-finals */
 .semis {
   min-width: 220px;
 }
 
-.semis .match-box {
-  margin-bottom: 820px;
-}
+.semis .match-box:nth-child(2) { margin-top: 495px; }  /* 235 + 520*0.5 */
+.semis .match-box:nth-child(3) { margin-top: 1040px; } /* 520*2 */
 
-.semis .match-box:first-of-type {
-  margin-top: 530px;
-}
-
+/* Final: centered between 2 Semi-finals */
 .final {
   min-width: 240px;
 }
 
 .final .final-box {
-  margin-top: 940px;
+  margin-top: 1015px;  /* 495 + 1040*0.5 */
 }
 
 /* Final box styling */
