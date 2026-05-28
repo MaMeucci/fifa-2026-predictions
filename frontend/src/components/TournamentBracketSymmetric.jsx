@@ -2,7 +2,7 @@ import { Box, TextField, Typography, Paper, Autocomplete } from '@mui/material';
 import { useState, useEffect } from 'react';
 import './TournamentBracketSymmetric.css';
 import api from '../services/api';
-import worldCupTrophy from '../assets/world-cup-trophy..jpg';
+import worldCupTrophy from '../assets/world-cup-trophy.jpg';
 
 const TournamentBracketSymmetric = ({ predictions, onChange, isLocked }) => {
   const [teamsByGroup, setTeamsByGroup] = useState({});
