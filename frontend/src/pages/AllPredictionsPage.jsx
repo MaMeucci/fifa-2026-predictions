@@ -666,6 +666,67 @@ const AllPredictionsPage = () => {
                                 <Chip key={idx} label={team.name || '-'} color="success" size="small" sx={{ color: 'white', fontWeight: 'bold' }} />
                               ))}
                             </Box>
+                            <Divider sx={{ my: 2 }} />
+                          </Grid>
+                        )}
+                        
+                        {/* Podio e Capocannoniere */}
+                        {correctResults?.finalRankings && (
+                          <Grid item xs={12}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                              <Typography variant="subtitle1" fontWeight="bold" sx={{ color: 'white' }}>
+                                Podio
+                              </Typography>
+                            </Box>
+                            <Grid container spacing={2}>
+                              <Grid item xs={6} sm={3}>
+                                <Paper sx={{ p: 2, textAlign: 'center', bgcolor: '#FFD700' }}>
+                                  <Typography variant="caption">1° Posto</Typography>
+                                  <Typography variant="body1" fontWeight="bold">
+                                    {correctResults.finalRankings.first?.name || '-'}
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                              <Grid item xs={6} sm={3}>
+                                <Paper sx={{ p: 2, textAlign: 'center', bgcolor: '#C0C0C0' }}>
+                                  <Typography variant="caption">2° Posto</Typography>
+                                  <Typography variant="body1" fontWeight="bold">
+                                    {correctResults.finalRankings.second?.name || '-'}
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                              <Grid item xs={6} sm={3}>
+                                <Paper sx={{ p: 2, textAlign: 'center', bgcolor: '#CD7F32' }}>
+                                  <Typography variant="caption">3° Posto</Typography>
+                                  <Typography variant="body1" fontWeight="bold">
+                                    {correctResults.finalRankings.third?.name || '-'}
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                              <Grid item xs={6} sm={3}>
+                                <Paper sx={{ p: 2, textAlign: 'center', bgcolor: 'grey.300' }}>
+                                  <Typography variant="caption">4° Posto</Typography>
+                                  <Typography variant="body1" fontWeight="bold">
+                                    {correctResults.finalRankings.fourth?.name || '-'}
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                            </Grid>
+                            
+                            {/* Capocannoniere */}
+                            {correctResults.topScorer && (correctResults.topScorer.playerName || correctResults.topScorer.name) && (
+                              <Box sx={{ mt: 2 }}>
+                                <Typography variant="subtitle2" fontWeight="bold" gutterBottom sx={{ color: 'white' }}>
+                                  Capocannoniere
+                                </Typography>
+                                <Chip
+                                  label={correctResults.topScorer.playerName || correctResults.topScorer.name || '-'}
+                                  color="success"
+                                  icon={<SportsIcon />}
+                                  sx={{ color: 'white', fontWeight: 'bold' }}
+                                />
+                              </Box>
+                            )}
                           </Grid>
                         )}
                       </Grid>
@@ -863,7 +924,7 @@ const AllPredictionsPage = () => {
                             </Grid>
                             
                             {/* Top Scorer - moved here from separate section */}
-                            {prediction.topScorer?.name && (
+                            {prediction.topScorer && (prediction.topScorer.playerName || prediction.topScorer.name) && (
                               <Box sx={{ mt: 2 }}>
                                 <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
                                   Capocannoniere
