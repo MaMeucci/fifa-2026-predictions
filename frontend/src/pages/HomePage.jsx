@@ -65,39 +65,60 @@ const HomePage = () => {
               <Grid container spacing={3}>
                 {/* I Miei Pronostici */}
                 <Grid item xs={12} md={6}>
-                  <Card
-                    sx={{
-                      height: '100%',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s',
-                      boxShadow: 2,
-                      '&:hover': {
-                        transform: 'translateY(-4px)',
-                        boxShadow: 8
-                      }
-                    }}
-                    component={Link}
-                    to={ROUTES.PREDICTIONS}
-                    style={{ textDecoration: 'none' }}
+                  <Tooltip
+                    title={isAdmin() ? "Area non disponibile per utenti Admin" : ""}
+                    arrow
                   >
-                    <CardContent sx={{ textAlign: 'center', py: 4 }}>
-                      <EditIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
-                      <Typography variant="h5" gutterBottom color="primary">
-                        I Miei Pronostici
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                        Inserisci o modifica i tuoi pronostici personali
-                      </Typography>
-                      <Button
-                        variant="contained"
-                        size="large"
-                        fullWidth
-                        startIcon={<EditIcon />}
+                    <span>
+                      <Card
+                        sx={{
+                          height: '100%',
+                          cursor: isAdmin() ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.3s',
+                          opacity: isAdmin() ? 0.6 : 1,
+                          boxShadow: 2,
+                          '&:hover': !isAdmin() ? {
+                            transform: 'translateY(-4px)',
+                            boxShadow: 8
+                          } : {},
+                          position: 'relative'
+                        }}
+                        component={isAdmin() ? 'div' : Link}
+                        to={isAdmin() ? undefined : ROUTES.PREDICTIONS}
+                        style={{ textDecoration: 'none' }}
                       >
-                        Vai ai Pronostici
-                      </Button>
-                    </CardContent>
-                  </Card>
+                        <CardContent sx={{ textAlign: 'center', py: 4 }}>
+                          {isAdmin() && (
+                            <LockIcon sx={{
+                              position: 'absolute',
+                              top: 16,
+                              right: 16,
+                              fontSize: 30,
+                              color: 'error.main'
+                            }} />
+                          )}
+                          <EditIcon sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
+                          <Typography variant="h5" gutterBottom color="primary">
+                            I Miei Pronostici
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                            {isAdmin()
+                              ? "Area riservata ai giocatori"
+                              : "Inserisci o modifica i tuoi pronostici personali"}
+                          </Typography>
+                          <Button
+                            variant="contained"
+                            size="large"
+                            fullWidth
+                            startIcon={isAdmin() ? <LockIcon /> : <EditIcon />}
+                            disabled={isAdmin()}
+                          >
+                            {isAdmin() ? "Non Disponibile" : "Vai ai Pronostici"}
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </span>
+                  </Tooltip>
                 </Grid>
                 
                 {/* Vai alla Classifica */}

@@ -147,6 +147,10 @@ const DashboardPage = () => {
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Punti Totali</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Risultati Esatti</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Segni Corretti</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Totale Fase a Gironi</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Totale Fase Finale</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Totale Podio</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>Totale Capiscione</TableCell>
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>Trend</TableCell>
               </TableRow>
             </TableHead>
@@ -195,6 +199,26 @@ const DashboardPage = () => {
                   </TableCell>
                   <TableCell align="center">
                     <Chip label={row.correctSigns} color="info" size="small" />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                      {row.groupStageTotal || 0}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                      {row.knockoutStageTotal || 0}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                      {row.podiumTotal || 0}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                      {row.capiscioneTotal || 0}
+                    </Typography>
                   </TableCell>
                   <TableCell align="center">
                     {getTrendIcon(row.trend)}

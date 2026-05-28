@@ -21,15 +21,48 @@ router.get('/leaderboard', protect, async (req, res) => {
     const validScores = scores.filter(score => score.user !== null);
     
     // Format leaderboard
-    const leaderboard = validScores.map((score, index) => ({
-      rank: index + 1,
-      username: score.user.username,
-      userId: score.user._id,
-      totalPoints: score.totalPoints || 0,
-      exactResults: score.breakdown?.exactResults?.count || 0,
-      correctSigns: score.breakdown?.correctSigns?.count || 0,
-      trend: 'same' // TODO: Calculate trend based on previous rankings
-    }));
+    const leaderboard = validScores.map((score, index) => {
+      const breakdown = score.breakdown || {};
+      
+      // Calculate category totals
+      const groupStageTotal =
+        (breakdown.exactResults?.points || 0) +
+        (breakdown.correctSigns?.points || 0) +
+        (breakdown.bonusExactResults?.points || 0);
+      
+      const knockoutStageTotal =
+        (breakdown.round16Teams?.points || 0) +
+        (breakdown.quarterTeams?.points || 0) +
+        (breakdown.semiTeams?.points || 0) +
+        (breakdown.finalTeams?.points || 0) +
+        (breakdown.finalMatchTeams?.points || 0);
+      
+      const podiumTotal =
+        (breakdown.winner?.points || 0) +
+        (breakdown.runnerUp?.points || 0) +
+        (breakdown.third?.points || 0) +
+        (breakdown.fourth?.points || 0) +
+        (breakdown.topScorer?.points || 0);
+      
+      const capiscioneTotal =
+        (breakdown.capiscione?.top?.points || 0) +
+        (breakdown.capiscione?.outsider?.points || 0) +
+        (breakdown.capiscione?.materasso?.points || 0);
+      
+      return {
+        rank: index + 1,
+        username: score.user.username,
+        userId: score.user._id,
+        totalPoints: score.totalPoints || 0,
+        exactResults: breakdown.exactResults?.count || 0,
+        correctSigns: breakdown.correctSigns?.count || 0,
+        groupStageTotal,
+        knockoutStageTotal,
+        podiumTotal,
+        capiscioneTotal,
+        trend: 'same' // TODO: Calculate trend based on previous rankings
+      };
+    });
     
     res.json({
       success: true,
