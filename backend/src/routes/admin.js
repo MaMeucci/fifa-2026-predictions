@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const { protect, admin } = require('../middleware/auth');
 
@@ -206,6 +207,59 @@ router.delete('/users/:id', async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error deleting user',
+      error: error.message
+    });
+  }
+});
+
+// Reset user password
+router.put('/users/:id/reset-password', async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+    
+    const user = await User.findById(req.params.id);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+    
+    // Only allow password reset for local auth users
+    if (user.authProvider !== 'local') {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot reset password for non-local authentication users'
+      });
+    }
+    
+    // Validate new password
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters long'
+      });
+    }
+    
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    
+    // Update password
+    user.passwordHash = hashedPassword;
+    await user.save();
+    
+    res.json({
+      success: true,
+      message: 'Password reset successfully',
+      data: user.toPublicJSON()
+    });
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error resetting password',
       error: error.message
     });
   }

@@ -46,7 +46,8 @@ import {
   CheckCircleOutlined,
   Delete,
   AdminPanelSettings,
-  Person
+  Person,
+  VpnKey
 } from '@mui/icons-material';
 import api from '../services/api';
 import AdminKnockoutStage from '../components/AdminKnockoutStage';
@@ -78,6 +79,8 @@ const AdminPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState(null);
+  const [resetPasswordDialogOpen, setResetPasswordDialogOpen] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
 
   // Load matches on component mount and when filters change
   useEffect(() => {
@@ -194,6 +197,33 @@ const AdminPage = () => {
         console.error(err);
       }
     });
+  const handleResetPassword = (user) => {
+    setSelectedUser(user);
+    setNewPassword('');
+    setResetPasswordDialogOpen(true);
+  };
+
+  const handleConfirmResetPassword = async () => {
+    try {
+      setError('');
+      
+      if (!newPassword || newPassword.length < 6) {
+        setError('La password deve essere di almeno 6 caratteri');
+        return;
+      }
+      
+      await api.put(`/admin/users/${selectedUser._id}/reset-password`, { newPassword });
+      
+      setSuccess(`Password resettata con successo per ${selectedUser.username}`);
+      setResetPasswordDialogOpen(false);
+      setNewPassword('');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Errore nel reset della password');
+      console.error(err);
+    }
+  };
+
     setConfirmDialogOpen(true);
   };
 
@@ -629,6 +659,17 @@ const AdminPage = () => {
                           {user.isActive ? <Block /> : <CheckCircleOutlined />}
                         </IconButton>
                       </Tooltip>
+                      {user.authProvider === 'local' && (
+                        <Tooltip title="Reset password">
+                          <IconButton
+                            color="warning"
+                            size="small"
+                            onClick={() => handleResetPassword(user)}
+                          >
+                            <VpnKey />
+                          </IconButton>
+                        </Tooltip>
+                      )}
                       <Tooltip title="Elimina utente">
                         <IconButton
                           color="error"
@@ -723,6 +764,38 @@ const AdminPage = () => {
             </Button>
           </DialogActions>
         </Dialog>
+        {/* Reset Password Dialog */}
+        <Dialog open={resetPasswordDialogOpen} onClose={() => setResetPasswordDialogOpen(false)} maxWidth="xs" fullWidth>
+          <DialogTitle>Reset Password</DialogTitle>
+          <DialogContent>
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              Inserisci la nuova password per <strong>{selectedUser?.username}</strong>
+            </Typography>
+            <TextField
+              fullWidth
+              type="password"
+              label="Nuova Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              helperText="Minimo 6 caratteri"
+              autoFocus
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setResetPasswordDialogOpen(false)}>
+              Annulla
+            </Button>
+            <Button 
+              onClick={handleConfirmResetPassword}
+              variant="contained"
+              color="warning"
+              disabled={!newPassword || newPassword.length < 6}
+            >
+              Reset Password
+            </Button>
+          </DialogActions>
+        </Dialog>
+
 
         {/* Edit Match Dialog */}
         <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="sm" fullWidth>
