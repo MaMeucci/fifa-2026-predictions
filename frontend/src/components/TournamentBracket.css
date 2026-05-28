@@ -17,7 +17,7 @@
   flex-direction: column;
   position: relative;
   flex-shrink: 0;
-  gap: 0;
+  min-height: 1800px;
 }
 
 .round-title {
@@ -31,6 +31,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
   margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
 .match-box {
@@ -38,14 +39,13 @@
   border-radius: 6px;
   padding: 10px;
   min-width: 220px;
-  height: 90px;
+  margin-bottom: 15px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 6px;
   position: relative;
   transition: transform 0.2s, box-shadow 0.2s;
-  margin-bottom: 15px;
 }
 
 .match-box:hover {
@@ -98,55 +98,25 @@
   text-align: center;
 }
 
-/* Margin-based spacing for perfect alignment */
-/* Each match is 90px tall + 15px margin = 105px total */
-
+/* Reset to simple layout */
 .round-32 {
   min-width: 220px;
 }
 
-/* Ottavi: centered between pairs of R32 matches */
-/* First R32 pair: match 1-2, center at 52.5px (half of 105px) */
 .round-16 {
   min-width: 220px;
 }
 
-.round-16 .match-box:nth-of-type(1) { margin-top: 52px; }
-.round-16 .match-box:nth-of-type(2) { margin-top: 105px; }
-.round-16 .match-box:nth-of-type(3) { margin-top: 105px; }
-.round-16 .match-box:nth-of-type(4) { margin-top: 105px; }
-.round-16 .match-box:nth-of-type(5) { margin-top: 105px; }
-.round-16 .match-box:nth-of-type(6) { margin-top: 105px; }
-.round-16 .match-box:nth-of-type(7) { margin-top: 105px; }
-.round-16 .match-box:nth-of-type(8) { margin-top: 105px; }
-
-/* Quarti: centered between pairs of R16 matches */
-/* Each R16 match is 105px, so pair is 210px, center at 105px */
 .quarters {
   min-width: 220px;
 }
 
-.quarters .match-box:nth-of-type(1) { margin-top: 157px; }
-.quarters .match-box:nth-of-type(2) { margin-top: 210px; }
-.quarters .match-box:nth-of-type(3) { margin-top: 210px; }
-.quarters .match-box:nth-of-type(4) { margin-top: 210px; }
-
-/* Semifinali: centered between pairs of Quarter matches */
-/* Each Quarter match is 105px, so pair is 210px, center at 105px */
 .semis {
   min-width: 220px;
 }
 
-.semis .match-box:nth-of-type(1) { margin-top: 367px; }
-.semis .match-box:nth-of-type(2) { margin-top: 420px; }
-
-/* Finale: centered between the two Semi matches */
 .final {
   min-width: 240px;
-}
-
-.final .final-box {
-  margin-top: 787px;
 }
 
 /* Final box styling */
@@ -155,7 +125,6 @@
   border-radius: 12px;
   padding: 20px;
   min-width: 300px;
-  height: 200px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
