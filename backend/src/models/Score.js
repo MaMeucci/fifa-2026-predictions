@@ -45,6 +45,10 @@ const scoreSchema = new mongoose.Schema(
         correct: { type: Number, default: 0 },
         points: { type: Number, default: 0 },
       },
+      finalMatchTeams: {
+        correct: { type: Number, default: 0 },
+        points: { type: Number, default: 0 },
+      },
       
       // Final standings
       winner: {

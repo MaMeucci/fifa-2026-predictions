@@ -31,11 +31,11 @@ router.get('/leaderboard', protect, async (req, res) => {
         (breakdown.bonusExactResults?.points || 0);
       
       const knockoutStageTotal =
-        (breakdown.round16Teams?.points || 0) +
-        (breakdown.quarterTeams?.points || 0) +
-        (breakdown.semiTeams?.points || 0) +
-        (breakdown.finalTeams?.points || 0) +
-        (breakdown.finalMatchTeams?.points || 0);
+        (breakdown.round16Teams?.points || 0) +      // Sedicesimi
+        (breakdown.quarterTeams?.points || 0) +      // Ottavi
+        (breakdown.semiTeams?.points || 0) +         // Quarti
+        (breakdown.finalTeams?.points || 0) +        // Semifinali
+        (breakdown.finalMatchTeams?.points || 0);    // Finale
       
       const podiumTotal =
         (breakdown.winner?.points || 0) +

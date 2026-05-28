@@ -108,6 +108,7 @@ const calculateUserScore = async (userId, finishedMatches = null) => {
       quarterTeams: { correct: 0, points: 0 },
       semiTeams: { correct: 0, points: 0 },
       finalTeams: { correct: 0, points: 0 },
+      finalMatchTeams: { correct: 0, points: 0 },
       winner: { correct: false, points: 0 },
       runnerUp: { correct: false, points: 0 },
       third: { correct: false, points: 0 },
@@ -439,10 +440,6 @@ const calculateKnockoutPoints = async (prediction, breakdown) => {
       
       console.log(`Total: ${correctTeams} teams correct, Points: ${correctTeams * 60}`);
       
-      // Add to breakdown (we need to add this field to the breakdown object)
-      if (!breakdown.finalMatchTeams) {
-        breakdown.finalMatchTeams = { correct: 0, points: 0 };
-      }
       breakdown.finalMatchTeams.correct = correctTeams;
       breakdown.finalMatchTeams.points = correctTeams * 60;
     }
