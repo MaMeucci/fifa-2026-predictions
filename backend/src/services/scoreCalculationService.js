@@ -5,6 +5,40 @@ const User = require('../models/User');
 const KnockoutResults = require('../models/KnockoutResults');
 
 /**
+ * Normalize player name for fuzzy matching
+ * Handles: accents, case, initials, extra spaces
+ * Examples:
+ * - "Mbappé" -> "mbappe"
+ * - "K. Mbappé" -> "mbappe"
+ * - "MBAPPE" -> "mbappe"
+ * - "Mbappè" -> "mbappe"
+ */
+const normalizePlayerName = (name) => {
+  if (!name || typeof name !== 'string') return '';
+  
+  return name
+    .toLowerCase() // Convert to lowercase
+    .normalize('NFD') // Decompose accented characters
+    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics (accents)
+    .replace(/[a-z]\.\s*/gi, '') // Remove initials like "K. " or "k."
+    .replace(/\s+/g, ' ') // Normalize multiple spaces to single space
+    .trim(); // Remove leading/trailing spaces
+};
+
+/**
+ * Compare two player names using fuzzy matching
+ * Returns true if names match after normalization
+ */
+const comparePlayerNames = (name1, name2) => {
+  const normalized1 = normalizePlayerName(name1);
+  const normalized2 = normalizePlayerName(name2);
+  
+  console.log(`Comparing players: "${name1}" (normalized: "${normalized1}") vs "${name2}" (normalized: "${normalized2}")`);
+  
+  return normalized1 === normalized2 && normalized1 !== '';
+};
+
+/**
  * Calculate scores for all users based on their predictions and match results
  */
 const calculateAllScores = async () => {
@@ -547,13 +581,17 @@ const calculateTopScorerPoints = async (prediction, breakdown) => {
     }
     
     // Correct top scorer: 30 points
+    // Using fuzzy matching to handle accents, case, initials, etc.
     if (prediction.topScorer?.playerName &&
         knockoutResults.topScorer.playerName &&
         prediction.topScorer.playerName.trim() !== '' &&
-        prediction.topScorer.playerName === knockoutResults.topScorer.playerName) {
+        comparePlayerNames(prediction.topScorer.playerName, knockoutResults.topScorer.playerName)) {
       points += 30;
       breakdown.topScorer.correct = true;
       breakdown.topScorer.points = 30;
+      console.log(`✓ Top scorer correct: "${prediction.topScorer.playerName}" matches "${knockoutResults.topScorer.playerName}" (+30 pts)`);
+    } else if (prediction.topScorer?.playerName && knockoutResults.topScorer.playerName) {
+      console.log(`✗ Top scorer incorrect: "${prediction.topScorer.playerName}" does not match "${knockoutResults.topScorer.playerName}"`);
     }
     
   } catch (error) {
