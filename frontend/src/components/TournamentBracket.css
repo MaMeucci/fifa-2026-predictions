@@ -15,11 +15,10 @@
 .bracket-column {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
   flex-shrink: 0;
   min-height: 1400px;
-  gap: 80px;
 }
 
 .round-title {
@@ -103,23 +102,57 @@
   min-width: 220px;
 }
 
+.round-32 .match-box {
+  margin-bottom: 20px;
+}
+
+.round-32 .match-box:first-of-type {
+  margin-top: 40px;
+}
+
 .round-16 {
   min-width: 220px;
+}
+
+.round-16 .match-box {
+  margin-bottom: 160px;
+}
+
+.round-16 .match-box:first-of-type {
+  margin-top: 110px;
 }
 
 .quarters {
   min-width: 220px;
 }
 
+.quarters .match-box {
+  margin-bottom: 380px;
+}
+
+.quarters .match-box:first-of-type {
+  margin-top: 250px;
+}
+
 .semis {
   min-width: 220px;
+}
+
+.semis .match-box {
+  margin-bottom: 820px;
+}
+
+.semis .match-box:first-of-type {
+  margin-top: 530px;
 }
 
 .final {
   min-width: 240px;
 }
 
-/* Remove all manual spacing - let flexbox handle it */
+.final .final-box {
+  margin-top: 940px;
+}
 
 /* Final box styling */
 .final-box {
