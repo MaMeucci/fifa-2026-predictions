@@ -242,12 +242,11 @@ router.put('/users/:id/reset-password', async (req, res) => {
       });
     }
     
-    // Hash new password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    // Update password - set it directly and mark as not modified
+    // to prevent the pre-save hook from hashing it again
+    user.passwordHash = newPassword;
     
-    // Update password
-    user.passwordHash = hashedPassword;
+    // The pre-save hook will hash it automatically
     await user.save();
     
     res.json({
