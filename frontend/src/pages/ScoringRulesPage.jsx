@@ -236,9 +236,8 @@ const ScoringRulesPage = () => {
                           key={index}
                           label={team}
                           size="small"
-                          sx={{ m: 0.5 }}
+                          sx={{ m: 0.5, fontWeight: 'bold' }}
                           color="success"
-                          variant="outlined"
                         />
                       ))}
                     </Box>
@@ -266,9 +265,8 @@ const ScoringRulesPage = () => {
                           key={index}
                           label={team}
                           size="small"
-                          sx={{ m: 0.5 }}
+                          sx={{ m: 0.5, fontWeight: 'bold' }}
                           color="warning"
-                          variant="outlined"
                         />
                       ))}
                     </Box>
@@ -296,9 +294,8 @@ const ScoringRulesPage = () => {
                           key={index}
                           label={team}
                           size="small"
-                          sx={{ m: 0.5 }}
+                          sx={{ m: 0.5, fontWeight: 'bold' }}
                           color="error"
-                          variant="outlined"
                         />
                       ))}
                     </Box>
