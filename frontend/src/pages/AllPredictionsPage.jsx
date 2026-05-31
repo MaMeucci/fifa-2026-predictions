@@ -446,14 +446,6 @@ const AllPredictionsPage = () => {
                           {getUserInitials(pred.user?.username)}
                         </Avatar>
                         <Typography variant="body1">{pred.user?.username}</Typography>
-                        {pred.user?.role === 'admin' && (
-                          <Chip
-                            label="ADMIN"
-                            size="small"
-                            color="error"
-                            sx={{ fontWeight: 'bold' }}
-                          />
-                        )}
                       </Box>
                     </Grid>
                   ))}
@@ -481,14 +473,6 @@ const AllPredictionsPage = () => {
                           {getUserInitials(prediction.user?.username)}
                         </Avatar>
                         <Typography variant="h6">{prediction.user?.username}</Typography>
-                        {prediction.user?.role === 'admin' && (
-                          <Chip
-                            label="ADMIN"
-                            size="small"
-                            color="error"
-                            sx={{ fontWeight: 'bold' }}
-                          />
-                        )}
                         <Chip
                           label={`${prediction.groupStage?.length || 0} partite`}
                           size="small"
@@ -759,14 +743,6 @@ const AllPredictionsPage = () => {
                           {getUserInitials(prediction.user?.username)}
                         </Avatar>
                         <Typography variant="h6">{prediction.user?.username}</Typography>
-                        {prediction.user?.role === 'admin' && (
-                          <Chip
-                            label="ADMIN"
-                            size="small"
-                            color="error"
-                            sx={{ fontWeight: 'bold' }}
-                          />
-                        )}
                       </Box>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -989,6 +965,55 @@ const AllPredictionsPage = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
+                        {/* Risultati Corretti - Prima riga */}
+                        {correctResults?.capiscione && (
+                          <TableRow sx={{ backgroundColor: 'action.hover' }}>
+                            <TableCell>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Avatar sx={{ width: 32, height: 32, bgcolor: 'error.main', fontSize: '0.875rem' }}>
+                                  ✓
+                                </Avatar>
+                                <Typography fontWeight="bold">Risultati Corretti</Typography>
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Chip
+                                label={correctResults.capiscione.top?.name || '-'}
+                                color="success"
+                                size="small"
+                                variant="filled"
+                                sx={{ fontWeight: 'bold' }}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Chip
+                                label={correctResults.capiscione.outsider?.name || '-'}
+                                color="warning"
+                                size="small"
+                                variant="filled"
+                                sx={{ fontWeight: 'bold' }}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Chip
+                                label={correctResults.capiscione.materasso?.name || '-'}
+                                color="error"
+                                size="small"
+                                variant="filled"
+                                sx={{ fontWeight: 'bold' }}
+                              />
+                            </TableCell>
+                            <TableCell align="center">
+                              <Chip
+                                label="-"
+                                size="small"
+                                sx={{ fontWeight: 'bold' }}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                        
+                        {/* Pronostici Utenti */}
                         {predictions.map((pred) => (
                           <TableRow key={pred._id}>
                             <TableCell>

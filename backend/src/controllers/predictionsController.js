@@ -139,12 +139,13 @@ exports.getAllPredictions = async (req, res, next) => {
     // Admins can see all predictions (locked or not), users only see locked ones
     const query = req.user.role === 'admin' ? {} : { isLocked: true };
     
-    const predictions = await Prediction.find(query)
+    const allPredictions = await Prediction.find(query)
       .populate('user', 'username email role')
       .populate('groupStage.match', 'matchNumber homeTeam awayTeam date group phase result')
       .select('-__v');
     
-    // Include admin predictions - they will be shown with special styling in frontend
+    // Filter out admin predictions - only show regular users' predictions
+    const predictions = allPredictions.filter(pred => pred.user && pred.user.role !== 'admin');
     
     res.status(200).json({
       success: true,
