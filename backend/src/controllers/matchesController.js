@@ -1,4 +1,5 @@
 const Match = require('../models/Match');
+const { calculateAllScores } = require('../services/scoreCalculationService');
 
 // @desc    Get all matches
 // @route   GET /api/matches
@@ -160,6 +161,10 @@ exports.updateMatchResult = async (req, res, next) => {
       
       await match.save();
       
+      // Recalculate all scores after clearing result
+      console.log('Recalculating scores after clearing match result...');
+      await calculateAllScores();
+      
       return res.status(200).json({
         success: true,
         data: match,
@@ -184,6 +189,10 @@ exports.updateMatchResult = async (req, res, next) => {
     match.status = 'FINISHED';
     
     await match.save();
+    
+    // Recalculate all scores after updating result
+    console.log('Recalculating scores after updating match result...');
+    await calculateAllScores();
     
     res.status(200).json({
       success: true,
