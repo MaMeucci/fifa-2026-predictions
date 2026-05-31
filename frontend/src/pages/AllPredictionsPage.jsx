@@ -446,6 +446,14 @@ const AllPredictionsPage = () => {
                           {getUserInitials(pred.user?.username)}
                         </Avatar>
                         <Typography variant="body1">{pred.user?.username}</Typography>
+                        {pred.user?.role === 'admin' && (
+                          <Chip
+                            label="ADMIN"
+                            size="small"
+                            color="error"
+                            sx={{ fontWeight: 'bold' }}
+                          />
+                        )}
                       </Box>
                     </Grid>
                   ))}
@@ -473,9 +481,17 @@ const AllPredictionsPage = () => {
                           {getUserInitials(prediction.user?.username)}
                         </Avatar>
                         <Typography variant="h6">{prediction.user?.username}</Typography>
-                        <Chip 
-                          label={`${prediction.groupStage?.length || 0} partite`} 
-                          size="small" 
+                        {prediction.user?.role === 'admin' && (
+                          <Chip
+                            label="ADMIN"
+                            size="small"
+                            color="error"
+                            sx={{ fontWeight: 'bold' }}
+                          />
+                        )}
+                        <Chip
+                          label={`${prediction.groupStage?.length || 0} partite`}
+                          size="small"
                           sx={{ ml: 'auto' }}
                         />
                       </Box>
@@ -743,6 +759,14 @@ const AllPredictionsPage = () => {
                           {getUserInitials(prediction.user?.username)}
                         </Avatar>
                         <Typography variant="h6">{prediction.user?.username}</Typography>
+                        {prediction.user?.role === 'admin' && (
+                          <Chip
+                            label="ADMIN"
+                            size="small"
+                            color="error"
+                            sx={{ fontWeight: 'bold' }}
+                          />
+                        )}
                       </Box>
                     </AccordionSummary>
                     <AccordionDetails>
