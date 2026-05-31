@@ -243,8 +243,12 @@ const AllPredictionsPage = () => {
 
   // Calculate points for a single match prediction
   const calculateMatchPoints = (pred) => {
-    // Check if match has results - now checking inside result object
-    if (!pred.match?.result || pred.match.result.homeScore === null || pred.match.result.awayScore === null) {
+    // Check if match has results - checking if scores are null or undefined
+    if (!pred.match?.result ||
+        pred.match.result.homeScore === null ||
+        pred.match.result.homeScore === undefined ||
+        pred.match.result.awayScore === null ||
+        pred.match.result.awayScore === undefined) {
       return null; // Match not played yet - return null to distinguish from 0 points
     }
 
