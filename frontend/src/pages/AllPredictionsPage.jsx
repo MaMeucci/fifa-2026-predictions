@@ -654,21 +654,26 @@ const AllPredictionsPage = () => {
                         )}
                         
                         {/* Finale */}
-                        {correctResults?.final && Array.isArray(correctResults.final) && correctResults.final.length > 0 && (
-                          <Grid item xs={12}>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-                              <Typography variant="subtitle1" fontWeight="bold" sx={{ color: 'white' }}>
-                                Finale
-                              </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                              {correctResults.final.map((team, idx) => (
+                        <Grid item xs={12}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                            <Typography variant="subtitle1" fontWeight="bold" sx={{ color: 'white' }}>
+                              Finale
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                            {correctResults?.final && Array.isArray(correctResults.final) && correctResults.final.length > 0 ? (
+                              correctResults.final.map((team, idx) => (
                                 <Chip key={idx} label={team.name || '-'} color="success" size="small" sx={{ color: 'white', fontWeight: 'bold' }} />
-                              ))}
-                            </Box>
-                            <Divider sx={{ my: 2 }} />
-                          </Grid>
-                        )}
+                              ))
+                            ) : (
+                              <>
+                                <Chip label="-" color="success" size="small" sx={{ color: 'white', fontWeight: 'bold' }} />
+                                <Chip label="-" color="success" size="small" sx={{ color: 'white', fontWeight: 'bold' }} />
+                              </>
+                            )}
+                          </Box>
+                          <Divider sx={{ my: 2 }} />
+                        </Grid>
                         
                         {/* Podio e Capocannoniere */}
                         {correctResults?.finalRankings && (
