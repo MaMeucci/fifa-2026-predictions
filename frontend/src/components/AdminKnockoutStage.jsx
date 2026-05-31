@@ -428,6 +428,9 @@ const AdminKnockoutStage = () => {
                       }))}
                       label="Seleziona squadra"
                     >
+                      <MenuItem value="">
+                        <em>Nessuna selezione</em>
+                      </MenuItem>
                       {group.teams.map(team => (
                         <MenuItem key={team} value={team}>{team}</MenuItem>
                       ))}

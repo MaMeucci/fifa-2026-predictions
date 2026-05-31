@@ -246,28 +246,35 @@ const AdminPage = () => {
     try {
       setError('');
       
-      // Validate scores
-      if (matchResult.homeScore === '' || matchResult.awayScore === '') {
-        setError('Inserisci entrambi i punteggi');
+      // Allow empty fields to clear results
+      const payload = {};
+      
+      if (matchResult.homeScore === '' && matchResult.awayScore === '') {
+        // Clear result - send null values
+        payload.homeScore = null;
+        payload.awayScore = null;
+        payload.penalties = null;
+      } else if (matchResult.homeScore !== '' && matchResult.awayScore !== '') {
+        // Set result with scores
+        payload.homeScore = parseInt(matchResult.homeScore);
+        payload.awayScore = parseInt(matchResult.awayScore);
+        
+        // Add penalties if provided (for knockout matches)
+        if (matchResult.penaltiesHome !== '' && matchResult.penaltiesAway !== '') {
+          payload.penalties = {
+            homeScore: parseInt(matchResult.penaltiesHome),
+            awayScore: parseInt(matchResult.penaltiesAway),
+          };
+        }
+      } else {
+        // One field is empty and one is not - validation error
+        setError('Inserisci entrambi i punteggi o lascia entrambi vuoti per cancellare');
         return;
-      }
-
-      const payload = {
-        homeScore: parseInt(matchResult.homeScore),
-        awayScore: parseInt(matchResult.awayScore),
-      };
-
-      // Add penalties if provided (for knockout matches)
-      if (matchResult.penaltiesHome !== '' && matchResult.penaltiesAway !== '') {
-        payload.penalties = {
-          homeScore: parseInt(matchResult.penaltiesHome),
-          awayScore: parseInt(matchResult.penaltiesAway),
-        };
       }
 
       await api.put(`/matches/${selectedMatch._id}/result`, payload);
       
-      setSuccess('Risultato salvato con successo!');
+      setSuccess(payload.homeScore === null ? 'Risultato cancellato con successo!' : 'Risultato salvato con successo!');
       setEditDialogOpen(false);
       loadMatches(); // Reload matches
       setTimeout(() => setSuccess(''), 3000);
@@ -884,11 +891,10 @@ const AdminPage = () => {
             <Button onClick={() => setEditDialogOpen(false)}>
               Annulla
             </Button>
-            <Button 
-              onClick={handleSaveResult} 
-              variant="contained" 
+            <Button
+              onClick={handleSaveResult}
+              variant="contained"
               startIcon={<Save />}
-              disabled={matchResult.homeScore === '' || matchResult.awayScore === ''}
             >
               Salva Risultato
             </Button>

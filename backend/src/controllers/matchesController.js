@@ -149,12 +149,32 @@ exports.updateMatchResult = async (req, res, next) => {
       });
     }
     
-    // Update result
+    // Check if clearing result (both scores are null)
+    if (homeScore === null && awayScore === null) {
+      // Clear result
+      match.result.homeScore = null;
+      match.result.awayScore = null;
+      match.result.penalties = null;
+      match.result.winner = null;
+      match.status = 'SCHEDULED';
+      
+      await match.save();
+      
+      return res.status(200).json({
+        success: true,
+        data: match,
+        message: 'Match result cleared successfully',
+      });
+    }
+    
+    // Update result with scores
     match.result.homeScore = homeScore;
     match.result.awayScore = awayScore;
     
     if (penalties) {
       match.result.penalties = penalties;
+    } else {
+      match.result.penalties = null;
     }
     
     // Determine winner
