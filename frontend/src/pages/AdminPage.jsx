@@ -398,14 +398,18 @@ const AdminPage = () => {
                     })}
                   </TableCell>
                   <TableCell align="center">
-                    {match.result?.homeScore !== null && match.result?.awayScore !== null ? (
+                    {match.result?.homeScore !== null &&
+                     match.result?.homeScore !== undefined &&
+                     match.result?.awayScore !== null &&
+                     match.result?.awayScore !== undefined ? (
                       <Box>
-                        <Chip 
+                        <Chip
                           label={`${match.result.homeScore} - ${match.result.awayScore}`}
                           color="success"
                           size="small"
                         />
-                        {match.result?.penalties?.homeScore !== null && (
+                        {match.result?.penalties?.homeScore !== null &&
+                         match.result?.penalties?.homeScore !== undefined && (
                           <Typography variant="caption" display="block" sx={{ mt: 0.5 }}>
                             Rigori: {match.result.penalties.homeScore} - {match.result.penalties.awayScore}
                           </Typography>
