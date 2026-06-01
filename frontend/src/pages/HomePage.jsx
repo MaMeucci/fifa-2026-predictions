@@ -66,29 +66,35 @@ const HomePage = () => {
                 {/* I Miei Pronostici */}
                 <Grid item xs={12} md={6}>
                   <Tooltip
-                    title={isAdmin() ? "Area non disponibile per utenti Admin" : ""}
+                    title={
+                      isAdmin()
+                        ? "Area non disponibile per utenti Admin"
+                        : tournamentStarted
+                        ? "Pronostici bloccati - Torneo iniziato"
+                        : ""
+                    }
                     arrow
                   >
                     <span>
                       <Card
                         sx={{
                           height: '100%',
-                          cursor: isAdmin() ? 'not-allowed' : 'pointer',
+                          cursor: (isAdmin() || tournamentStarted) ? 'not-allowed' : 'pointer',
                           transition: 'all 0.3s',
-                          opacity: isAdmin() ? 0.6 : 1,
+                          opacity: (isAdmin() || tournamentStarted) ? 0.6 : 1,
                           boxShadow: 2,
-                          '&:hover': !isAdmin() ? {
+                          '&:hover': (!isAdmin() && !tournamentStarted) ? {
                             transform: 'translateY(-4px)',
                             boxShadow: 8
                           } : {},
                           position: 'relative'
                         }}
-                        component={isAdmin() ? 'div' : Link}
-                        to={isAdmin() ? undefined : ROUTES.PREDICTIONS}
+                        component={(isAdmin() || tournamentStarted) ? 'div' : Link}
+                        to={(isAdmin() || tournamentStarted) ? undefined : ROUTES.PREDICTIONS}
                         style={{ textDecoration: 'none' }}
                       >
                         <CardContent sx={{ textAlign: 'center', py: 4 }}>
-                          {isAdmin() && (
+                          {(isAdmin() || tournamentStarted) && (
                             <LockIcon sx={{
                               position: 'absolute',
                               top: 16,
@@ -104,16 +110,18 @@ const HomePage = () => {
                           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                             {isAdmin()
                               ? "Area riservata ai giocatori"
+                              : tournamentStarted
+                              ? "Area riservata ai giocatori"
                               : "Inserisci o modifica i tuoi pronostici personali"}
                           </Typography>
                           <Button
                             variant="contained"
                             size="large"
                             fullWidth
-                            startIcon={isAdmin() ? <LockIcon /> : <EditIcon />}
-                            disabled={isAdmin()}
+                            startIcon={(isAdmin() || tournamentStarted) ? <LockIcon /> : <EditIcon />}
+                            disabled={isAdmin() || tournamentStarted}
                           >
-                            {isAdmin() ? "Non Disponibile" : "Vai ai Pronostici"}
+                            {(isAdmin() || tournamentStarted) ? "Non Disponibile" : "Vai ai Pronostici"}
                           </Button>
                         </CardContent>
                       </Card>

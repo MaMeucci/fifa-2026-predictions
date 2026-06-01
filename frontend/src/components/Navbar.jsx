@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { Menu as MenuIcon, EmojiEvents, Logout } from '@mui/icons-material';
 import { useAuth } from '../context/AuthContext';
-import { ROUTES } from '../utils/constants';
+import { ROUTES, TOURNAMENT_CONFIG } from '../utils/constants';
 
 const Navbar = () => {
   const { user, logout, isAdmin } = useAuth();
@@ -46,13 +46,16 @@ const Navbar = () => {
     handleCloseUserMenu();
   };
 
+  // Check if tournament has started
+  const tournamentStarted = new Date() >= new Date(TOURNAMENT_CONFIG.startDate);
+
   const pages = [
     { name: 'Home', path: ROUTES.HOME },
     { name: 'Classifica', path: ROUTES.DASHBOARD },
   ];
 
-  // Only show predictions page for non-admin users
-  if (!isAdmin()) {
+  // Only show predictions page for non-admin users AND before tournament starts
+  if (!isAdmin() && !tournamentStarted) {
     pages.splice(1, 0, { name: 'I Miei Pronostici', path: ROUTES.PREDICTIONS });
   }
 
