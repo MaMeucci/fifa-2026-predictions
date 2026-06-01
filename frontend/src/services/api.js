@@ -133,6 +133,16 @@ export const logout = () => {
   localStorage.removeItem(STORAGE_KEYS.USER);
 };
 
+// Admin API - Get tournament statistics
+export const getTournamentStatistics = async () => {
+  try {
+    const response = await api.get('/admin/stats/tournament');
+    return response.data;
+  } catch (error) {
+    throw handleApiError(error);
+  }
+};
+
 export default api;
 
 // Made with Bob

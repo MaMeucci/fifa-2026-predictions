@@ -51,6 +51,7 @@ import {
 } from '@mui/icons-material';
 import api from '../services/api';
 import AdminKnockoutStage from '../components/AdminKnockoutStage';
+import TournamentStatistics from '../components/TournamentStatistics';
 
 const AdminPage = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -453,12 +454,7 @@ const AdminPage = () => {
 
   const renderStatistics = () => (
     <Box>
-      <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
-        Statistiche Torneo
-      </Typography>
-      <Alert severity="info">
-        Statistiche in fase di implementazione
-      </Alert>
+      <TournamentStatistics />
     </Box>
   );
 
