@@ -54,7 +54,7 @@ const PredictionsPage = () => {
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
-  const isLocked = new Date() >= new Date(TOURNAMENT_CONFIG.lockDate);
+  const isLocked = new Date() >= new Date(TOURNAMENT_CONFIG.startDate);
 
   // Load matches and user predictions from API
   useEffect(() => {
