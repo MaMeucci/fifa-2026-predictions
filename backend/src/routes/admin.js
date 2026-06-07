@@ -326,7 +326,7 @@ router.get('/stats/tournament', async (req, res) => {
     const userPredictions = allPredictions.filter(p => p.user && p.user.role === 'user');
     const usersWithPredictions = userPredictions.length;
     
-    // Count users with complete predictions
+    // Count users with complete predictions and track partial users details
     // Complete = ALL sections filled:
     // 1. 48 group stage matches
     // 2. Knockout stage (round16, quarterFinals, semiFinals, final, finalists)
@@ -335,10 +335,12 @@ router.get('/stats/tournament', async (req, res) => {
     // 5. Capiscione (top, outsider, materasso)
     let completeUsers = 0;
     let partialUsers = 0;
+    const partialUsersDetails = [];
     
     userPredictions.forEach(pred => {
       // 1. Group stage (48 matches)
       const hasGroupStage = pred.groupStage && pred.groupStage.length >= 48;
+      const groupStageCount = pred.groupStage?.length || 0;
       
       // 2. Knockout stage (all rounds)
       const hasRound16 = pred.knockoutStage?.round16?.length >= 32;
@@ -367,6 +369,35 @@ router.get('/stats/tournament', async (req, res) => {
         completeUsers++;
       } else if (pred.groupStage && pred.groupStage.length > 0) {
         partialUsers++;
+        
+        // Track what's missing for this user
+        const missing = [];
+        if (!hasGroupStage) {
+          missing.push(`Gironi (${groupStageCount}/48)`);
+        }
+        if (!hasKnockoutStage) {
+          const knockoutMissing = [];
+          if (!hasRound16) knockoutMissing.push('Sedicesimi');
+          if (!hasQuarterFinals) knockoutMissing.push('Ottavi');
+          if (!hasSemiFinals) knockoutMissing.push('Quarti');
+          if (!hasFinal) knockoutMissing.push('Semifinali');
+          if (!hasFinalists) knockoutMissing.push('Finaliste');
+          missing.push(`Fase Finale (${knockoutMissing.join(', ')})`);
+        }
+        if (!hasPodium) {
+          missing.push('Podio');
+        }
+        if (!hasTopScorer) {
+          missing.push('Capocannoniere');
+        }
+        if (!hasCapiscione) {
+          missing.push('Angolo del Capiscione');
+        }
+        
+        partialUsersDetails.push({
+          username: pred.user.username,
+          missing: missing
+        });
       }
     });
     
@@ -511,7 +542,8 @@ router.get('/stats/tournament', async (req, res) => {
           usersWithPredictions,
           completeUsers,
           partialUsers,
-          completionRate
+          completionRate,
+          partialUsersDetails
         },
         predictions: {
           total: totalPredictions,
