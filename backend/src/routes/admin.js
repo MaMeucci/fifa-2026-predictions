@@ -318,150 +318,152 @@ router.get('/stats/tournament', async (req, res) => {
     
     const tournamentProgress = Math.round((finishedMatches / totalMatches) * 100);
     
-    // User participation statistics
+    // User participation statistics - using the correct Prediction model
     const totalUsers = await User.countDocuments({ role: 'user' }); // Exclude admins
-    const distinctUsers = await Prediction.distinct('user');
-    const usersWithPredictions = distinctUsers.length;
+    const allPredictions = await Prediction.find({}).populate('user');
     
-    // Count users with complete predictions (48 group matches + knockout predictions)
-    const usersWithCompletePredictions = await Prediction.aggregate([
-      {
-        $group: {
-          _id: '$user',
-          matchCount: { $sum: 1 },
-          hasKnockout: {
-            $max: {
-              $cond: [
-                { $ifNull: ['$knockoutPredictions.roundOf16', false] },
-                1,
-                0
-              ]
-            }
-          }
-        }
-      },
-      {
-        $match: {
-          matchCount: { $gte: 48 },
-          hasKnockout: 1
-        }
-      },
-      {
-        $count: 'total'
+    // Filter out admin predictions
+    const userPredictions = allPredictions.filter(p => p.user && p.user.role === 'user');
+    const usersWithPredictions = userPredictions.length;
+    
+    // Count users with complete predictions
+    // Complete = has at least 48 group stage predictions + knockout stage filled
+    let completeUsers = 0;
+    let partialUsers = 0;
+    
+    userPredictions.forEach(pred => {
+      const hasGroupStage = pred.groupStage && pred.groupStage.length >= 48;
+      const hasKnockoutStage = pred.knockoutStage &&
+                               pred.knockoutStage.round16 &&
+                               pred.knockoutStage.round16.length > 0;
+      
+      if (hasGroupStage && hasKnockoutStage) {
+        completeUsers++;
+      } else if (pred.groupStage && pred.groupStage.length > 0) {
+        partialUsers++;
       }
-    ]);
+    });
     
-    const completeUsers = usersWithCompletePredictions[0]?.total || 0;
-    const partialUsers = usersWithPredictions - completeUsers;
     const completionRate = totalUsers > 0 ? Math.round((completeUsers / totalUsers) * 100) : 0;
     
     // Prediction statistics (only for finished matches)
-    const finishedMatchIds = await Match.find({ status: 'FINISHED' }).distinct('_id');
-    
-    const predictions = await Prediction.find({
-      match: { $in: finishedMatchIds }
-    }).populate('match user');
+    const finishedMatchIds = await Match.find({ status: 'FINISHED' });
     
     let exactResults = 0;
     let correctSigns = 0;
-    let totalPredictions = predictions.length;
+    let totalPredictions = 0;
     
-    predictions.forEach(pred => {
-      if (!pred.match?.result ||
-          pred.match.result.homeScore === null ||
-          pred.match.result.awayScore === null) {
-        return;
-      }
+    // Count sign distribution
+    const signStats = {
+      '1': 0,
+      'X': 0,
+      '2': 0
+    };
+    
+    userPredictions.forEach(userPred => {
+      if (!userPred.groupStage) return;
       
-      const actualHome = pred.match.result.homeScore;
-      const actualAway = pred.match.result.awayScore;
-      const predHome = pred.homeScore;
-      const predAway = pred.awayScore;
-      
-      // Check exact result
-      if (actualHome === predHome && actualAway === predAway) {
-        exactResults++;
-      }
-      
-      // Check sign
-      const actualSign = actualHome > actualAway ? '1' : actualHome < actualAway ? '2' : 'X';
-      if (pred.sign === actualSign) {
-        correctSigns++;
-      }
+      userPred.groupStage.forEach(groupPred => {
+        // Find the corresponding finished match
+        const finishedMatch = finishedMatchIds.find(m =>
+          m._id.toString() === groupPred.match.toString()
+        );
+        
+        if (!finishedMatch || !finishedMatch.result ||
+            finishedMatch.result.homeScore === null) {
+          return;
+        }
+        
+        totalPredictions++;
+        
+        const actualHome = finishedMatch.result.homeScore;
+        const actualAway = finishedMatch.result.awayScore;
+        const predHome = groupPred.homeScore;
+        const predAway = groupPred.awayScore;
+        
+        // Check exact result
+        if (actualHome === predHome && actualAway === predAway) {
+          exactResults++;
+        }
+        
+        // Check sign
+        const actualSign = actualHome > actualAway ? '1' : actualHome < actualAway ? '2' : 'X';
+        if (groupPred.sign === actualSign) {
+          correctSigns++;
+        }
+        
+        // Count sign distribution
+        if (groupPred.sign) {
+          signStats[groupPred.sign]++;
+        }
+      });
     });
     
     const successRate = totalPredictions > 0 ?
       Math.round(((exactResults + correctSigns) / (totalPredictions * 2)) * 100) : 0;
     
     // Top performers
-    const topScorers = await User.find({ role: 'user' })
-      .select('username totalScore')
-      .sort({ totalScore: -1 })
+    const topScorers = await Prediction.find({})
+      .populate('user', 'username')
+      .sort({ 'scores.total': -1 })
       .limit(5);
     
-    // Most predicted results for finished matches
-    const signDistribution = await Prediction.aggregate([
-      { $match: { match: { $in: finishedMatchIds } } },
-      {
-        $group: {
-          _id: '$sign',
-          count: { $sum: 1 }
-        }
-      }
-    ]);
-    
-    const signStats = {
-      '1': 0,
-      'X': 0,
-      '2': 0
-    };
-    signDistribution.forEach(item => {
-      if (item._id) signStats[item._id] = item.count;
-    });
+    const topPerformers = topScorers
+      .filter(p => p.user && p.user.role === 'user')
+      .map(p => ({
+        username: p.user.username,
+        score: p.scores.total
+      }));
     
     // Most difficult match (least correct predictions)
-    const matchDifficulty = await Promise.all(
-      finishedMatchIds.slice(0, 20).map(async (matchId) => {
-        const match = await Match.findById(matchId);
-        const matchPreds = predictions.filter(p => p.match._id.toString() === matchId.toString());
+    const matchDifficulty = [];
+    for (const match of finishedMatchIds.slice(0, 20)) {
+      let correct = 0;
+      let total = 0;
+      
+      userPredictions.forEach(userPred => {
+        if (!userPred.groupStage) return;
         
-        const correct = matchPreds.filter(p => {
-          if (!match?.result || match.result.homeScore === null) return false;
-          return p.homeScore === match.result.homeScore && p.awayScore === match.result.awayScore;
-        }).length;
+        const matchPred = userPred.groupStage.find(gp =>
+          gp.match.toString() === match._id.toString()
+        );
         
-        return {
+        if (matchPred && match.result && match.result.homeScore !== null) {
+          total++;
+          if (matchPred.homeScore === match.result.homeScore &&
+              matchPred.awayScore === match.result.awayScore) {
+            correct++;
+          }
+        }
+      });
+      
+      if (total > 0) {
+        matchDifficulty.push({
           match: `${match.homeTeam} vs ${match.awayTeam}`,
           correctPredictions: correct,
-          totalPredictions: matchPreds.length,
-          difficulty: matchPreds.length > 0 ? Math.round((correct / matchPreds.length) * 100) : 0
-        };
-      })
-    );
+          totalPredictions: total,
+          difficulty: Math.round((correct / total) * 100)
+        });
+      }
+    }
     
     const mostDifficult = matchDifficulty.sort((a, b) => a.difficulty - b.difficulty)[0];
     const mostPredicted = matchDifficulty.sort((a, b) => b.difficulty - a.difficulty)[0];
     
     // Knockout phase statistics
-    const knockoutResults = await KnockoutResults.findOne();
     let winnerPredictions = {};
     let topScorerPredictions = {};
     
-    if (knockoutResults) {
-      // Get all knockout predictions
-      const allKnockoutPreds = await Prediction.find({}).select('knockoutPredictions');
-      
-      allKnockoutPreds.forEach(pred => {
-        if (pred.knockoutPredictions?.winner) {
-          const winner = pred.knockoutPredictions.winner;
-          winnerPredictions[winner] = (winnerPredictions[winner] || 0) + 1;
-        }
-        if (pred.knockoutPredictions?.topScorer) {
-          const scorer = pred.knockoutPredictions.topScorer;
-          topScorerPredictions[scorer] = (topScorerPredictions[scorer] || 0) + 1;
-        }
-      });
-    }
+    userPredictions.forEach(pred => {
+      if (pred.finalRankings?.first?.name) {
+        const winner = pred.finalRankings.first.name;
+        winnerPredictions[winner] = (winnerPredictions[winner] || 0) + 1;
+      }
+      if (pred.topScorer?.playerName) {
+        const scorer = pred.topScorer.playerName;
+        topScorerPredictions[scorer] = (topScorerPredictions[scorer] || 0) + 1;
+      }
+    });
     
     const mostPredictedWinner = Object.entries(winnerPredictions)
       .sort((a, b) => b[1] - a[1])[0];
