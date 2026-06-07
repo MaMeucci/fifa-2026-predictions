@@ -327,17 +327,43 @@ router.get('/stats/tournament', async (req, res) => {
     const usersWithPredictions = userPredictions.length;
     
     // Count users with complete predictions
-    // Complete = has at least 48 group stage predictions + knockout stage filled
+    // Complete = ALL sections filled:
+    // 1. 48 group stage matches
+    // 2. Knockout stage (round16, quarterFinals, semiFinals, final, finalists)
+    // 3. Final rankings (podium: first, second, third, fourth)
+    // 4. Top scorer
+    // 5. Capiscione (top, outsider, materasso)
     let completeUsers = 0;
     let partialUsers = 0;
     
     userPredictions.forEach(pred => {
+      // 1. Group stage (48 matches)
       const hasGroupStage = pred.groupStage && pred.groupStage.length >= 48;
-      const hasKnockoutStage = pred.knockoutStage &&
-                               pred.knockoutStage.round16 &&
-                               pred.knockoutStage.round16.length > 0;
       
-      if (hasGroupStage && hasKnockoutStage) {
+      // 2. Knockout stage (all rounds)
+      const hasRound16 = pred.knockoutStage?.round16?.length >= 32;
+      const hasQuarterFinals = pred.knockoutStage?.quarterFinals?.length >= 16;
+      const hasSemiFinals = pred.knockoutStage?.semiFinals?.length >= 8;
+      const hasFinal = pred.knockoutStage?.final?.length >= 4;
+      const hasFinalists = pred.knockoutStage?.finalists?.length >= 2;
+      const hasKnockoutStage = hasRound16 && hasQuarterFinals && hasSemiFinals && hasFinal && hasFinalists;
+      
+      // 3. Final rankings (podium)
+      const hasPodium = pred.finalRankings?.first?.name &&
+                        pred.finalRankings?.second?.name &&
+                        pred.finalRankings?.third?.name &&
+                        pred.finalRankings?.fourth?.name;
+      
+      // 4. Top scorer
+      const hasTopScorer = pred.topScorer?.playerName;
+      
+      // 5. Capiscione
+      const hasCapiscione = pred.capiscione?.top?.name &&
+                           pred.capiscione?.outsider?.name &&
+                           pred.capiscione?.materasso?.name;
+      
+      // Check if ALL sections are complete
+      if (hasGroupStage && hasKnockoutStage && hasPodium && hasTopScorer && hasCapiscione) {
         completeUsers++;
       } else if (pred.groupStage && pred.groupStage.length > 0) {
         partialUsers++;
