@@ -320,18 +320,31 @@ router.get('/stats/tournament', async (req, res) => {
     
     // User participation statistics
     const totalUsers = await User.countDocuments({ role: 'user' }); // Exclude admins
-    const usersWithPredictions = await Prediction.distinct('user').countDocuments();
+    const distinctUsers = await Prediction.distinct('user');
+    const usersWithPredictions = distinctUsers.length;
     
-    // Count users with complete group predictions (48 matches)
+    // Count users with complete predictions (48 group matches + knockout predictions)
     const usersWithCompletePredictions = await Prediction.aggregate([
       {
         $group: {
           _id: '$user',
-          count: { $sum: 1 }
+          matchCount: { $sum: 1 },
+          hasKnockout: {
+            $max: {
+              $cond: [
+                { $ifNull: ['$knockoutPredictions.roundOf16', false] },
+                1,
+                0
+              ]
+            }
+          }
         }
       },
       {
-        $match: { count: { $gte: 48 } }
+        $match: {
+          matchCount: { $gte: 48 },
+          hasKnockout: 1
+        }
       },
       {
         $count: 'total'
