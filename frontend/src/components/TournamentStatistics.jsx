@@ -10,7 +10,11 @@ import {
   LinearProgress,
   Chip,
   Paper,
-  Divider
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon
 } from '@mui/material';
 import {
   SportsSoccer,
@@ -19,7 +23,8 @@ import {
   TrendingUp,
   CheckCircle,
   Schedule,
-  Star
+  Star,
+  Warning
 } from '@mui/icons-material';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title } from 'chart.js';
 import { Pie, Bar, Line } from 'react-chartjs-2';
@@ -278,6 +283,56 @@ const TournamentStatistics = () => {
           </Grid>
         </Grid>
       </Paper>
+
+      {/* Partial Users Details */}
+      {stats.participation.partialUsersDetails && stats.participation.partialUsersDetails.length > 0 && (
+        <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Warning color="warning" />
+            Dettaglio Pronostici Parziali
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Utenti che non hanno completato tutte le sezioni richieste
+          </Typography>
+          <List>
+            {stats.participation.partialUsersDetails.map((user, index) => (
+              <React.Fragment key={index}>
+                {index > 0 && <Divider />}
+                <ListItem alignItems="flex-start">
+                  <ListItemIcon>
+                    <People color="warning" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                        {user.username}
+                      </Typography>
+                    }
+                    secondary={
+                      <Box sx={{ mt: 1 }}>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                          Sezioni mancanti:
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                          {user.missing.map((item, idx) => (
+                            <Chip
+                              key={idx}
+                              label={item}
+                              size="small"
+                              color="warning"
+                              variant="outlined"
+                            />
+                          ))}
+                        </Box>
+                      </Box>
+                    }
+                  />
+                </ListItem>
+              </React.Fragment>
+            ))}
+          </List>
+        </Paper>
+      )}
 
       {/* Charts */}
       <Grid container spacing={3} sx={{ mb: 3 }}>
