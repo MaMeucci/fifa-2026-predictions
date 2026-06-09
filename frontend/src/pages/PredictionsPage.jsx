@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Container,
   Box,
@@ -19,13 +19,21 @@ import {
   Chip,
   CircularProgress,
   Autocomplete,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from '@mui/material';
 import { Save, Lock, EmojiEvents } from '@mui/icons-material';
 import { GROUPS, MATCH_SIGNS, CAPISCIONE_GROUPS, TOURNAMENT_CONFIG } from '../utils/constants';
 import api from '../services/api';
 import TournamentBracketSymmetric from '../components/TournamentBracketSymmetric';
+import { useAuth } from '../context/AuthContext';
 
 const PredictionsPage = () => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState(0);
   const [groupPredictions, setGroupPredictions] = useState({});
   const [allTeams, setAllTeams] = useState([]);
@@ -55,6 +63,105 @@ const PredictionsPage = () => {
   const [error, setError] = useState('');
 
   const isLocked = new Date() >= new Date(TOURNAMENT_CONFIG.startDate);
+  
+  // Show standings only for NaticaForest user
+  const showStandings = user?.username === 'NaticaForest';
+
+  // Calculate group standings based on predictions
+  const groupStandings = useMemo(() => {
+    if (!matches.length || !Object.keys(groupPredictions).length) {
+      return {};
+    }
+
+    const standings = {};
+    
+    // Initialize standings for each group
+    GROUPS.forEach(group => {
+      standings[group] = {};
+    });
+
+    // Process each match prediction
+    matches.forEach(match => {
+      const prediction = groupPredictions[match.id];
+      if (!prediction) return;
+
+      const homeScore = parseInt(prediction.homeScore) || 0;
+      const awayScore = parseInt(prediction.awayScore) || 0;
+      const group = match.group;
+
+      // Initialize team stats if not exists
+      if (!standings[group][match.home]) {
+        standings[group][match.home] = {
+          team: match.home,
+          played: 0,
+          won: 0,
+          drawn: 0,
+          lost: 0,
+          goalsFor: 0,
+          goalsAgainst: 0,
+          goalDifference: 0,
+          points: 0,
+        };
+      }
+      if (!standings[group][match.away]) {
+        standings[group][match.away] = {
+          team: match.away,
+          played: 0,
+          won: 0,
+          drawn: 0,
+          lost: 0,
+          goalsFor: 0,
+          goalsAgainst: 0,
+          goalDifference: 0,
+          points: 0,
+        };
+      }
+
+      // Update stats
+      standings[group][match.home].played++;
+      standings[group][match.away].played++;
+      standings[group][match.home].goalsFor += homeScore;
+      standings[group][match.home].goalsAgainst += awayScore;
+      standings[group][match.away].goalsFor += awayScore;
+      standings[group][match.away].goalsAgainst += homeScore;
+
+      if (homeScore > awayScore) {
+        // Home win
+        standings[group][match.home].won++;
+        standings[group][match.home].points += 3;
+        standings[group][match.away].lost++;
+      } else if (homeScore < awayScore) {
+        // Away win
+        standings[group][match.away].won++;
+        standings[group][match.away].points += 3;
+        standings[group][match.home].lost++;
+      } else {
+        // Draw
+        standings[group][match.home].drawn++;
+        standings[group][match.away].drawn++;
+        standings[group][match.home].points += 1;
+        standings[group][match.away].points += 1;
+      }
+
+      // Update goal difference
+      standings[group][match.home].goalDifference =
+        standings[group][match.home].goalsFor - standings[group][match.home].goalsAgainst;
+      standings[group][match.away].goalDifference =
+        standings[group][match.away].goalsFor - standings[group][match.away].goalsAgainst;
+    });
+
+    // Sort teams in each group
+    Object.keys(standings).forEach(group => {
+      standings[group] = Object.values(standings[group]).sort((a, b) => {
+        // Sort by points, then goal difference, then goals scored
+        if (b.points !== a.points) return b.points - a.points;
+        if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+        return b.goalsFor - a.goalsFor;
+      });
+    });
+
+    return standings;
+  }, [matches, groupPredictions]);
 
   // Load matches and user predictions from API
   useEffect(() => {
@@ -443,6 +550,89 @@ const PredictionsPage = () => {
           <strong>Nota:</strong> Il segno può essere diverso dal risultato esatto.
           Ad esempio: 2-0 con segno X è valido.
         </Alert>
+
+        {/* Group Standings - Only for NaticaForest */}
+        {showStandings && Object.keys(groupStandings).length > 0 && (
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
+              Classifiche Pronosticate
+            </Typography>
+            <Alert severity="info" sx={{ mb: 3 }}>
+              Queste classifiche sono calcolate automaticamente in base ai tuoi pronostici sui risultati delle partite.
+            </Alert>
+            <Grid container spacing={2}>
+              {GROUPS.map(group => {
+                const standings = groupStandings[group];
+                if (!standings || standings.length === 0) return null;
+
+                return (
+                  <Grid item xs={12} md={6} lg={4} key={group}>
+                    <Paper elevation={2} sx={{ p: 2 }}>
+                      <Typography variant="h6" gutterBottom sx={{
+                        bgcolor: 'primary.main',
+                        color: 'white',
+                        p: 1,
+                        borderRadius: 1,
+                        textAlign: 'center',
+                        mb: 2
+                      }}>
+                        Girone {group}
+                      </Typography>
+                      <TableContainer>
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell sx={{ fontWeight: 'bold', p: 0.5 }}>#</TableCell>
+                              <TableCell sx={{ fontWeight: 'bold', p: 0.5 }}>Squadra</TableCell>
+                              <TableCell align="center" sx={{ fontWeight: 'bold', p: 0.5 }}>G</TableCell>
+                              <TableCell align="center" sx={{ fontWeight: 'bold', p: 0.5 }}>V</TableCell>
+                              <TableCell align="center" sx={{ fontWeight: 'bold', p: 0.5 }}>N</TableCell>
+                              <TableCell align="center" sx={{ fontWeight: 'bold', p: 0.5 }}>P</TableCell>
+                              <TableCell align="center" sx={{ fontWeight: 'bold', p: 0.5 }}>GF</TableCell>
+                              <TableCell align="center" sx={{ fontWeight: 'bold', p: 0.5 }}>GS</TableCell>
+                              <TableCell align="center" sx={{ fontWeight: 'bold', p: 0.5 }}>DR</TableCell>
+                              <TableCell align="center" sx={{ fontWeight: 'bold', p: 0.5 }}>Pt</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {standings.map((team, index) => (
+                              <TableRow
+                                key={team.team}
+                                sx={{
+                                  bgcolor: index < 2 ? 'success.light' : index === 2 ? 'warning.light' : 'transparent',
+                                  '&:hover': { bgcolor: index < 2 ? 'success.main' : index === 2 ? 'warning.main' : 'action.hover' }
+                                }}
+                              >
+                                <TableCell sx={{ p: 0.5, fontWeight: 'bold' }}>{index + 1}</TableCell>
+                                <TableCell sx={{ p: 0.5, fontSize: '0.85rem' }}>{team.team}</TableCell>
+                                <TableCell align="center" sx={{ p: 0.5 }}>{team.played}</TableCell>
+                                <TableCell align="center" sx={{ p: 0.5 }}>{team.won}</TableCell>
+                                <TableCell align="center" sx={{ p: 0.5 }}>{team.drawn}</TableCell>
+                                <TableCell align="center" sx={{ p: 0.5 }}>{team.lost}</TableCell>
+                                <TableCell align="center" sx={{ p: 0.5 }}>{team.goalsFor}</TableCell>
+                                <TableCell align="center" sx={{ p: 0.5 }}>{team.goalsAgainst}</TableCell>
+                                <TableCell align="center" sx={{ p: 0.5, fontWeight: 'bold' }}>
+                                  {team.goalDifference > 0 ? '+' : ''}{team.goalDifference}
+                                </TableCell>
+                                <TableCell align="center" sx={{ p: 0.5, fontWeight: 'bold', fontSize: '1rem' }}>
+                                  {team.points}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                      <Box sx={{ mt: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                        <Chip label="Qualificate" size="small" sx={{ bgcolor: 'success.light' }} />
+                        <Chip label="Possibile 3°" size="small" sx={{ bgcolor: 'warning.light' }} />
+                      </Box>
+                    </Paper>
+                  </Grid>
+                );
+              })}
+            </Grid>
+          </Box>
+        )}
       </Box>
     );
   };
