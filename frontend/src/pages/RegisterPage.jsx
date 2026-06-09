@@ -61,6 +61,12 @@ const RegisterPage = () => {
     // Password validation
     if (formData.password.length < VALIDATION.PASSWORD_MIN) {
       errors.password = `La password deve essere di almeno ${VALIDATION.PASSWORD_MIN} caratteri`;
+    } else if (!/[A-Z]/.test(formData.password)) {
+      errors.password = 'La password deve contenere almeno una lettera maiuscola';
+    } else if (!/[a-z]/.test(formData.password)) {
+      errors.password = 'La password deve contenere almeno una lettera minuscola';
+    } else if (!/\d/.test(formData.password)) {
+      errors.password = 'La password deve contenere almeno un numero';
     }
 
     // Confirm password validation
@@ -88,7 +94,17 @@ const RegisterPage = () => {
     if (result.success) {
       navigate(ROUTES.DASHBOARD);
     } else {
-      setError(result.error || 'Errore durante la registrazione');
+      // Check if there are detailed validation errors from backend
+      if (result.errors && Array.isArray(result.errors)) {
+        const backendErrors = {};
+        result.errors.forEach(err => {
+          backendErrors[err.field] = err.message;
+        });
+        setValidationErrors(backendErrors);
+        setError('Correggi gli errori evidenziati');
+      } else {
+        setError(result.error || 'Errore durante la registrazione');
+      }
     }
 
     setLoading(false);
@@ -149,7 +165,7 @@ const RegisterPage = () => {
               onChange={handleChange}
               required
               error={!!validationErrors.password}
-              helperText={validationErrors.password || `Minimo ${VALIDATION.PASSWORD_MIN} caratteri`}
+              helperText={validationErrors.password || 'Minimo 8 caratteri, deve contenere maiuscola, minuscola e numero'}
               sx={{ mb: 2 }}
             />
             <TextField
