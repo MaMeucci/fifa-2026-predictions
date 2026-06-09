@@ -163,6 +163,36 @@ const PredictionsPage = () => {
     return standings;
   }, [matches, groupPredictions]);
 
+  // Calculate best third-placed teams (top 8)
+  const bestThirdPlaced = useMemo(() => {
+    if (!Object.keys(groupStandings).length) {
+      return new Set();
+    }
+
+    // Get all third-placed teams
+    const thirdPlacedTeams = [];
+    Object.keys(groupStandings).forEach(group => {
+      const standings = groupStandings[group];
+      if (standings && standings.length >= 3) {
+        thirdPlacedTeams.push({
+          ...standings[2],
+          group: group
+        });
+      }
+    });
+
+    // Sort by: points, goal difference, goals scored
+    thirdPlacedTeams.sort((a, b) => {
+      if (b.points !== a.points) return b.points - a.points;
+      if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+      return b.goalsFor - a.goalsFor;
+    });
+
+    // Get top 8 teams
+    const top8 = thirdPlacedTeams.slice(0, 8);
+    return new Set(top8.map(team => team.team));
+  }, [groupStandings]);
+
   // Load matches and user predictions from API
   useEffect(() => {
     const loadData = async () => {
@@ -595,36 +625,41 @@ const PredictionsPage = () => {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                            {standings.map((team, index) => (
-                              <TableRow
-                                key={team.team}
-                                sx={{
-                                  bgcolor: index < 2 ? 'success.light' : index === 2 ? 'warning.light' : 'transparent',
-                                  '&:hover': { bgcolor: index < 2 ? 'success.main' : index === 2 ? 'warning.main' : 'action.hover' }
-                                }}
-                              >
-                                <TableCell sx={{ p: 0.5, fontWeight: 'bold' }}>{index + 1}</TableCell>
-                                <TableCell sx={{ p: 0.5, fontSize: '0.85rem' }}>{team.team}</TableCell>
-                                <TableCell align="center" sx={{ p: 0.5 }}>{team.played}</TableCell>
-                                <TableCell align="center" sx={{ p: 0.5 }}>{team.won}</TableCell>
-                                <TableCell align="center" sx={{ p: 0.5 }}>{team.drawn}</TableCell>
-                                <TableCell align="center" sx={{ p: 0.5 }}>{team.lost}</TableCell>
-                                <TableCell align="center" sx={{ p: 0.5 }}>{team.goalsFor}</TableCell>
-                                <TableCell align="center" sx={{ p: 0.5 }}>{team.goalsAgainst}</TableCell>
-                                <TableCell align="center" sx={{ p: 0.5, fontWeight: 'bold' }}>
-                                  {team.goalDifference > 0 ? '+' : ''}{team.goalDifference}
-                                </TableCell>
-                                <TableCell align="center" sx={{ p: 0.5, fontWeight: 'bold', fontSize: '1rem' }}>
-                                  {team.points}
-                                </TableCell>
-                              </TableRow>
-                            ))}
+                            {standings.map((team, index) => {
+                              const isQualified = index < 2;
+                              const isBestThird = index === 2 && bestThirdPlaced.has(team.team);
+                              
+                              return (
+                                <TableRow
+                                  key={team.team}
+                                  sx={{
+                                    bgcolor: isQualified ? 'success.light' : isBestThird ? 'warning.light' : 'transparent',
+                                    '&:hover': { bgcolor: isQualified ? 'success.main' : isBestThird ? 'warning.main' : 'action.hover' }
+                                  }}
+                                >
+                                  <TableCell sx={{ p: 0.5, fontWeight: 'bold' }}>{index + 1}</TableCell>
+                                  <TableCell sx={{ p: 0.5, fontSize: '0.85rem' }}>{team.team}</TableCell>
+                                  <TableCell align="center" sx={{ p: 0.5 }}>{team.played}</TableCell>
+                                  <TableCell align="center" sx={{ p: 0.5 }}>{team.won}</TableCell>
+                                  <TableCell align="center" sx={{ p: 0.5 }}>{team.drawn}</TableCell>
+                                  <TableCell align="center" sx={{ p: 0.5 }}>{team.lost}</TableCell>
+                                  <TableCell align="center" sx={{ p: 0.5 }}>{team.goalsFor}</TableCell>
+                                  <TableCell align="center" sx={{ p: 0.5 }}>{team.goalsAgainst}</TableCell>
+                                  <TableCell align="center" sx={{ p: 0.5, fontWeight: 'bold' }}>
+                                    {team.goalDifference > 0 ? '+' : ''}{team.goalDifference}
+                                  </TableCell>
+                                  <TableCell align="center" sx={{ p: 0.5, fontWeight: 'bold', fontSize: '1rem' }}>
+                                    {team.points}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
                           </TableBody>
                         </Table>
                       </TableContainer>
                       <Box sx={{ mt: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                         <Chip label="Qualificate" size="small" sx={{ bgcolor: 'success.light' }} />
-                        <Chip label="Possibile 3°" size="small" sx={{ bgcolor: 'warning.light' }} />
+                        <Chip label="Migliori 8 terze" size="small" sx={{ bgcolor: 'warning.light' }} />
                       </Box>
                     </Paper>
                   </Grid>
