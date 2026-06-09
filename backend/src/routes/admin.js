@@ -335,7 +335,10 @@ router.get('/stats/tournament', async (req, res) => {
     // 5. Capiscione (top, outsider, materasso)
     let completeUsers = 0;
     let partialUsers = 0;
+    let noPredictionsUsers = 0;
+    const completeUsersDetails = [];
     const partialUsersDetails = [];
+    const noPredictionsUsersDetails = [];
     
     userPredictions.forEach(pred => {
       // 1. Group stage (48 matches)
@@ -367,6 +370,7 @@ router.get('/stats/tournament', async (req, res) => {
       // Check if ALL sections are complete
       if (hasGroupStage && hasKnockoutStage && hasPodium && hasTopScorer && hasCapiscione) {
         completeUsers++;
+        completeUsersDetails.push(pred.user.username);
       } else if (pred.groupStage && pred.groupStage.length > 0) {
         partialUsers++;
         
@@ -398,6 +402,10 @@ router.get('/stats/tournament', async (req, res) => {
           username: pred.user.username,
           missing: missing
         });
+      } else {
+        // User has no predictions at all
+        noPredictionsUsers++;
+        noPredictionsUsersDetails.push(pred.user.username);
       }
     });
     
@@ -541,9 +549,12 @@ router.get('/stats/tournament', async (req, res) => {
           totalUsers,
           usersWithPredictions,
           completeUsers,
+          completeUsersDetails,
           partialUsers,
-          completionRate,
-          partialUsersDetails
+          partialUsersDetails,
+          noPredictionsUsers,
+          noPredictionsUsersDetails,
+          completionRate
         },
         predictions: {
           total: totalPredictions,
