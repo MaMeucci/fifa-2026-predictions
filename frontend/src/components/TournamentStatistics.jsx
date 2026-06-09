@@ -251,7 +251,7 @@ const TournamentStatistics = () => {
           Statistiche Partecipazione
         </Typography>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <Box sx={{ textAlign: 'center', p: 2 }}>
               <Typography variant="h3" color="success.main" sx={{ fontWeight: 'bold' }}>
                 {stats.participation.completeUsers}
@@ -261,7 +261,7 @@ const TournamentStatistics = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <Box sx={{ textAlign: 'center', p: 2 }}>
               <Typography variant="h3" color="warning.main" sx={{ fontWeight: 'bold' }}>
                 {stats.participation.partialUsers}
@@ -271,7 +271,17 @@ const TournamentStatistics = () => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
+            <Box sx={{ textAlign: 'center', p: 2 }}>
+              <Typography variant="h3" color="error.main" sx={{ fontWeight: 'bold' }}>
+                {stats.participation.noPredictionsUsers}
+              </Typography>
+              <Typography color="text.secondary">
+                Nessun Pronostico
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={3}>
             <Box sx={{ textAlign: 'center', p: 2 }}>
               <Typography variant="h3" color="primary.main" sx={{ fontWeight: 'bold' }}>
                 {stats.participation.completionRate}%
@@ -283,6 +293,30 @@ const TournamentStatistics = () => {
           </Grid>
         </Grid>
       </Paper>
+
+      {/* Complete Users List */}
+      {stats.participation.completeUsersDetails && stats.participation.completeUsersDetails.length > 0 && (
+        <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <CheckCircle color="success" />
+            Utenti con Pronostici Completi
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {stats.participation.completeUsers} {stats.participation.completeUsers === 1 ? 'utente ha' : 'utenti hanno'} completato tutte le sezioni
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {stats.participation.completeUsersDetails.map((username, index) => (
+              <Chip
+                key={index}
+                label={username}
+                color="success"
+                variant="outlined"
+                icon={<CheckCircle />}
+              />
+            ))}
+          </Box>
+        </Paper>
+      )}
 
       {/* Partial Users Details */}
       {stats.participation.partialUsersDetails && stats.participation.partialUsersDetails.length > 0 && (
@@ -331,6 +365,30 @@ const TournamentStatistics = () => {
               </React.Fragment>
             ))}
           </List>
+        </Paper>
+      )}
+
+      {/* No Predictions Users */}
+      {stats.participation.noPredictionsUsersDetails && stats.participation.noPredictionsUsersDetails.length > 0 && (
+        <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+          <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Warning color="error" />
+            Utenti Senza Pronostici
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {stats.participation.noPredictionsUsers} {stats.participation.noPredictionsUsers === 1 ? 'utente non ha' : 'utenti non hanno'} ancora inserito alcun pronostico
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {stats.participation.noPredictionsUsersDetails.map((username, index) => (
+              <Chip
+                key={index}
+                label={username}
+                color="error"
+                variant="outlined"
+                icon={<Warning />}
+              />
+            ))}
+          </Box>
         </Paper>
       )}
 
