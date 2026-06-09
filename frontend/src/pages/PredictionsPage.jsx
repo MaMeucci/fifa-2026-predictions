@@ -30,10 +30,8 @@ import { Save, Lock, EmojiEvents } from '@mui/icons-material';
 import { GROUPS, MATCH_SIGNS, CAPISCIONE_GROUPS, TOURNAMENT_CONFIG } from '../utils/constants';
 import api from '../services/api';
 import TournamentBracketSymmetric from '../components/TournamentBracketSymmetric';
-import { useAuth } from '../context/AuthContext';
 
 const PredictionsPage = () => {
-  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState(0);
   const [groupPredictions, setGroupPredictions] = useState({});
   const [allTeams, setAllTeams] = useState([]);
@@ -63,9 +61,6 @@ const PredictionsPage = () => {
   const [error, setError] = useState('');
 
   const isLocked = new Date() >= new Date(TOURNAMENT_CONFIG.startDate);
-  
-  // Show standings only for NaticaForest user
-  const showStandings = user?.username === 'NaticaForest';
 
   // Calculate group standings based on predictions
   const groupStandings = useMemo(() => {
@@ -581,8 +576,8 @@ const PredictionsPage = () => {
           Ad esempio: 2-0 con segno X è valido.
         </Alert>
 
-        {/* Group Standings - Only for NaticaForest */}
-        {showStandings && Object.keys(groupStandings).length > 0 && (
+        {/* Group Standings */}
+        {Object.keys(groupStandings).length > 0 && (
           <Box sx={{ mt: 4 }}>
             <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
               Classifiche Pronosticate
