@@ -10,16 +10,10 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import LockIcon from '@mui/icons-material/Lock';
 
 const HomePage = () => {
-  const { isAuthenticated, isAdmin, user } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
   
-  // TEMP: GiorgioMeucci bypass - remove when done
-  const UNLOCK_USERNAME = 'GiorgioMeucci';
-  const isUnlockedUser = user?.username === UNLOCK_USERNAME;
-
   // Check if tournament has started (for demo purposes, using a mock date)
-  const tournamentStarted = isUnlockedUser
-    ? false
-    : new Date() >= new Date(TOURNAMENT_CONFIG.startDate);
+  const tournamentStarted = new Date() >= new Date(TOURNAMENT_CONFIG.startDate);
   
   // Admin can always see all predictions
   const canViewAllPredictions = tournamentStarted || isAdmin();
