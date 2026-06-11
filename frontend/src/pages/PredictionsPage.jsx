@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useAuth } from '../context/AuthContext';
 import {
   Container,
   Box,
@@ -32,6 +33,7 @@ import api from '../services/api';
 import TournamentBracketSymmetric from '../components/TournamentBracketSymmetric';
 
 const PredictionsPage = () => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState(0);
   const [groupPredictions, setGroupPredictions] = useState({});
   const [allTeams, setAllTeams] = useState([]);
@@ -60,7 +62,11 @@ const PredictionsPage = () => {
   const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
-  const isLocked = new Date() >= new Date(TOURNAMENT_CONFIG.startDate);
+  // TEMP: GiorgioMeucci bypass - remove when done
+  const UNLOCK_USERNAME = 'GiorgioMeucci';
+  const isLocked = user?.username === UNLOCK_USERNAME
+    ? false
+    : new Date() >= new Date(TOURNAMENT_CONFIG.startDate);
 
   // Calculate group standings based on predictions
   const groupStandings = useMemo(() => {
