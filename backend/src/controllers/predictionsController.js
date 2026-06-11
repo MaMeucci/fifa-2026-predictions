@@ -39,12 +39,8 @@ exports.getMyPredictions = async (req, res, next) => {
 exports.updateMyPredictions = async (req, res, next) => {
   try {
     // Check if predictions are locked
-    // TEMP: GiorgioMeucci bypass - remove when done
-    const UNLOCK_USERNAME = 'GiorgioMeucci';
-    const isUnlockedUser = req.user.username === UNLOCK_USERNAME;
-
     const settings = await Settings.getSettings();
-    if (!isUnlockedUser && settings.arePredictionsLocked()) {
+    if (settings.arePredictionsLocked()) {
       return res.status(403).json({
         success: false,
         message: 'Predictions are locked. Cannot modify after tournament starts.',
@@ -57,8 +53,8 @@ exports.updateMyPredictions = async (req, res, next) => {
       prediction = new Prediction({ user: req.user.id });
     }
     
-    // Check if already locked (bypass for unlocked user)
-    if (!isUnlockedUser && prediction.isLocked) {
+    // Check if already locked
+    if (prediction.isLocked) {
       return res.status(403).json({
         success: false,
         message: 'Your predictions are already locked.',
