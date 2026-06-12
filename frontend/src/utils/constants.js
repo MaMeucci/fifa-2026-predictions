@@ -12,8 +12,8 @@ export const AUTH0_CONFIG = {
 // Tournament Configuration
 export const TOURNAMENT_CONFIG = {
   name: 'FIFA World Cup 2026',
-  startDate: new Date(import.meta.env.VITE_TOURNAMENT_START || '2026-06-11T00:00:00Z'),
-  lockDate: new Date(import.meta.env.VITE_PREDICTIONS_LOCK_DATE || '2026-06-10T23:59:59Z'),
+  startDate: new Date(import.meta.env.VITE_TOURNAMENT_START || '2025-06-12T00:00:00Z'),
+  lockDate: new Date(import.meta.env.VITE_PREDICTIONS_LOCK_DATE || '2025-06-11T23:59:59Z'),
   hosts: ['Canada', 'Messico', 'USA'],
 };
 
