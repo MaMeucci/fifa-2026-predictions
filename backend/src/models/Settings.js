@@ -158,12 +158,26 @@ settingsSchema.statics.getSettings = async function() {
       _id: 'app_settings',
       tournament: {
         name: 'FIFA World Cup 2026',
-        startDate: new Date('2026-06-11'),
+        startDate: new Date('2025-06-12'),
         endDate: new Date('2026-07-19'),
         hosts: ['USA', 'Canada', 'Mexico'],
       },
-      predictionsLockDate: new Date('2026-06-10'),
+      predictionsLockDate: new Date('2025-06-11'),
     });
+  } else {
+    // Migration: if startDate is still the old placeholder (2026-06-11), update to actual start
+    const oldStartDate = new Date('2026-06-11').getTime();
+    const oldLockDate = new Date('2026-06-10').getTime();
+    const updates = {};
+    if (settings.tournament.startDate.getTime() === oldStartDate) {
+      updates['tournament.startDate'] = new Date('2025-06-12');
+    }
+    if (settings.predictionsLockDate.getTime() === oldLockDate) {
+      updates['predictionsLockDate'] = new Date('2025-06-11');
+    }
+    if (Object.keys(updates).length > 0) {
+      settings = await this.findByIdAndUpdate('app_settings', { $set: updates }, { new: true });
+    }
   }
   
   return settings;

@@ -128,7 +128,7 @@ exports.getAllPredictions = async (req, res, next) => {
   try {
     const settings = await Settings.getSettings();
     
-    // Check if tournament has started (admins can always see)
+    // Only admins can see predictions before tournament starts
     if (!settings.hasTournamentStarted() && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
@@ -136,10 +136,9 @@ exports.getAllPredictions = async (req, res, next) => {
       });
     }
     
-    // Admins can see all predictions (locked or not), users only see locked ones
-    const query = req.user.role === 'admin' ? {} : { isLocked: true };
-    
-    const allPredictions = await Prediction.find(query)
+    // After tournament starts, show all predictions regardless of isLocked flag
+    // (isLocked was a manual mechanism never triggered — date-based control is the source of truth)
+    const allPredictions = await Prediction.find({})
       .populate('user', 'username email role')
       .populate('groupStage.match', 'matchNumber homeTeam awayTeam date group phase result')
       .select('-__v');
