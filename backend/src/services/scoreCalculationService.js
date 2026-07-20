@@ -26,16 +26,43 @@ const normalizePlayerName = (name) => {
 };
 
 /**
- * Compare two player names using fuzzy matching
- * Returns true if names match after normalization
+ * Compare two player names using fuzzy matching.
+ * Returns true if names match after normalization.
+ *
+ * Strategy:
+ *  1. Exact match after normalization  (e.g. "MBAPPE" vs "Mbappé")
+ *  2. Surname-fallback: compare the last token of each normalized name
+ *     so that "Kylian Mbappé" matches "Mbappé", and vice-versa.
+ *
+ * Examples:
+ *  comparePlayerNames("Kylian Mbappé", "Mbappé")   → true
+ *  comparePlayerNames("kylian mbappe", "mbappe")   → true
+ *  comparePlayerNames("MBAPPE", "Mbappé")          → true
+ *  comparePlayerNames("K. Mbappé", "Mbappé")       → true
+ *  comparePlayerNames("Mbappé", "Kylian Mbappé")   → true  (symmetric)
+ *  comparePlayerNames("Ronaldo", "Mbappé")         → false
  */
 const comparePlayerNames = (name1, name2) => {
   const normalized1 = normalizePlayerName(name1);
   const normalized2 = normalizePlayerName(name2);
-  
+
+  if (!normalized1 || !normalized2) return false;
+
   console.log(`Comparing players: "${name1}" (normalized: "${normalized1}") vs "${name2}" (normalized: "${normalized2}")`);
-  
-  return normalized1 === normalized2 && normalized1 !== '';
+
+  // 1. Exact match
+  if (normalized1 === normalized2) return true;
+
+  // 2. Surname-fallback: last token of each normalized name
+  const surname1 = normalized1.split(' ').pop();
+  const surname2 = normalized2.split(' ').pop();
+
+  if (surname1 && surname2 && surname1 === surname2) {
+    console.log(`  → Surname fallback match: "${surname1}"`);
+    return true;
+  }
+
+  return false;
 };
 
 /**

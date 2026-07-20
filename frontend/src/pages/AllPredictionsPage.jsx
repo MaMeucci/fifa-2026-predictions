@@ -319,6 +319,40 @@ const AllPredictionsPage = () => {
     return points;
   };
 
+  /**
+   * Normalize a player name for fuzzy comparison.
+   * Mirrors the backend logic in scoreCalculationService.js:
+   *  1. lowercase
+   *  2. remove diacritics (é→e, etc.)
+   *  3. remove initials (K. → "")
+   *  4. collapse spaces
+   */
+  const normalizePlayerName = (name) => {
+    if (!name || typeof name !== 'string') return '';
+    return name
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[a-z]\.\s*/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
+  /**
+   * Compare two player names with fuzzy matching.
+   * Returns true on exact normalized match OR surname-only match
+   * (last token), so "Kylian Mbappé" matches "Mbappé".
+   */
+  const comparePlayerNames = (name1, name2) => {
+    const n1 = normalizePlayerName(name1);
+    const n2 = normalizePlayerName(name2);
+    if (!n1 || !n2) return false;
+    if (n1 === n2) return true;
+    const s1 = n1.split(' ').pop();
+    const s2 = n2.split(' ').pop();
+    return Boolean(s1 && s2 && s1 === s2);
+  };
+
   // Calculate podium points (includes top scorer)
   const calculatePodiumPoints = (prediction) => {
     if (!correctResults?.finalRankings || !prediction?.finalRankings) return 0;
@@ -345,7 +379,7 @@ const AllPredictionsPage = () => {
     if (correctResults?.topScorer && prediction?.topScorer) {
       const predName = prediction.topScorer.playerName || prediction.topScorer.name;
       const correctName = correctResults.topScorer.playerName || correctResults.topScorer.name;
-      if (predName === correctName) {
+      if (comparePlayerNames(predName, correctName)) {
         points += 30;
       }
     }
@@ -360,7 +394,7 @@ const AllPredictionsPage = () => {
     const predName = prediction.topScorer.playerName || prediction.topScorer.name;
     const correctName = correctResults.topScorer.playerName || correctResults.topScorer.name;
     
-    return predName === correctName ? 30 : 0;
+    return comparePlayerNames(predName, correctName) ? 30 : 0;
   };
 
   // Calculate capiscione points
