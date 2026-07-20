@@ -77,12 +77,8 @@ const calculateAllScores = async () => {
       return { success: true, message: 'No active users found', scoresCalculated: 0 };
     }
 
-    // Get all finished matches
+    // Get all finished matches (may be empty — knockout/topScorer points are still calculated)
     const finishedMatches = await Match.find({ status: 'FINISHED' });
-    
-    if (finishedMatches.length === 0) {
-      return { success: true, message: 'No finished matches found', scoresCalculated: 0 };
-    }
 
     const results = [];
 
