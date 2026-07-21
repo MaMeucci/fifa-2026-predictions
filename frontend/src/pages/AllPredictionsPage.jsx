@@ -334,6 +334,7 @@ const AllPredictionsPage = () => {
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .replace(/[a-z]\.\s*/gi, '')
+      .replace(/[''\u2018\u2019\u02bc`]/g, '') // Remove apostrophes/quotes (e.g. MBAPPE' → MBAPPE)
       .replace(/\s+/g, ' ')
       .trim();
   };

@@ -21,6 +21,7 @@ const normalizePlayerName = (name) => {
     .normalize('NFD') // Decompose accented characters
     .replace(/[\u0300-\u036f]/g, '') // Remove diacritics (accents)
     .replace(/[a-z]\.\s*/gi, '') // Remove initials like "K. " or "k."
+    .replace(/[''\u2018\u2019\u02bc`]/g, '') // Remove apostrophes/quotes (e.g. MBAPPE' → MBAPPE)
     .replace(/\s+/g, ' ') // Normalize multiple spaces to single space
     .trim(); // Remove leading/trailing spaces
 };
